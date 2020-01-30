@@ -2,14 +2,14 @@ package io.github.dawncraft.desktopaddons;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,54 +17,55 @@ import okhttp3.Response;
 
 public class Utils
 {
-    static final public String NCOV_QQ_NEWS = "https://news.qq.com/zt2020/page/feiyan.htm";
-    static final public String NCOV_QQ_NEWS_API = "https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars";
-    static final private Map<String, String> NCOV_DATA_CACHE = new HashMap<>();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private static OkHttpClient client = new OkHttpClient();
+
+    private Utils() {}
+
+    public static boolean isNetworkAvailable(Context context)
     {
-        NCOV_DATA_CACHE.put("confirm", "-");
-        NCOV_DATA_CACHE.put("suspect", "-");
-        NCOV_DATA_CACHE.put("cure", "-");
-        NCOV_DATA_CACHE.put("dead", "-");
-        NCOV_DATA_CACHE.put("time", "XXXX-XX-XX XX:XX");
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
-    static private OkHttpClient client = new OkHttpClient();
-
-    static public void loadnCoVData() throws Exception
-    {
-        String content = getUrl(NCOV_QQ_NEWS_API);
-        JSONObject json = new JSONObject(content);
-        if (json.has("data"))
-        {
-            JSONArray array = new JSONArray(json.getString("data"));
-            JSONObject data = array.getJSONObject(0);
-            NCOV_DATA_CACHE.put("confirm", String.valueOf(data.getInt("confirmCount")));
-            NCOV_DATA_CACHE.put("suspect", String.valueOf(data.getInt("suspectCount")));
-            NCOV_DATA_CACHE.put("cure", String.valueOf(data.getInt("cure")));
-            NCOV_DATA_CACHE.put("dead", String.valueOf(data.getInt("deadCount")));
-            NCOV_DATA_CACHE.put("time", data.getString("recentTime"));
-        }
-    }
-
-    static public Map<String, String> getCachednCoVData()
-    {
-        return NCOV_DATA_CACHE;
-    }
-
-    static public String getUrl(String url) throws IOException
+    public static String getUrl(String url) throws IOException
     {
         final Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();
-
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        if (response.body() != null)
+        {
+            return response.body().string();
+        }
+        else
+        {
+            return "";
+        }
     }
 
-    static public void openUrl(Context context, String url)
+    public static void openUrl(Context context, String url)
     {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    public static String getFormattedDate()
+    {
+        return DATE_FORMAT.format(new Date(System.currentTimeMillis()));
+    }
+
+    public static void toast(String msg)
+    {
+        toast(DAApplication.getInstance(), msg);
+    }
+
+    public static void toast(Context context, String msg)
+    {
+        int duration = msg.length() < 15 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
+        Toast.makeText(context, msg, duration).show();
     }
 }

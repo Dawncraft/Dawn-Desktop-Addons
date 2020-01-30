@@ -1,9 +1,11 @@
 package io.github.dawncraft.desktopaddons;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.RemoteViews;
@@ -17,6 +19,9 @@ import java.util.Map;
  */
 public class nCoVAppWidget extends AppWidgetProvider
 {
+    public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
+    public static final String ACTION_CLICK = "desktopaddons.intent.action.CLICK";
+
     @Override
     public void onEnabled(Context context)
     {
@@ -48,20 +53,26 @@ public class nCoVAppWidget extends AppWidgetProvider
             {
                 try
                 {
-                    Utils.loadnCoVData();
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable()
+                    if (nCoVInfoLoader.loadnCoVData(context))
                     {
-                        @Override
-                        public void run()
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable()
                         {
-                            for (int appWidgetId : appWidgetIds)
+                            @Override
+                            public void run()
                             {
-                                updateAppWidget(context, appWidgetManager, appWidgetId);
+                                for (int appWidgetId : appWidgetIds)
+                                {
+                                    updateAppWidget(context, appWidgetManager, appWidgetId);
+                                }
+                                result.finish();
                             }
-                            result.finish();
-                        }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        result.finish();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -76,17 +87,36 @@ public class nCoVAppWidget extends AppWidgetProvider
     public void onReceive(Context context, Intent intent)
     {
         super.onReceive(context, intent);
+        String action = intent.getAction();
+        if (ACTION_REFRESH.equals(action))
+        {
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
+            {
+                final int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                this.onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+            }
+        }
+        else if (ACTION_CLICK.equals(action))
+        {
+            // 打开
+        }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
     {
-        Map<String, String> data = Utils.getCachednCoVData();
+        Map<String, String> data = nCoVInfoLoader.getCachednCoVData();
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncov_app_widget);
-        views.setTextViewText(R.id.textViewTime, data.get("time"));
+        views.setTextViewText(R.id.textViewTime, data.get("date"));
+        views.setTextViewText(R.id.textViewUpdate, data.get("update_time"));
         views.setTextViewText(R.id.textViewConfirm, data.get("confirm"));
         views.setTextViewText(R.id.textViewSuspect, data.get("suspect"));
         views.setTextViewText(R.id.textViewCure, data.get("cure"));
         views.setTextViewText(R.id.textViewDead, data.get("dead"));
+        Intent intent = new Intent(ACTION_REFRESH);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }
