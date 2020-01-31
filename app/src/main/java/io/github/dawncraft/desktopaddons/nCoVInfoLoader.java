@@ -1,6 +1,7 @@
 package io.github.dawncraft.desktopaddons;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,9 @@ public class nCoVInfoLoader
     public static final String NCOV_QQ_NEWS_API = "https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars";
     public static final String NCOV_QQ_NEWS_API2 = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
 
+    private static final String TAG = "nCoVInfoLoader";
+
+    // 非线程安全,先凑合用,我还没学多线程呢
     private static boolean updating = false;
     private static Map<String, String> NCOV_DATA_CACHE = new HashMap<>();
     {
@@ -27,7 +31,7 @@ public class nCoVInfoLoader
         NCOV_DATA_CACHE.put("update_time", "XXXX-XX-XX XX:XX:XX");
     }
 
-    public static boolean loadnCoVData(Context context)
+    public static int loadnCoVData(Context context)
     {
         if (Utils.isNetworkAvailable(context))
         {
@@ -36,35 +40,44 @@ public class nCoVInfoLoader
                 updating = true;
                 try
                 {
+                    Log.i(TAG, "Start to update.");
                     // String content = Utils.getUrl(NCOV_QQ_NEWS_API);
                     String content = Utils.getUrl(NCOV_QQ_NEWS_API2);
                     JSONObject json = new JSONObject(content);
                     // readnCovJSON(json);
                     readnCovJSON2(json);
                     updating = false;
-                    return true;
+                    Log.i(TAG, "Update successfully.");
+                    return 1;
                 }
                 catch (IOException e)
                 {
                     e.printStackTrace();
-                    Utils.toast(context, "无法获取数据, 请与作者联系以解决这个问题");
+                    Log.e(TAG, "Can't get data.");
+//                    Utils.toast(context, "无法获取数据, 请与作者联系以解决这个问题");
+                    return -3;
                 }
                 catch (JSONException e)
                 {
                     e.printStackTrace();
-                    Utils.toast(context, "无法解析JSON, 请与作者联系以解决这个问题");
+                    Log.e(TAG, "Can't analyse JSON.");
+//                    Utils.toast(context, "无法解析JSON, 请与作者联系以解决这个问题");
+                    return -4;
                 }
             }
             else
             {
-                Utils.toast(context, context.getString(R.string.ncov_app_widget_updating));
+                Log.e(TAG, "Updating.");
+//                Utils.toast(context, context.getString(R.string.ncov_app_widget_updating));
+                return -2;
             }
         }
         else
         {
-            Utils.toast(context, "网络不可用, 无法获取nCoV-2019的最新数据");
+            Log.e(TAG, "No network connection.");
+//            Utils.toast(context, "网络不可用, 无法获取nCoV-2019的最新数据");
+            return -1;
         }
-        return false;
     }
 
     private static void readnCovJSON(JSONObject json) throws JSONException

@@ -14,32 +14,50 @@
 
         <TextView
             android:id="@+id/ncov_widget_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/colorBackgraund"
-            android:contentDescription="@string/ncov_app_widget_title"
             android:paddingStart="20dp"
             android:paddingLeft="20dp"
             android:paddingTop="4dp"
             android:paddingEnd="0dp"
             android:paddingRight="0dp"
             android:paddingBottom="4dp"
-            android:singleLine="true"
+            android:background="@color/colorBackgraund"
             android:text="@string/ncov_app_widget_title"
+            android:contentDescription="@string/ncov_app_widget_title"
             android:textColor="@android:color/white"
             android:textSize="@dimen/widget_title_size"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:singleLine="true"/>
+
+        <!-- app widget 不支持appcompat, 用不了矢量图 -->
+        <!--<androidx.appcompat.widget.AppCompatImageButton />-->
+        <ImageButton
+            android:id="@+id/imageButtonOpen"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:focusable="true"
+            android:clickable="true"
+            android:background="@color/colorBackgraund"
+            android:contentDescription="@string/ncov_app_widget_refresh"
+            android:scaleType="center"
+            android:src="@drawable/ic_open"
+            android:tint="@android:color/white" />
 
         <ImageButton
             android:id="@+id/imageButtonRefresh"
-            android:layout_width="48dp"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
+            android:focusable="true"
+            android:clickable="true"
             android:background="@color/colorBackgraund"
             android:contentDescription="@string/ncov_app_widget_refresh"
-            android:tint="@android:color/white"
-            app:srcCompat="@drawable/ic_refresh_black_24dp" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_refresh"
+            android:tint="@android:color/white" />
 
     </LinearLayout>
 

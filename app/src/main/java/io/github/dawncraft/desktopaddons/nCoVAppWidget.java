@@ -6,8 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.RemoteViews;
 
 import java.util.Map;
@@ -19,8 +17,8 @@ import java.util.Map;
  */
 public class nCoVAppWidget extends AppWidgetProvider
 {
+    public static final String ACTION_OPEN = "desktopaddons.intent.action.OPEN";
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
-    public static final String ACTION_CLICK = "desktopaddons.intent.action.CLICK";
 
     @Override
     public void onEnabled(Context context)
@@ -41,46 +39,30 @@ public class nCoVAppWidget extends AppWidgetProvider
     }
 
     @Override
-    public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds)
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
     {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
         final PendingResult result = goAsync();
-        new Thread(new Runnable()
+        Thread thread = new Thread(new Runnable()
         {
             @Override
             public void run()
             {
-                try
-                {
-                    if (nCoVInfoLoader.loadnCoVData(context))
-                    {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                for (int appWidgetId : appWidgetIds)
-                                {
-                                    updateAppWidget(context, appWidgetManager, appWidgetId);
-                                }
-                                result.finish();
-                            }
-                        });
-                    }
-                    else
-                    {
-                        result.finish();
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    result.finish();
-                }
+                nCoVInfoLoader.loadnCoVData(DAApplication.getInstance());
             }
-        }).start();
+        });
+        thread.start();
+        try
+        {
+            thread.join();
+        }
+        catch (InterruptedException ignored) {}
+        for (int appWidgetId : appWidgetIds)
+        {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+        result.finish();
     }
 
     @Override
@@ -88,18 +70,51 @@ public class nCoVAppWidget extends AppWidgetProvider
     {
         super.onReceive(context, intent);
         String action = intent.getAction();
-        if (ACTION_REFRESH.equals(action))
+        if (ACTION_OPEN.equals(action))
+        {
+            Utils.openUrl(context, nCoVInfoLoader.NCOV_QQ_NEWS);
+            /*
+            Utils.runOnUIThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Context context = DAApplication.getInstance();
+
+                    LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    final View view = layoutInflater.inflate(R.layout.ncov_popup_window, new FrameLayout(context));
+
+                    final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                    windowManager.addView(view, layoutParams);
+
+                    ImageButton imageButtonClose = view.findViewById(R.id.imageButtonClose);
+                    imageButtonClose.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            windowManager.removeView(view);
+                        }
+                    });
+
+                    WebView webView = view.findViewById(R.id.webView);
+                    webView.loadUrl(nCoVInfoLoader.NCOV_QQ_NEWS);
+
+                    TextView textViewTitle = view.findViewById(R.id.textViewTitle);
+                    textViewTitle.setText(webView.getTitle());
+                }
+            });
+            */
+        }
+        else if (ACTION_REFRESH.equals(action))
         {
             Bundle extras = intent.getExtras();
             if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
             {
-                final int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
-                this.onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
             }
-        }
-        else if (ACTION_CLICK.equals(action))
-        {
-            // 打开
         }
     }
 
@@ -113,10 +128,13 @@ public class nCoVAppWidget extends AppWidgetProvider
         views.setTextViewText(R.id.textViewSuspect, data.get("suspect"));
         views.setTextViewText(R.id.textViewCure, data.get("cure"));
         views.setTextViewText(R.id.textViewDead, data.get("dead"));
-        Intent intent = new Intent(ACTION_REFRESH);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntent);
+        Intent intentOpen = new Intent(ACTION_OPEN);
+        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, 0, intentOpen, 0);
+        views.setOnClickPendingIntent(R.id.imageButtonOpen, pendingIntentOpen);
+        Intent intentRefresh = new Intent(ACTION_REFRESH);
+        intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh, 0);
+        views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }

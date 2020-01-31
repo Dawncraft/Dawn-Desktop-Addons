@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -58,14 +60,27 @@ public class Utils
         return DATE_FORMAT.format(new Date(System.currentTimeMillis()));
     }
 
-    public static void toast(String msg)
+    public static void toast(final String msg)
     {
         toast(DAApplication.getInstance(), msg);
     }
 
-    public static void toast(Context context, String msg)
+    public static void toast(final Context context, final String msg)
     {
-        int duration = msg.length() < 15 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
-        Toast.makeText(context, msg, duration).show();
+        runOnUIThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int duration = msg.length() < 15 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
+                Toast.makeText(context, msg, duration).show();
+            }
+        });
+    }
+
+    public static boolean runOnUIThread(Runnable runnable)
+    {
+        Handler handler = new Handler(Looper.getMainLooper());
+        return handler.post(runnable);
     }
 }
