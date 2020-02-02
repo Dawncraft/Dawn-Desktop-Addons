@@ -1,6 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -17,19 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorBackgraund"
+            android:contentDescription="@string/ncov_app_widget_title"
             android:paddingStart="20dp"
             android:paddingLeft="20dp"
             android:paddingTop="4dp"
             android:paddingEnd="0dp"
             android:paddingRight="0dp"
             android:paddingBottom="4dp"
-            android:background="@color/colorBackgraund"
+            android:singleLine="true"
             android:text="@string/ncov_app_widget_title"
-            android:contentDescription="@string/ncov_app_widget_title"
             android:textColor="@android:color/white"
             android:textSize="@dimen/widget_title_size"
-            android:textStyle="bold|italic"
-            android:singleLine="true"/>
+            android:textStyle="bold|italic" />
 
         <!-- app widget 不支持appcompat, 用不了矢量图 -->
         <!--<androidx.appcompat.widget.AppCompatImageButton />-->
@@ -38,10 +37,11 @@
             android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
-            android:focusable="true"
-            android:clickable="true"
             android:background="@color/colorBackgraund"
+            android:clickable="true"
             android:contentDescription="@string/ncov_app_widget_refresh"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:scaleType="center"
             android:src="@drawable/ic_open"
             android:tint="@android:color/white" />
@@ -51,10 +51,11 @@
             android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
-            android:focusable="true"
-            android:clickable="true"
             android:background="@color/colorBackgraund"
+            android:clickable="true"
             android:contentDescription="@string/ncov_app_widget_refresh"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_refresh"
             android:tint="@android:color/white" />
@@ -76,6 +77,8 @@
             android:text="@string/ncov_app_widget_time"
             android:textColor="@android:color/black"
             android:textSize="@dimen/widget_time_size" />
+
+        <!-- TODO 可以让日期也仅单行 -->
 
         <TextView
             android:id="@+id/textViewTime"

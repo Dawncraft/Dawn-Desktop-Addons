@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/ncov_app_widget"
-    android:resizeMode="none"
+    android:resizeMode="horizontal"
     android:minWidth="250dp"
     android:minHeight="40dp"
     android:previewImage="@drawable/ncov_app_widget_preview"
     android:updatePeriodMillis="3600000" />
+    <!--  为了适配Oppo这种一行5个应用的奇葩手机, 暂时就先让宽度可控  -->

@@ -51,7 +51,8 @@ public class Utils
 
     public static void openUrl(Context context, String url)
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndNormalize(Uri.parse(url));
         context.startActivity(intent);
     }
 

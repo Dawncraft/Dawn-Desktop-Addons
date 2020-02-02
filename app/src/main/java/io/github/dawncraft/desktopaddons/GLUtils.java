@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
