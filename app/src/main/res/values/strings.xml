@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Dawn Desktop Addons</string>
     <string name="wallpaper_name">Memorial live wallpaper</string>
-    <string name="ncov_app_widget_title" >nCoV-2019 Statistics</string>
-    <string name="ncov_app_widget_time" >To date:</string>
-    <string name="ncov_app_widget_confirm" >Confirm</string>
-    <string name="ncov_app_widget_suspect" >Suspect</string>
-    <string name="ncov_app_widget_cure" >Cure</string>
-    <string name="ncov_app_widget_dead" >Dead</string>
+    <string name="ncp_app_widget_title" >nCoV-2019 Statistics</string>
+    <string name="ncp_app_widget_time" >To date:</string>
+    <string name="ncp_app_widget_confirm" >Confirm</string>
+    <string name="ncp_app_widget_suspect" >Suspect</string>
+    <string name="ncp_app_widget_cure" >Cure</string>
+    <string name="ncp_app_widget_dead" >Dead</string>
 
     <string name="none" translatable="false">-</string>
     <string name="no_network">No Internet connection.</string>
-    <string name="ncov_app_widget_update_time">Last update:</string>
-    <string name="ncov_app_widget_updating">Updating, try it later.</string>
-    <string name="ncov_app_widget_refresh">Refresh</string>
+    <string name="ncp_app_widget_update_time">Last update:</string>
+    <string name="ncp_app_widget_updating">Updating, try it later.</string>
+    <string name="ncp_app_widget_refresh">Refresh</string>
 </resources>

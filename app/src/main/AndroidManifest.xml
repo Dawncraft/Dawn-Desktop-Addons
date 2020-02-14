@@ -35,7 +35,7 @@
         </service>
 
         <receiver
-            android:name=".nCoVAppWidget">
+            android:name=".NCPAppWidget">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -45,7 +45,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/ncov_app_widget_info" />
+                android:resource="@xml/ncp_app_widget_info" />
         </receiver>
 
     </application>

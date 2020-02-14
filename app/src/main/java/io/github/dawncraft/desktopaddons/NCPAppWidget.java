@@ -17,13 +17,13 @@ import java.util.Map;
  *
  * @author QingChenW (Wu Chen)
  */
-public class nCoVAppWidget extends AppWidgetProvider
+public class NCPAppWidget extends AppWidgetProvider
 {
     public static final String ACTION_OPEN = "desktopaddons.intent.action.OPEN";
     /** No use */
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
     
-    private static final String TAG = "nCoVAppWidget";
+    private static final String TAG = "NCPAppWidget";
     
     @Override
     public void onEnabled(Context context)
@@ -52,7 +52,7 @@ public class nCoVAppWidget extends AppWidgetProvider
         {
             Log.i(TAG, "Action open");
             // 小米android4.4会崩溃
-            // Utils.openUrl(context, nCoVInfoLoader.NCOV_QQ_NEWS);
+            // Utils.openUrl(context, NCPInfoLoader.NCP_QQ_NEWS);
             /*
             Utils.runOnUIThread(new Runnable()
             {
@@ -62,7 +62,7 @@ public class nCoVAppWidget extends AppWidgetProvider
                     Context context = DAApplication.getInstance();
 
                     LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    final View view = layoutInflater.inflate(R.layout.ncov_popup_window, new FrameLayout(context));
+                    final View view = layoutInflater.inflate(R.layout.ncp_popup_window, new FrameLayout(context));
 
                     final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                     WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
@@ -79,7 +79,7 @@ public class nCoVAppWidget extends AppWidgetProvider
                     });
 
                     WebView webView = view.findViewById(R.id.webView);
-                    webView.loadUrl(nCoVInfoLoader.NCOV_QQ_NEWS);
+                    webView.loadUrl(NCPInfoLoader.NCP_QQ_NEWS);
 
                     TextView textViewTitle = view.findViewById(R.id.textViewTitle);
                     textViewTitle.setText(webView.getTitle());
@@ -110,7 +110,7 @@ public class nCoVAppWidget extends AppWidgetProvider
             @Override
             public void run()
             {
-                nCoVInfoLoader.loadnCoVData(DAApplication.getInstance());
+                NCPInfoLoader.loadNCPData(DAApplication.getInstance());
             }
         });
         thread.start();
@@ -129,8 +129,8 @@ public class nCoVAppWidget extends AppWidgetProvider
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
     {
-        Map<String, String> data = nCoVInfoLoader.getCachednCoVData();
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncov_app_widget);
+        Map<String, String> data = NCPInfoLoader.getCachedNCPData();
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncp_app_widget);
         views.setTextViewText(R.id.textViewTime, data.get("date"));
         views.setTextViewText(R.id.textViewUpdate, data.get("update_time"));
         views.setTextViewText(R.id.textViewConfirm, data.get("confirm"));
@@ -141,11 +141,11 @@ public class nCoVAppWidget extends AppWidgetProvider
         // 将目标平台改为7.0,先凑合着
         Intent intentOpen = new Intent(Intent.ACTION_VIEW);
         // intentOpen.setComponent(null);
-        intentOpen.setDataAndNormalize(Uri.parse(nCoVInfoLoader.NCOV_QQ_NEWS));
+        intentOpen.setDataAndNormalize(Uri.parse(NCPInfoLoader.NCP_QQ_NEWS));
         PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, 0, intentOpen, 0);
         views.setOnClickPendingIntent(R.id.imageButtonOpen, pendingIntentOpen);
         Intent intentRefresh = new Intent(ACTION_REFRESH);
-        // intentRefresh.setComponent(new ComponentName(context, nCoVAppWidget.class));
+        // intentRefresh.setComponent(new ComponentName(context, NCPAppWidget.class));
         intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);
