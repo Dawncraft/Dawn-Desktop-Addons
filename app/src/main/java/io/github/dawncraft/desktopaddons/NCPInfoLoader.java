@@ -54,28 +54,24 @@ public class NCPInfoLoader
                 {
                     e.printStackTrace();
                     Log.e(TAG, "Can't get data.");
-//                    Utils.toast(context, "无法获取数据, 请与作者联系以解决这个问题");
                     return -3;
                 }
                 catch (JSONException e)
                 {
                     e.printStackTrace();
                     Log.e(TAG, "Can't analyse JSON.");
-//                    Utils.toast(context, "无法解析JSON, 请与作者联系以解决这个问题");
                     return -4;
                 }
             }
             else
             {
                 Log.e(TAG, "Updating.");
-//                Utils.toast(context, context.getString(R.string.ncov_app_widget_updating));
                 return -2;
             }
         }
         else
         {
             Log.e(TAG, "No network connection.");
-//            Utils.toast(context, "网络不可用, 无法获取nCoV-2019的最新数据");
             return -1;
         }
     }

@@ -52,6 +52,9 @@ public class Utils
     public static void openUrl(Context context, String url)
     {
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        // FIXME 踩坑了! 在Activity之外startActivity时必须用FLAG_ACTIVITY_NEW_TASK参数
+        // 详见android.app.ContextImpl#startActivity(android.content.Intent, android.os.Bundle)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndNormalize(Uri.parse(url));
         context.startActivity(intent);
     }

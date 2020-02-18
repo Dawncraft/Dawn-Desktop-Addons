@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -20,10 +19,11 @@ import java.util.Map;
 public class NCPAppWidget extends AppWidgetProvider
 {
     public static final String ACTION_OPEN = "desktopaddons.intent.action.OPEN";
-    /** No use */
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
     
     private static final String TAG = "NCPAppWidget";
+    
+    private int lastResult = 0;
     
     @Override
     public void onEnabled(Context context)
@@ -48,11 +48,11 @@ public class NCPAppWidget extends AppWidgetProvider
     {
         super.onReceive(context, intent);
         String action = intent.getAction();
-        if (false && ACTION_OPEN.equals(action))
+        if (ACTION_OPEN.equals(action))
         {
             Log.i(TAG, "Action open");
+            Utils.openUrl(context, NCPInfoLoader.NCP_QQ_NEWS);
             // 小米android4.4会崩溃
-            // Utils.openUrl(context, NCPInfoLoader.NCP_QQ_NEWS);
             /*
             Utils.runOnUIThread(new Runnable()
             {
@@ -110,7 +110,7 @@ public class NCPAppWidget extends AppWidgetProvider
             @Override
             public void run()
             {
-                NCPInfoLoader.loadNCPData(DAApplication.getInstance());
+                lastResult = NCPInfoLoader.loadNCPData(DAApplication.getInstance());
             }
         });
         thread.start();
@@ -119,10 +119,28 @@ public class NCPAppWidget extends AppWidgetProvider
             // 我没别的招了
             thread.join();
         }
-        catch (InterruptedException ignored) {}
-        for (int appWidgetId : appWidgetIds)
+        catch (InterruptedException ignored)
         {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            lastResult = -233;
+        }
+        if (lastResult > 0)
+        {
+            for (int appWidgetId : appWidgetIds)
+            {
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
+        }
+        else
+        {
+            switch (lastResult)
+            {
+                case 0: break;
+                case -1: Utils.toast(context, "网络不可用, 无法获取新冠肺炎的最新数据"); break;
+                case -2: Utils.toast(context, context.getString(R.string.ncp_app_widget_updating)); break;
+                case -3: Utils.toast(context, "无法获取数据, 请与作者联系以解决这个问题"); break;
+                case -4: Utils.toast(context, "无法解析JSON, 请与作者联系以解决这个问题"); break;
+                default: Utils.toast(context, "发生了未知错误, 请与作者联系以解决这个问题" + lastResult); break;
+            }
         }
         result.finish();
     }
@@ -139,10 +157,8 @@ public class NCPAppWidget extends AppWidgetProvider
         views.setTextViewText(R.id.textViewDead, data.get("dead"));
         // TODO Android 8.0 后台服务限制,似乎无法正常工作
         // 将目标平台改为7.0,先凑合着
-        Intent intentOpen = new Intent(Intent.ACTION_VIEW);
-        // intentOpen.setComponent(null);
-        intentOpen.setDataAndNormalize(Uri.parse(NCPInfoLoader.NCP_QQ_NEWS));
-        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, 0, intentOpen, 0);
+        Intent intentOpen = new Intent(ACTION_OPEN);
+        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, -233, intentOpen, 0);
         views.setOnClickPendingIntent(R.id.imageButtonOpen, pendingIntentOpen);
         Intent intentRefresh = new Intent(ACTION_REFRESH);
         // intentRefresh.setComponent(new ComponentName(context, NCPAppWidget.class));
