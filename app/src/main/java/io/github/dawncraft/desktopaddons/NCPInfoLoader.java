@@ -41,11 +41,11 @@ public class NCPInfoLoader
                 try
                 {
                     Log.i(TAG, "Start to update.");
-                    // String content = Utils.getUrl(NCP_QQ_NEWS_API);
-                    String content = Utils.getUrl(NCP_QQ_NEWS_API2);
+                    String content = Utils.getUrl(NCP_QQ_NEWS_API);
+                    // String content = Utils.getUrl(NCP_QQ_NEWS_API2);
                     JSONObject json = new JSONObject(content);
-                    // readNCPJSON(json);
-                    readNCPJSON2(json);
+                    readNCPJSON(json);
+                    // readNCPJSON2(json);
                     updating = false;
                     Log.i(TAG, "Update successfully.");
                     return 1;
@@ -80,11 +80,11 @@ public class NCPInfoLoader
     {
         JSONArray array = new JSONArray(json.getString("data"));
         JSONObject data = array.getJSONObject(0);
-        NCP_DATA_CACHE.put("confirm", String.valueOf(data.getInt("confirmCount")));
+        NCP_DATA_CACHE.put("confirm", String.valueOf(data.getInt("nowConfirm")));
         NCP_DATA_CACHE.put("suspect", String.valueOf(data.getInt("suspectCount")));
         NCP_DATA_CACHE.put("cure", String.valueOf(data.getInt("cure")));
         NCP_DATA_CACHE.put("dead", String.valueOf(data.getInt("deadCount")));
-        NCP_DATA_CACHE.put("date", data.getString("recentTime"));
+        NCP_DATA_CACHE.put("date", data.getString("update_time"));
         NCP_DATA_CACHE.put("update_time", Utils.getFormattedDate());
     }
 
