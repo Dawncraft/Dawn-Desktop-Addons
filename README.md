@@ -22,7 +22,9 @@ Maintained by Dawncraft Studio.
 1. 各种bug
 
 ## TODO
-1. TODO
+1. 加个缓存
+点击刷新的时候先保存到缓存然后更新当前的小部件
+自动刷新的时候先从缓存里读取如果超时再从网上获取
 
 ## 特别致谢
 1. 腾讯新闻API
