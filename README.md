@@ -17,18 +17,19 @@ Maintained by Dawncraft Studio.
 2. An app widget that can monitor Novel coronavirus pneumonia's statistics.The API comes from Tencent News.
    一个用于监测新型冠状病毒肺炎的桌面小工具，API来自于腾讯新闻
    ![Screenshot](/screenshot-1.png)
+3. An app widget that can open/close zen mode.
+   一个用于开启或关闭勿扰模式的小部件
 
 ## Bugs
 1. 各种bug
 
 ## TODO
-1. 加个缓存
-点击刷新的时候先保存到缓存然后更新当前的小部件
-自动刷新的时候先从缓存里读取如果超时再从网上获取
+~~1. 加入缓存~~
+2. 将获取新冠肺炎数据放在Service中
 
 ## 特别致谢
-1. 腾讯新闻API
-2. 所有在疫情中奉献自己的医护人员
+1. 所有在疫情中奉献自己的医护人员
+2. 腾讯新闻API
 
 ## 更新日志
-无
+懒得写
