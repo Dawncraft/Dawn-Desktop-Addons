@@ -12,8 +12,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,11 +69,6 @@ public class Utils
         return formatDate(new Date());
     }
 
-    public static void toast(final String msg)
-    {
-        toast(DAApplication.getInstance(), msg);
-    }
-
     public static boolean isNetworkAvailable(Context context)
     {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -108,46 +101,77 @@ public class Utils
         context.startActivity(intent);
     }
 
-    /*
-    android.provider.Settings.Global#ZEN_MODE_OFF = 0;
-    android.provider.Settings.Global#ZEN_MODE_IMPORTANT_INTERRUPTIONS = 1;
-    android.provider.Settings.Global#ZEN_MODE_NO_INTERRUPTIONS = 2;
-    android.provider.Settings.Global#ZEN_MODE_ALARMS = 3;
-    */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void setZenMode(int zenMode, Uri conditionId, String reason)
+    // Android5.0及以上版本中直接操作勿扰模式的方法被设为hide
+    // 详见 https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces
+    public static void setZenMode(Context context, boolean flag)
     {
-        NotificationManager notificationManager = (NotificationManager) DAApplication.getInstance()
+        NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager.isNotificationPolicyAccessGranted())
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
         {
-            Log.e("desktopaddon", notificationManager.getAutomaticZenRules().toString());
-            /*try
+            if (notificationManager.isNotificationPolicyAccessGranted())
             {
-                Class<NotificationManager> clazz = NotificationManager.class;
-                Method method = clazz.getMethod("setZenMode", int.class, Uri.class, String.class);
-                method.invoke(notificationManager, zenMode, conditionId, reason);
+                // Log.d("desktopaddon", notificationManager.getAutomaticZenRules().toString());
+                // TODO 用Policy
+                // 另见 ZenPolicy
+                // NotificationManager.Policy policy = new NotificationManager.Policy();
+                // notificationManager.setNotificationPolicy();
+                int newMode = flag ? NotificationManager.INTERRUPTION_FILTER_NONE : NotificationManager.INTERRUPTION_FILTER_ALL;
+                notificationManager.setInterruptionFilter(newMode);
             }
-            catch (NoSuchMethodException e)
+            else
             {
-                e.printStackTrace();
+                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
-            }
-            catch (InvocationTargetException e)
-            {
-                e.printStackTrace();
-            }*/
+        }
+        else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            Log.i("Utils", "Not support android 5.0 yet");
+            // int mode = flag ? Settings.Global.ZEN_MODE_NO_INTERRUPTIONS : Settings.Global.ZEN_MODE_OFF;
+            // notificationManager.setZenMode(mode, null, "DAApplication");
         }
         else
         {
-            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            DAApplication.getInstance().startActivity(intent);
+            Log.i("Utils", "Not support android below 5.0 yet");
         }
+    }
 
+    public static boolean isZenMode(Context context)
+    {
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+        {
+            if (notificationManager.isNotificationPolicyAccessGranted())
+            {
+                int mode = notificationManager.getCurrentInterruptionFilter();
+                return mode > NotificationManager.INTERRUPTION_FILTER_ALL;
+            }
+            else
+            {
+                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        }
+        else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            Log.i("Utils", "Not support android 5.0 yet");
+            // int mode = notificationManager.getZenMode();
+            // return mode > Settings.Global.ZEN_MODE_OFF;
+        }
+        else
+        {
+            Log.i("Utils", "Not support android below 5.0 yet");
+        }
+        return false;
+    }
+
+    public static void toast(final String msg)
+    {
+        toast(DAApplication.getInstance(), msg);
     }
 
     public static void toast(final Context context, final String msg)

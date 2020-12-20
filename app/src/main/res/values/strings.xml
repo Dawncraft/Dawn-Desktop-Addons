@@ -9,8 +9,16 @@
     <string name="ncp_app_widget_dead" >Dead</string>
 
     <string name="none" translatable="false">-</string>
+    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
     <string name="no_network">No Internet connection.</string>
     <string name="ncp_app_widget_update_time">Last update:</string>
     <string name="ncp_app_widget_updating">Updating, try it later.</string>
     <string name="ncp_app_widget_refresh">Refresh</string>
+
+    <string name="channel_name">Set zen mode</string>
+    <string name="channel_description">Switch zen mode by click the button on notification</string>
+    <string name="zen_mode_switcher">Switch zen mode</string>
+    <string name="zen_mode_close">Zen mode is closed</string>
+    <string name="zen_mode_open">Zen mode is opened</string>
+
 </resources>

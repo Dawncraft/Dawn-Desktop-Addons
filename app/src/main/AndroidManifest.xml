@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -52,15 +53,12 @@
         </receiver>
 
         <receiver
-            android:name=".ZenAppWidget">
+            android:name=".ScreenBroadcastReceiver"
+            android:exported="false">
 
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="desktopaddons.intent.action.SWITCH_ZEN_MODE" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/zen_app_widget_info" />
         </receiver>
 
     </application>

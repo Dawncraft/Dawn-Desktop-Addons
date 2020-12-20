@@ -12,4 +12,9 @@
     <string name="ncp_app_widget_update_time">上次更新:</string>
     <string name="ncp_app_widget_updating">正在更新中, 不要着急哦~</string>
     <string name="ncp_app_widget_refresh">刷新</string>
+    <string name="channel_name">设置勿扰模式</string>
+    <string name="channel_description">通过点击通知上的按钮来切换勿扰模式</string>
+    <string name="zen_mode_switcher">切换勿扰模式</string>
+    <string name="zen_mode_close">勿扰模式已关闭</string>
+    <string name="zen_mode_open">勿扰模式已开启</string>
 </resources>

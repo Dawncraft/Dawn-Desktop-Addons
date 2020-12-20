@@ -47,7 +47,7 @@ public class NCPAppWidget extends AppWidgetProvider
         String action = intent.getAction();
         if (ACTION_DETAILS.equals(action))
         {
-            Log.i(TAG, "Action open");
+            Log.d(TAG, "Action open");
             Utils.openUrl(context, NCPInfoModel.NCP_QQ_NEWS);
             // 小米android4.4会崩溃
             /*
@@ -86,7 +86,7 @@ public class NCPAppWidget extends AppWidgetProvider
         }
         else if (ACTION_REFRESH.equals(action))
         {
-            Log.i(TAG, "Action refresh");
+            Log.d(TAG, "Action refresh");
             Bundle extras = intent.getExtras();
             if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
             {
@@ -124,20 +124,23 @@ public class NCPAppWidget extends AppWidgetProvider
     {
         NCPInfoItem item = NCPInfoModel.getInfoItem("");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncp_app_widget);
-        views.setTextViewText(R.id.textViewTime, item.isVaild ? item.date : "XXXX-XX-XX XX:XX:XX");
-        views.setTextViewText(R.id.textViewUpdate, item.isVaild ? item.updateTime : "XXXX-XX-XX XX:XX:XX");
-        views.setTextViewText(R.id.textViewConfirm, item.isVaild ? String.valueOf(item.confirm) : "-");
-        views.setTextViewText(R.id.textViewSuspect, item.isVaild ? String.valueOf(item.suspect) : "-");
-        views.setTextViewText(R.id.textViewCure, item.isVaild ? String.valueOf(item.cure) : "-");
-        views.setTextViewText(R.id.textViewDead, item.isVaild ? String.valueOf(item.dead) : "-");
+        if (item.isVaild)
+        {
+            views.setTextViewText(R.id.textViewTime, item.date);
+            views.setTextViewText(R.id.textViewUpdate, item.updateTime);
+            views.setTextViewText(R.id.textViewConfirm, String.valueOf(item.confirm));
+            views.setTextViewText(R.id.textViewSuspect, String.valueOf(item.suspect));
+            views.setTextViewText(R.id.textViewCure, String.valueOf(item.cure));
+            views.setTextViewText(R.id.textViewDead, String.valueOf(item.dead));
+        }
         // FIXME Android 8.0 后台限制, 隐式广播无法正常工作
         // 详见 https://www.jianshu.com/p/5283ebc225d5
         Intent intentOpen = new Intent(ACTION_DETAILS);
-        intentOpen.setComponent(new ComponentName(context, NCPAppWidget.class));
-        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, -233, intentOpen, 0);
+        intentOpen.setClass(context, NCPAppWidget.class);
+        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, -1, intentOpen, 0);
         views.setOnClickPendingIntent(R.id.imageButtonOpen, pendingIntentOpen);
         Intent intentRefresh = new Intent(ACTION_REFRESH);
-        intentRefresh.setComponent(new ComponentName(context, NCPAppWidget.class));
+        intentRefresh.setClass(context, NCPAppWidget.class);
         intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);

@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text=""
+            android:text="@string/unknown_date"
             android:textColor="@android:color/black"
             android:textSize="@dimen/widget_time_size" />
 
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text=""
+            android:text="@string/unknown_date"
             android:textColor="@android:color/black"
             android:textSize="@dimen/widget_time_size" />
 
