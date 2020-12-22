@@ -11,6 +11,13 @@ import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+/**
+ * 切换勿扰模式的<s>锁屏小部件</s>锁屏通知
+ *
+ * @author QingChenW (Wu Chen)
+ */
+// 为防止流氓软件后台自启, 从Android 3.1起未启动的应用无法接收广播
+// 详见 https://developer.android.com/about/versions/android-3.1.html#launchcontrols
 public class ScreenBroadcastReceiver extends BroadcastReceiver
 {
     public static final String ACTION_SWITCH = "desktopaddons.intent.action.SWITCH_ZEN_MODE";

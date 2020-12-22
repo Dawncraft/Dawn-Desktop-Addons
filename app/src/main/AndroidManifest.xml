@@ -23,6 +23,15 @@
         android:launchMode="singleInstance"
         android:excludeFromRecents="true">
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".DawnLiveWallpaper"
             android:enabled="true"

@@ -1,5 +1,27 @@
 <resources>
-    <string name="app_name">Dawn Desktop Addons</string>
+    <string name="app_name">Desktop Addons</string>
+    <string name="app_author">Maintained by Dawncraft Studio</string>
+
+    <string name="settings">Settings</string>
+    <string-array name="ncp_data_sources">
+        <item>腾讯新闻</item>
+        <item>丁香园·丁香医生</item>
+        <item>百度</item>
+        <item>搜狗</item>
+        <item>新浪微博</item>
+        <item>网易新闻</item>
+        <item>人民日报</item>
+        <item>人民网</item>
+        <item>凤凰网</item>
+        <item>高德地图</item>
+        <item>知乎</item>
+        <item>今日头条</item>
+        <item>阿里</item>
+        <item>UC</item>
+        <item>GitHub仓库</item>
+        <item>小孩纸才做选择, 大人全都要(下载所有数据取平均值)</item>
+    </string-array>
+
     <string name="wallpaper_name">Memorial live wallpaper</string>
     <string name="ncp_app_widget_title" >nCoV-2019 Statistics</string>
     <string name="ncp_app_widget_time" >To date:</string>
@@ -20,5 +42,24 @@
     <string name="zen_mode_switcher">Switch zen mode</string>
     <string name="zen_mode_close">Zen mode is closed</string>
     <string name="zen_mode_open">Zen mode is opened</string>
+
+    <string-array name="value_list">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+    </string-array>
 
 </resources>

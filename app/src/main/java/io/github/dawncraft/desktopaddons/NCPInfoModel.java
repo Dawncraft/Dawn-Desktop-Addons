@@ -131,6 +131,7 @@ public class NCPInfoModel
         CACHED,
         NO_NETWORK,
         IO_ERROR,
-        JSON_ERROR
+        JSON_ERROR,
+        UNKNOWN
     }
 }

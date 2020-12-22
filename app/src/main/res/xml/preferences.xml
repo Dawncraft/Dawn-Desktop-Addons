@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:title="开发者的废话"
+        android:summary="受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        android:title="动态壁纸"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:title="场景设置"
+            android:summary="然而并没有什么卵用"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="桌面小部件"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:key="ncp_source"
+            android:defaultValue="0"
+            android:entries="@array/ncp_data_sources"
+            android:entryValues="@array/value_list"
+            android:title="设置新冠肺炎数据源"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="锁屏小部件"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="zen_mode"
+            android:title="是否启用勿扰模式开关"
+            android:summary="重启应用后生效"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="permission"
+            android:title="打开勿扰模式权限设置"
+            app:isPreferenceVisible="false"
+            app:iconSpaceReserved="false">
+
+            <intent android:action="android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS" />
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="关于"
+        app:iconSpaceReserved="false" >
+
+        <Preference
+            android:title="@string/app_name"
+            android:summary="@string/app_author"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="version"
+            android:title="版本"
+            android:summary="点击检查更新(不, 我没写)"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:title="访问本项目的GitHub仓库"
+            android:summary="来我们的GitHub看看吧"
+            app:iconSpaceReserved="false">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/Dawncraft/Dawn-Desktop-Addons" />
+        </Preference>
+
+        <Preference
+            android:title="第三方库协议"
+            android:summary="没用啥第三方库, 自己看去吧"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

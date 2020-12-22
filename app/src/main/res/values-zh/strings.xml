@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">曙光桌面小部件</string>
+    <string name="app_name">桌面小部件</string>
+    <string name="app_author">由曙光工艺工作室维护</string>
+
+    <string name="settings">设置</string>
+
     <string name="wallpaper_name">珍贵的回忆动态桌面</string>
     <string name="ncp_app_widget_title">新型冠状病毒肺炎 疫情实时追踪</string>
     <string name="ncp_app_widget_time">截至: </string>
@@ -17,4 +21,5 @@
     <string name="zen_mode_switcher">切换勿扰模式</string>
     <string name="zen_mode_close">勿扰模式已关闭</string>
     <string name="zen_mode_open">勿扰模式已开启</string>
+
 </resources>

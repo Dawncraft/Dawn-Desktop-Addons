@@ -3,13 +3,12 @@ package io.github.dawncraft.desktopaddons;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -105,13 +104,12 @@ public class Utils
     // 详见 https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces
     public static void setZenMode(Context context, boolean flag)
     {
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
         {
             if (notificationManager.isNotificationPolicyAccessGranted())
             {
-                // Log.d("desktopaddon", notificationManager.getAutomaticZenRules().toString());
                 // TODO 用Policy
                 // 另见 ZenPolicy
                 // NotificationManager.Policy policy = new NotificationManager.Policy();
@@ -126,24 +124,21 @@ public class Utils
                 context.startActivity(intent);
             }
         }
-        else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            Log.i("Utils", "Not support android 5.0 yet");
-            // int mode = flag ? Settings.Global.ZEN_MODE_NO_INTERRUPTIONS : Settings.Global.ZEN_MODE_OFF;
-            // notificationManager.setZenMode(mode, null, "DAApplication");
-        }
         else
         {
-            Log.i("Utils", "Not support android below 5.0 yet");
+            AudioManager audioManager = (AudioManager)
+                    context.getSystemService(Context.AUDIO_SERVICE);
+            int newMode = flag ? AudioManager.RINGER_MODE_SILENT : AudioManager.RINGER_MODE_NORMAL;
+            audioManager.setRingerMode(newMode);
         }
     }
 
     public static boolean isZenMode(Context context)
     {
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
         {
+            NotificationManager notificationManager = (NotificationManager)
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager.isNotificationPolicyAccessGranted())
             {
                 int mode = notificationManager.getCurrentInterruptionFilter();
@@ -156,15 +151,12 @@ public class Utils
                 context.startActivity(intent);
             }
         }
-        else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            Log.i("Utils", "Not support android 5.0 yet");
-            // int mode = notificationManager.getZenMode();
-            // return mode > Settings.Global.ZEN_MODE_OFF;
-        }
         else
         {
-            Log.i("Utils", "Not support android below 5.0 yet");
+            AudioManager audioManager = (AudioManager)
+                    context.getSystemService(Context.AUDIO_SERVICE);
+            int mode = audioManager.getRingerMode();
+            return mode > AudioManager.RINGER_MODE_SILENT;
         }
         return false;
     }

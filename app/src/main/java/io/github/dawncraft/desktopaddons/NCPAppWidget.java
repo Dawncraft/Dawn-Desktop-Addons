@@ -3,7 +3,6 @@ package io.github.dawncraft.desktopaddons;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,9 +99,24 @@ public class NCPAppWidget extends AppWidgetProvider
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
     {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+        // 主线程上不能执行耗费时间过长的操作, 也不能执行网络等操作, 除非开启严格模式, 但正式环境不应使用严格模式
         PendingResult pendingResult = goAsync();
-        NCPInfoModel.EnumResult result = NCPInfoModel.loadData();
-        switch (result)
+        final NCPInfoModel.EnumResult[] result = new NCPInfoModel.EnumResult[] { NCPInfoModel.EnumResult.UNKNOWN };
+        try
+        {
+            Thread thread = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    result[0] = NCPInfoModel.loadData();
+                }
+            });
+            thread.start();
+            thread.join();
+        }
+        catch (InterruptedException ignored) {}
+        switch (result[0])
         {
             case SUCCESS:
             case CACHED:
@@ -111,7 +125,8 @@ public class NCPAppWidget extends AppWidgetProvider
             case NO_NETWORK: Utils.toast(context, "无网络连接, 无法获取新冠肺炎的最新数据"); break;
             case IO_ERROR: Utils.toast(context, "无法获取数据, 请联系作者以解决这个问题"); break;
             case JSON_ERROR: Utils.toast(context, "无法解析JSON, 请联系作者以解决这个问题"); break;
-            default: Utils.toast(context, "发生了未知错误, 请联系作者: " + result.toString()); break;
+            case UNKNOWN:
+            default: Utils.toast(context, "发生了未知错误, 请联系作者: " + result[0].toString()); break;
         }
         for (int appWidgetId : appWidgetIds)
         {
@@ -124,6 +139,11 @@ public class NCPAppWidget extends AppWidgetProvider
     {
         NCPInfoItem item = NCPInfoModel.getInfoItem("");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncp_app_widget);
+        // FIXME Android 3.0起点击小部件默认会跳转至应用主Activity
+        // 详见 https://developer.android.google.cn/guide/topics/appwidgets/host#which-version-are-you-targeting
+        // 详见 android.appwidget.AppWidgetHostView#onDefaultViewClicked
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, -666, new Intent(), 0);
+        views.setOnClickPendingIntent(R.id.ncp_widget_layout, pendingIntent);
         if (item.isVaild)
         {
             views.setTextViewText(R.id.textViewTime, item.date);

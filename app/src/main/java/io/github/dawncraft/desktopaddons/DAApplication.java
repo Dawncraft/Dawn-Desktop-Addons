@@ -7,8 +7,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.StrictMode;
+
+import androidx.preference.PreferenceManager;
 
 /**
  * 曙光桌面小工具APP
@@ -26,28 +28,33 @@ public class DAApplication extends Application
     {
         super.onCreate();
         instance = getApplicationContext();
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .permitAll()
-                // .penaltyLog()
-                .build());
+
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        boolean zenMode = sharedPreferences.getBoolean("zen_mode", false);
+
         createNotificationChannel();
-        screenReceiver = new ScreenBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        // filter.addAction(ScreenBroadcastReceiver.ACTION_SWITCH);
-        instance.registerReceiver(screenReceiver, filter);
+        if (zenMode)
+        {
+            screenReceiver = new ScreenBroadcastReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            filter.addAction(Intent.ACTION_SCREEN_ON);
+            filter.addAction(Intent.ACTION_USER_PRESENT);
+            // filter.addAction(ScreenBroadcastReceiver.ACTION_SWITCH);
+            instance.registerReceiver(screenReceiver, filter);
+        }
     }
 
     @Override
     public void onTerminate()
     {
         super.onTerminate();
-        instance.unregisterReceiver(screenReceiver);
+        if (screenReceiver != null)
+        {
+            instance.unregisterReceiver(screenReceiver);
+            screenReceiver = null;
+        }
         instance = null;
     }
 
