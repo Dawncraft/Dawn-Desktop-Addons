@@ -23,7 +23,6 @@ import okhttp3.Response;
 
 public class Utils
 {
-
     private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
     private static final SimpleDateFormat UTC_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z", Locale.ROOT);
 
@@ -114,7 +113,7 @@ public class Utils
                 // 另见 ZenPolicy
                 // NotificationManager.Policy policy = new NotificationManager.Policy();
                 // notificationManager.setNotificationPolicy();
-                int newMode = flag ? NotificationManager.INTERRUPTION_FILTER_NONE : NotificationManager.INTERRUPTION_FILTER_ALL;
+                int newMode = flag ? NotificationManager.INTERRUPTION_FILTER_PRIORITY : NotificationManager.INTERRUPTION_FILTER_ALL;
                 notificationManager.setInterruptionFilter(newMode);
             }
             else

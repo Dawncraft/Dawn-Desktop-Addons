@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
@@ -50,11 +51,14 @@ public class ScreenBroadcastReceiver extends BroadcastReceiver
             Log.d(TAG, "Action screen off");
             sendNotification(context, isZenMode);
         }
+        // FIXME 有些系统可以灭屏解锁
+        /*
         else if (Intent.ACTION_SCREEN_ON.equals(action))
         {
             Log.d(TAG, "Action screen on");
             sendNotification(context, isZenMode);
         }
+        */
     }
 
     private void sendNotification(Context context, boolean checked)
@@ -65,10 +69,18 @@ public class ScreenBroadcastReceiver extends BroadcastReceiver
         {
             notificationLayout.setTextViewText(R.id.textViewZen, context.getString(R.string.zen_mode_open));
             int color;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-                color = context.getColor(android.R.color.holo_blue_light);
+            TypedValue typedValue = new TypedValue();
+            if (context.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true))
+            {
+                color = typedValue.data;
+            }
             else
-                color = context.getResources().getColor(android.R.color.holo_blue_light);
+            {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+                    color = context.getColor(android.R.color.holo_blue_light);
+                else
+                    color = context.getResources().getColor(android.R.color.holo_blue_light);
+            }
             notificationLayout.setInt(R.id.imageButtonZen, "setColorFilter", color);
         }
         Intent intent = new Intent(ACTION_SWITCH);

@@ -33,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity
                 Preference permissionPreference = findPreference("permission");
                 if (permissionPreference != null)
                 {
+                    permissionPreference.setVisible(true);
                     permissionPreference.setSummaryProvider(new Preference.SummaryProvider<Preference>()
                     {
                         @Override

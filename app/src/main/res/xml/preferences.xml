@@ -27,7 +27,7 @@
             android:defaultValue="0"
             android:entries="@array/ncp_data_sources"
             android:entryValues="@array/value_list"
-            android:title="设置新冠肺炎数据源"
+            android:title="设置新冠肺炎数据源(只会影响打开的网页)"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>

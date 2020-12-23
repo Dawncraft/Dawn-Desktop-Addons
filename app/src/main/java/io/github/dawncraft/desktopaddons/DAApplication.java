@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager;
 public class DAApplication extends Application
 {
     private static Context instance;
+    private static SharedPreferences sharedPreferences;
 
     private ScreenBroadcastReceiver screenReceiver;
 
@@ -28,9 +29,7 @@ public class DAApplication extends Application
     {
         super.onCreate();
         instance = getApplicationContext();
-
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean zenMode = sharedPreferences.getBoolean("zen_mode", false);
 
         createNotificationChannel();
@@ -55,6 +54,7 @@ public class DAApplication extends Application
             instance.unregisterReceiver(screenReceiver);
             screenReceiver = null;
         }
+        sharedPreferences = null;
         instance = null;
     }
 
@@ -81,5 +81,10 @@ public class DAApplication extends Application
     public static Context getInstance()
     {
         return instance;
+    }
+
+    public static SharedPreferences getSharedPreferences()
+    {
+        return sharedPreferences;
     }
 }

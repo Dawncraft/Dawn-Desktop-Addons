@@ -47,41 +47,9 @@ public class NCPAppWidget extends AppWidgetProvider
         if (ACTION_DETAILS.equals(action))
         {
             Log.d(TAG, "Action open");
-            Utils.openUrl(context, NCPInfoModel.NCP_QQ_NEWS);
-            // 小米android4.4会崩溃
-            /*
-            Utils.runOnUIThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Context context = DAApplication.getInstance();
-
-                    LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    final View view = layoutInflater.inflate(R.layout.ncp_popup_window, new FrameLayout(context));
-
-                    final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-                    windowManager.addView(view, layoutParams);
-
-                    ImageButton imageButtonClose = view.findViewById(R.id.imageButtonClose);
-                    imageButtonClose.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            windowManager.removeView(view);
-                        }
-                    });
-
-                    WebView webView = view.findViewById(R.id.webView);
-                    webView.loadUrl(NCPInfoLoader.NCP_QQ_NEWS);
-
-                    TextView textViewTitle = view.findViewById(R.id.textViewTitle);
-                    textViewTitle.setText(webView.getTitle());
-                }
-            });
-            */
+            // TODO 自己写详情页
+            int id = Integer.parseInt(DAApplication.getSharedPreferences().getString("ncp_source", "0"));
+            Utils.openUrl(context, NCPInfoModel.getSourceUrl(id));
         }
         else if (ACTION_REFRESH.equals(action))
         {
