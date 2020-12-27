@@ -42,27 +42,26 @@ public class SettingsActivity extends AppCompatActivity
                             NotificationManager notificationManager = (NotificationManager)
                                     SettingsFragment.this.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                             if (notificationManager.isNotificationPolicyAccessGranted())
-                            {
                                 return "您已授予修改勿扰模式权限";
-                            }
                             else
-                            {
                                 return "该功能需要手动授予修改勿扰模式的权限";
-                            }
                         }
                     });
                 }
             }
             Preference versionPreference = findPreference("version");
-            versionPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            if (versionPreference != null)
             {
-                @Override
-                public boolean onPreferenceClick(Preference preference)
+                versionPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
                 {
-                    Utils.toast(SettingsFragment.this.getContext(), "说了没写呢, 你点啥");
-                    return true;
-                }
-            });
+                    @Override
+                    public boolean onPreferenceClick(Preference preference)
+                    {
+                        Utils.toast(SettingsFragment.this.getContext(), "说了没写呢, 你点啥");
+                        return true;
+                    }
+                });
+            }
         }
     }
 }

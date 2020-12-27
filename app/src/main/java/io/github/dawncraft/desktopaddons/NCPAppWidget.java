@@ -90,11 +90,11 @@ public class NCPAppWidget extends AppWidgetProvider
             case CACHED:
                 break;
             case UPDATING: Utils.toast(context, context.getString(R.string.ncp_app_widget_updating)); break;
-            case NO_NETWORK: Utils.toast(context, "无网络连接, 无法获取新冠肺炎的最新数据"); break;
-            case IO_ERROR: Utils.toast(context, "无法获取数据, 请联系作者以解决这个问题"); break;
-            case JSON_ERROR: Utils.toast(context, "无法解析JSON, 请联系作者以解决这个问题"); break;
+            case NO_NETWORK: Utils.toast(context, context.getString(R.string.no_network)); break;
+            case IO_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_data)); break;
+            case JSON_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_json)); break;
             case UNKNOWN:
-            default: Utils.toast(context, "发生了未知错误, 请联系作者: " + result[0].toString()); break;
+            default: Utils.toast(context, context.getString(R.string.unknown_error)); break;
         }
         for (int appWidgetId : appWidgetIds)
         {

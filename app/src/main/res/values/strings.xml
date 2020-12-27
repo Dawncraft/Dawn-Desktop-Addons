@@ -21,25 +21,34 @@
     </string-array>
 
     <string name="wallpaper_name">Memorial live wallpaper</string>
+
+    <string name="ncp_app_widget_config">APP widget config</string>
+    <string name="ncp_search_area">Search area</string>
+
     <string name="ncp_app_widget_title" >nCoV-2019 Statistics</string>
+    <string name="ncp_app_widget_detail">View detail</string>
+    <string name="ncp_app_widget_refresh">Refresh</string>
     <string name="ncp_app_widget_time" >To date:</string>
+    <string name="ncp_app_widget_update_time">Last update:</string>
     <string name="ncp_app_widget_confirm" >Confirm</string>
     <string name="ncp_app_widget_suspect" >Suspect</string>
     <string name="ncp_app_widget_cure" >Cure</string>
     <string name="ncp_app_widget_dead" >Dead</string>
 
-    <string name="none" translatable="false">-</string>
-    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
     <string name="no_network">No Internet connection.</string>
-    <string name="ncp_app_widget_update_time">Last update:</string>
     <string name="ncp_app_widget_updating">Updating, try it later.</string>
-    <string name="ncp_app_widget_refresh">Refresh</string>
+    <string name="ncp_app_widget_no_data">Can\'t get data.</string>
+    <string name="ncp_app_widget_no_json">Can\'t analyse json.</string>
+    <string name="unknown_error">Unknown error occurred.</string>
 
     <string name="channel_name">Set zen mode</string>
     <string name="channel_description">Switch zen mode by click the button on notification</string>
     <string name="zen_mode_switcher">Switch zen mode</string>
     <string name="zen_mode_close">Zen mode is closed</string>
     <string name="zen_mode_open">Zen mode is opened</string>
+
+    <string name="none" translatable="false">-</string>
+    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
 
     <string-array name="value_list">
         <item>0</item>

@@ -6,15 +6,15 @@ android {
         applicationId "io.github.dawncraft.desktopaddons"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 11
-        versionName '2.2.0'
+        versionCode 12
+        versionName '2.3.0'
         vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         lintOptions {
             // 这个Android Studio告诉我Google Play需要目标平台26或以上, 而且还不让我编译
             // WTF???我又不用谷歌...
             // 虽然已经适配最新版本了, 但是我懒得去掉这个选项, 就留着吧
-            checkReleaseBuilds false
+            checkReleaseBuilds true
         }
     }
     buildTypes {

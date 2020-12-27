@@ -40,7 +40,7 @@
             android:layout_weight="0"
             android:background="@color/colorBackgraund"
             android:clickable="true"
-            android:contentDescription="@string/ncp_app_widget_refresh"
+            android:contentDescription="@string/ncp_app_widget_detail"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scaleType="center"

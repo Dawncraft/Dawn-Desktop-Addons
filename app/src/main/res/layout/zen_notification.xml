@@ -1,7 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,17 +11,17 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/TextAppearance.Compat.Notification.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zen_mode_switcher" />
+            android:text="@string/zen_mode_switcher"
+            style="@style/TextAppearance.Compat.Notification.Title" />
 
         <TextView
             android:id="@+id/textViewZen"
-            style="@style/TextAppearance.Compat.Notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/zen_mode_close" />
+            android:text="@string/zen_mode_close"
+            style="@style/TextAppearance.Compat.Notification" />
     </LinearLayout>
 
     <ImageButton

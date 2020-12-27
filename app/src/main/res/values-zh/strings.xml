@@ -6,16 +6,26 @@
     <string name="settings">设置</string>
 
     <string name="wallpaper_name">珍贵的回忆动态桌面</string>
+
+    <string name="ncp_app_widget_config">桌面小部件配置</string>
+    <string name="ncp_search_area">搜索地区</string>
+
     <string name="ncp_app_widget_title">新型冠状病毒肺炎 疫情实时追踪</string>
+    <string name="ncp_app_widget_detail">查看详情</string>
+    <string name="ncp_app_widget_refresh">刷新</string>
     <string name="ncp_app_widget_time">截至: </string>
+    <string name="ncp_app_widget_update_time">上次更新:</string>
     <string name="ncp_app_widget_confirm">现有确诊</string>
     <string name="ncp_app_widget_suspect">疑似病例</string>
     <string name="ncp_app_widget_cure">治愈人数</string>
     <string name="ncp_app_widget_dead">死亡人数</string>
-    <string name="no_network">无网络连接</string>
-    <string name="ncp_app_widget_update_time">上次更新:</string>
+
+    <string name="no_network">无网络连接, 无法获取新冠肺炎的最新数据</string>
     <string name="ncp_app_widget_updating">正在更新中, 不要着急哦~</string>
-    <string name="ncp_app_widget_refresh">刷新</string>
+    <string name="ncp_app_widget_no_data">无法获取数据, 请联系作者以解决这个问题</string>
+    <string name="ncp_app_widget_no_json">无法解析JSON, 请联系作者以解决这个问题</string>
+    <string name="unknown_error">发生了未知错误, 请联系作者</string>
+
     <string name="channel_name">设置勿扰模式</string>
     <string name="channel_description">通过点击通知上的按钮来切换勿扰模式</string>
     <string name="zen_mode_switcher">切换勿扰模式</string>

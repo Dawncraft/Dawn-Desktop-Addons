@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 用于获取并处理新型冠状病毒数据的Model类
@@ -56,6 +57,36 @@ public class NCPInfoModel
     private static long lastUpdateTime = 0;
     private static JSONObject cache = null;
 
+    public static String getSourceUrl(int id)
+    {
+        switch (id)
+        {
+            default:
+            case 0: return NCP_QQ_NEWS;
+            case 1: return NCP_DXY;
+            case 2: return NCP_BAIDU;
+            case 3: return NCP_SOGOU;
+            case 4: return NCP_SINA;
+            case 5: return NCP_ZHIHU;
+            case 6: return NCP_GAODE;
+            case 7: return NCP_PEOPLE;
+            case 8: return NCP_NETEASE;
+            case 9: return NCP_IFENG;
+            case 10: return NCP_TOUTIAO;
+            case 11: return NCP_ALI;
+            case 12: return NCP_UC;
+            case 13: return NCP_GITHUB;
+        }
+    }
+
+    public static JSONObject getDataJSON(int id) throws IOException, JSONException
+    {
+        // 啥, 你问我id有啥用, 我说你这个没用
+        // TODO 序列化JSON
+        String content = Utils.getUrl(NCP_QQ_NEWS_API_GLOBAL);
+        return new JSONObject(content);
+    }
+
     public static EnumResult loadData()
     {
         if (!isUpdating)
@@ -69,8 +100,8 @@ public class NCPInfoModel
                     lastUpdateTime = System.currentTimeMillis();
                     try
                     {
-                        String content = Utils.getUrl(NCP_QQ_NEWS_API_GLOBAL);
-                        cache = new JSONObject(content);
+                        int id = Integer.parseInt(DAApplication.getSharedPreferences().getString("ncp_source", "0"));
+                        cache = getDataJSON(id);
                     }
                     catch (IOException e)
                     {
@@ -108,6 +139,12 @@ public class NCPInfoModel
             Log.e(TAG, "Updating.");
             return EnumResult.UPDATING;
         }
+    }
+
+    public static List<String> getRegions()
+    {
+        // TODO 获取地区列表
+        return null;
     }
 
     public static NCPInfoItem getInfoItem(String region)
@@ -152,28 +189,6 @@ public class NCPInfoModel
         item.cure = stats.getInt("heal");
         item.dead = stats.getInt("dead");
         item.date = Utils.formatDefaultDate(data.getString("lastUpdateTime"));
-    }
-
-    public static String getSourceUrl(int id)
-    {
-        switch (id)
-        {
-            default:
-            case 0: return NCP_QQ_NEWS;
-            case 1: return NCP_DXY;
-            case 2: return NCP_BAIDU;
-            case 3: return NCP_SOGOU;
-            case 4: return NCP_SINA;
-            case 5: return NCP_ZHIHU;
-            case 6: return NCP_GAODE;
-            case 7: return NCP_PEOPLE;
-            case 8: return NCP_NETEASE;
-            case 9: return NCP_IFENG;
-            case 10: return NCP_TOUTIAO;
-            case 11: return NCP_ALI;
-            case 12: return NCP_UC;
-            case 13: return NCP_GITHUB;
-        }
     }
 
     public enum EnumResult
