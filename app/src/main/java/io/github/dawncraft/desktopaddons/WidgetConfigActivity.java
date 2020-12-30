@@ -3,9 +3,12 @@ package io.github.dawncraft.desktopaddons;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import java.util.List;
 public class WidgetConfigActivity extends AppCompatActivity
 {
     private int appWidgetId;
+    private List<String> areaList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,27 +37,61 @@ public class WidgetConfigActivity extends AppCompatActivity
         setResult(RESULT_CANCELED, getResultValue());
         // 初始化视图
         setContentView(R.layout.activity_ncp_app_widget_config);
-        NCPInfoModel.EnumResult result = NCPInfoModel.loadData();
-        if (result != NCPInfoModel.EnumResult.SUCCESS && result != NCPInfoModel.EnumResult.CACHED)
+        final NCPInfoModel.EnumResult[] result = new NCPInfoModel.EnumResult[] { NCPInfoModel.EnumResult.UNKNOWN };
+        try
         {
-            Utils.toast(this, "无法读取疫情数据" + result.toString());
+            Thread thread = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    result[0] = NCPInfoModel.loadData();
+                }
+            });
+            thread.start();
+            thread.join();
+        }
+        catch (InterruptedException ignored) {}
+        NCPAppWidget.printResult(this, result[0]);
+        if (result[0] != NCPInfoModel.EnumResult.SUCCESS && result[0] != NCPInfoModel.EnumResult.CACHED)
+        {
             finish();
             return;
         }
-        List<String> areaList = NCPInfoModel.getRegions();
+        areaList = NCPInfoModel.getRegions();
+        if (areaList == null || areaList.isEmpty())
+        {
+            Utils.toast(this, "获取地区列表失败");
+            finish();
+            return;
+        }
+        Button button = findViewById(R.id.buttonConfirm);
+        button.setEnabled(false);
         ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, areaList.toArray(new String[0]));
+                android.R.layout.simple_list_item_single_choice, areaList.toArray(new String[0]));
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteTextView.setAdapter(listAdapter);
+        autoCompleteTextView.setThreshold(1);
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
-        // TODO 点击
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                parent.setSelection(position);
+                button.setEnabled(true);
+            }
+        });
     }
 
     public void onButtonClicked(View v)
     {
         if (v.getId() == R.id.buttonConfirm)
         {
+            ListView listView = findViewById(R.id.listView);
+            String area = areaList.get(listView.getCheckedItemPosition());
+            // TODO 用ContentProvider保存APPWidget的id和area
             setResult(RESULT_OK, getResultValue());
             finish();
         }

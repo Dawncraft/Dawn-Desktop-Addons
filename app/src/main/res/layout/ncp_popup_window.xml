@@ -15,13 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorBackgraund"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:singleLine="true"
             android:text=""
-            android:background="@color/colorBackgraund"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/widget_title_size"
-            android:singleLine="true" />
+            android:textSize="@dimen/widget_title_size" />
 
         <ImageButton
             android:id="@+id/imageButtonClose"
@@ -29,13 +29,13 @@
             android:layout_height="match_parent"
             android:layout_weight="0"
             android:background="@color/colorBackgraund"
+            android:contentDescription="@android:string/cancel"
             android:scaleType="centerInside"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:contentDescription="@android:string/cancel" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/webView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

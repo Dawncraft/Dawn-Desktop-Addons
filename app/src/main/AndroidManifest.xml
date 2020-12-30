@@ -40,6 +40,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".NCPDetailActivity">
+        </activity>
+
         <service
             android:name=".DawnLiveWallpaper"
             android:enabled="true"
@@ -77,6 +81,13 @@
                 <action android:name="desktopaddons.intent.action.SWITCH_ZEN_MODE" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name=".WidgetIDProvider"
+            android:authorities="io.github.dawncraft.desktopaddons.WidgetIDProvider"
+            android:exported="false">
+
+        </provider>
 
     </application>
 

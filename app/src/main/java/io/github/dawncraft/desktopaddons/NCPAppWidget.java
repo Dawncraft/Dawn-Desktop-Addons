@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -47,9 +48,12 @@ public class NCPAppWidget extends AppWidgetProvider
         if (ACTION_DETAILS.equals(action))
         {
             Log.d(TAG, "Action open");
-            // TODO 自己写详情页
             int id = Integer.parseInt(DAApplication.getSharedPreferences().getString("ncp_source", "0"));
-            Utils.openUrl(context, NCPInfoModel.getSourceUrl(id));
+            String url = NCPInfoModel.getSourceUrl(id);
+            Intent newIntent = new Intent(context, NCPDetailActivity.class);
+            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            newIntent.putExtra("url", url);
+            context.startActivity(newIntent);
         }
         else if (ACTION_REFRESH.equals(action))
         {
@@ -84,18 +88,7 @@ public class NCPAppWidget extends AppWidgetProvider
             thread.join();
         }
         catch (InterruptedException ignored) {}
-        switch (result[0])
-        {
-            case SUCCESS:
-            case CACHED:
-                break;
-            case UPDATING: Utils.toast(context, context.getString(R.string.ncp_app_widget_updating)); break;
-            case NO_NETWORK: Utils.toast(context, context.getString(R.string.no_network)); break;
-            case IO_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_data)); break;
-            case JSON_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_json)); break;
-            case UNKNOWN:
-            default: Utils.toast(context, context.getString(R.string.unknown_error)); break;
-        }
+        printResult(context, result[0]);
         for (int appWidgetId : appWidgetIds)
         {
             updateAppWidget(context, appWidgetManager, appWidgetId);
@@ -103,7 +96,7 @@ public class NCPAppWidget extends AppWidgetProvider
         pendingResult.finish();
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
+    static private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
     {
         NCPInfoItem item = NCPInfoModel.getInfoItem("");
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.ncp_app_widget);
@@ -133,5 +126,21 @@ public class NCPAppWidget extends AppWidgetProvider
         PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    static public void printResult(Context context, NCPInfoModel.EnumResult result)
+    {
+        switch (result)
+        {
+            case SUCCESS:
+            case CACHED:
+                break;
+            case UPDATING: Utils.toast(context, context.getString(R.string.ncp_app_widget_updating)); break;
+            case NO_NETWORK: Utils.toast(context, context.getString(R.string.no_network)); break;
+            case IO_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_data)); break;
+            case JSON_ERROR: Utils.toast(context, context.getString(R.string.ncp_app_widget_no_json)); break;
+            case UNKNOWN:
+            default: Utils.toast(context, context.getString(R.string.unknown_error)); break;
+        }
     }
 }

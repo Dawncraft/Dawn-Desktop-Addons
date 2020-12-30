@@ -7,6 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -144,7 +147,7 @@ public class NCPInfoModel
     public static List<String> getRegions()
     {
         // TODO 获取地区列表
-        return null;
+        return Collections.singletonList("中国");
     }
 
     public static NCPInfoItem getInfoItem(String region)
