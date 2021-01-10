@@ -33,7 +33,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.12'
+    // okhttp 3.12.x支持Android 2.3+(API 9+)
+    // 新版只支持 Android 5.0+(API 21+)
+    // 详见https://blog.csdn.net/u011733020/article/details/103671108
     implementation 'org.conscrypt:conscrypt-android:2.5.1'
     implementation 'site.hanschen:glwallpaperservice:0.1.0'
     implementation 'androidx.preference:preference:1.1.1'
