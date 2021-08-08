@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.github.dawncraft.desktopaddons">
 
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -13,42 +14,60 @@
     <uses-feature android:name="android.software.live_wallpaper" />
 
     <application
-        android:allowBackup="false"
+        android:name=".DAApplication"
         android:label="@string/app_name"
         android:icon="@drawable/app_icon"
         android:roundIcon="@drawable/app_icon_round"
         android:theme="@style/AppTheme"
-        android:name=".DAApplication"
         android:supportsRtl="true"
+        android:allowBackup="false"
         android:launchMode="singleInstance"
         android:excludeFromRecents="true">
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/settings"
-            android:launchMode="singleTask">
+            android:name=".ui.MainActivity"
+            android:label="@string/activity_settings"
+            android:launchMode="singleTask"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
             </intent-filter>
         </activity>
 
+        <activity-alias
+            android:name=".ui.MainActivityAlias"
+            android:label="@string/app_name"
+            android:targetActivity=".ui.MainActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
-            android:name=".WidgetConfigActivity"
-            android:label="@string/ncp_app_widget_config">
+            android:name=".ui.NCPAppWidgetConfigActivity"
+            android:label="@string/ncp_app_widget_config"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".NCPDetailActivity">
+            android:name=".ui.WebViewActivity"
+            android:taskAffinity="io.github.dawncraft.desktopaddons.WebViewActivity">
         </activity>
+        <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
 
         <service
-            android:name=".DawnLiveWallpaper"
-            android:enabled="true"
+            android:name=".wallpaper.DawnLiveWallpaper"
             android:label="@string/wallpaper_name"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -59,8 +78,37 @@
                 android:resource="@xml/livewallpaper" />
         </service>
 
+        <service
+            android:name=".quicksetting.ShowLayoutTile"
+            android:label="@string/show_layout_border"
+            android:icon="@drawable/ic_border_all"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
+
         <receiver
-            android:name=".NCPAppWidget">
+            android:name=".appwidget.SentenceAppWidget"
+            android:label="@string/sentence_app_widget_name"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="desktopaddons.intent.action.REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_sentence" />
+        </receiver>
+
+        <receiver
+            android:name=".appwidget.NCPAppWidget"
+            android:label="@string/ncp_app_widget_name"
+            android:exported="false">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -70,11 +118,11 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/ncp_app_widget_info" />
+                android:resource="@xml/app_widget_ncp_info" />
         </receiver>
 
         <receiver
-            android:name=".ScreenBroadcastReceiver"
+            android:name=".broadcast.ZenModeBroadcastReceiver"
             android:exported="false">
 
             <intent-filter>
@@ -82,13 +130,10 @@
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name=".WidgetIDProvider"
-            android:authorities="io.github.dawncraft.desktopaddons.WidgetIDProvider"
-            android:exported="false">
-
-        </provider>
-
     </application>
+
+    <queries>
+        <package android:name="com.tencent.mobileqq" />
+    </queries>
 
 </manifest>

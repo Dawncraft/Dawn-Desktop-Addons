@@ -1,12 +1,10 @@
 package io.github.dawncraft.desktopaddons;
 
-import android.util.Log;
-
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.junit.Assert.*;
+import io.github.dawncraft.desktopaddons.model.NCPInfoModel;
+import io.github.dawncraft.desktopaddons.util.HttpUtils;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -15,10 +13,24 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest
 {
-    @Test
-    public void get_nCoV_data()
+    @Before
+    public void init()
     {
-        Map data = Utils.getnCoVData();
-        System.out.println(data);
+        HttpUtils.testInit();
+    }
+
+    // NOTE 单元测试老子不写了, 略略略
+    @Test
+    public void NCPInfoTest()
+    {
+        NCPInfoModel ncpInfoModel = new NCPInfoModel();
+        ncpInfoModel.getAllInfo((result, infoTree) ->
+        {
+            System.out.println(result);
+        });
+        ncpInfoModel.getRegionInfo("中国", (result, info) ->
+        {
+            System.out.println(result);
+        });
     }
 }

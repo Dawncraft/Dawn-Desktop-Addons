@@ -3,14 +3,101 @@
     <string name="app_name">桌面小部件</string>
     <string name="app_author">由曙光工艺工作室维护</string>
 
-    <string name="settings">设置</string>
+    <string name="activity_settings">设置</string>
+    <string name="developer_say">开发者的废话</string>
+    <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
+    <string name="hide_app_icon">隐藏桌面图标</string>
+    <string name="hide_app_icon_summary">对Android10以上系统无效, 隐藏后可以从应用设置页或者ADB命令打开</string>
+    <string name="settings_wallpaper">动态壁纸</string>
+    <string name="wallpaper_scene_setting">场景设置</string>
+    <string name="wallpaper_scene_setting_summary">然而并没有什么卵用</string>
+    <string name="settings_app_widget">桌面小部件</string>
+    <string name="sentence_list">提交你的句子</string>
+    <string name="sentence_list_summary">向曙光工艺服务器提交你的句子(需要登录)</string>
+    <string name="sentence_source">设置一言小部件句子来源</string>
+    <string name="sentence_source_summary">开启后会使用一言的句子而不是我自己的句子(只影响桌面小部件)</string>
+    <string name="ncp_data_source">设置新冠肺炎小部件数据源(只会影响打开的网页)</string>
+    <string-array name="ncp_data_sources">
+        <item>腾讯新闻</item>
+        <item>丁香园·丁香医生</item>
+        <item>百度</item>
+        <item>搜狗</item>
+        <item>新浪微博</item>
+        <item>知乎</item>
+        <item>高德地图</item>
+        <item>人民网</item>
+        <item>网易新闻</item>
+        <item>凤凰网</item>
+        <item>今日头条</item>
+        <item>阿里健康</item>
+        <item>UC</item>
+        <item>GitHub仓库</item>
+    </string-array>
+    <string name="settings_notification">锁屏小部件</string>
+    <string name="enable_zen_mode_switch">是否启用勿扰模式开关</string>
+    <string name="enable_zen_mode_switch_summary">重启应用后生效</string>
+    <string name="notification_policy_access_permission">打开勿扰模式权限设置</string>
+    <string name="no_notification_policy_access_permission">该功能需要手动授予修改勿扰模式的权限, 点击打开设置</string>
+    <string name="has_notification_policy_access_permission">您已授予修改勿扰模式的权限</string>
+    <string name="settings_user">曙光工艺账户</string>
+    <string name="user_not_log_in">未登录</string>
+    <string name="user_log_in_summary">登录账号以同步个人设置或上传句子</string>
+    <string name="user_logout">您已登录, 点击退出登录</string>
+    <string name="user_logout_confirm">你确定要退出登录吗?</string>
+    <string name="settings_about">关于</string>
+    <string name="check_update">点击检查更新</string>
+    <string name="no_update">版本: %s 当前是最新版本</string>
+    <string name="has_update">版本: %s 发现更新: %s</string>
+    <string name="visit_github">访问本项目的GitHub仓库</string>
+    <string name="visit_github_summary">来我们的GitHub看看吧</string>
+    <string name="library_licenses">第三方库协议</string>
+    <string name="library_licenses_summary">没用啥第三方库, 自己看去吧</string>
+
+    <string name="fragment_wallpaper">动态壁纸设置</string>
+
+    <string name="fragment_sentence">句子列表</string>
+    <string name="get_sentences_failed">加载句子失败, 请重试</string>
+    <string name="no_more_sentences">没有更多句子啦</string>
+    <string name="add_sentence">添加句子</string>
+    <string name="sentence_need_login">登录后才能提交句子哦~</string>
+    <string name="sentence">句子</string>
+    <string name="sentence_author">作者</string>
+    <string name="sentence_from">来源(可选)</string>
+    <string name="sentence_agreement">提交句子即视为您同意我们的用户协议</string>
+
+    <string name="fragment_login">登录</string>
+    <string name="account">邮箱</string>
+    <string name="password">密码</string>
+    <string name="forget_password">忘记密码? 找回密码</string>
+    <string name="find_password">找回密码</string>
+    <string name="login">登录</string>
+    <string name="third_login">使用第三方账号登录</string>
+    <string name="login_use_qq">QQ</string>
+    <string name="login_use_wechat">WeChat</string>
+    <string name="logging_in">正在登录中...</string>
+    <string name="login_success">成功登录</string>
+    <string name="already_login">您已登录</string>
+    <string name="invalid_account">请输入邮箱</string>
+    <string name="invalid_password">请输入密码</string>
+    <string name="wrong_user_or_password">用户不存在或密码错误</string>
+    <string name="login_error">登录时发生未知错误</string>
+
+    <string name="ncp_app_widget_config">选择地区</string>
+    <string name="invalid_app_widget">无效的桌面小部件</string>
+    <string name="get_area_list_failed">获取地区列表失败</string>
+    <string name="search_area">搜索地区</string>
+    <string name="view_subarea">浏览子地区</string>
+
+    <string name="invalid_url">无效的网址</string>
+    <string name="open_in_browser">在浏览器中打开</string>
 
     <string name="wallpaper_name">珍贵的回忆动态桌面</string>
-
-    <string name="ncp_app_widget_config">桌面小部件配置</string>
-    <string name="ncp_search_area">搜索地区</string>
-
+    <string name="show_layout_border">显示布局边界</string>
+    <string name="sentence_app_widget_name">一言</string>
+    <string name="sentence_get_failed">获取句子失败, 点击重试</string>
+    <string name="ncp_app_widget_name">新冠肺炎疫情统计</string>
     <string name="ncp_app_widget_title">新型冠状病毒肺炎 疫情实时追踪</string>
+    <string name="ncp_app_widget_region">新冠肺炎疫情追踪 - %s</string>
     <string name="ncp_app_widget_detail">查看详情</string>
     <string name="ncp_app_widget_refresh">刷新</string>
     <string name="ncp_app_widget_time">截至: </string>
@@ -19,17 +106,13 @@
     <string name="ncp_app_widget_suspect">疑似病例</string>
     <string name="ncp_app_widget_cure">治愈人数</string>
     <string name="ncp_app_widget_dead">死亡人数</string>
-
-    <string name="no_network">无网络连接, 无法获取新冠肺炎的最新数据</string>
-    <string name="ncp_app_widget_updating">正在更新中, 不要着急哦~</string>
-    <string name="ncp_app_widget_no_data">无法获取数据, 请联系作者以解决这个问题</string>
-    <string name="ncp_app_widget_no_json">无法解析JSON, 请联系作者以解决这个问题</string>
-    <string name="unknown_error">发生了未知错误, 请联系作者</string>
-
-    <string name="channel_name">设置勿扰模式</string>
-    <string name="channel_description">通过点击通知上的按钮来切换勿扰模式</string>
-    <string name="zen_mode_switcher">切换勿扰模式</string>
+    <string name="zen_mode_channel_name">设置勿扰模式</string>
+    <string name="zen_mode_channel_desc">通过点击通知上的按钮来切换勿扰模式</string>
+    <string name="zen_mode_switch">切换勿扰模式</string>
     <string name="zen_mode_close">勿扰模式已关闭</string>
     <string name="zen_mode_open">勿扰模式已开启</string>
+
+    <string name="no_network">无网络连接, 无法获取新冠肺炎的最新数据</string>
+    <string name="unknown_error">发生了未知错误, 请联系作者</string>
 
 </resources>

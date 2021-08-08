@@ -11,37 +11,45 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.preference.PreferenceManager;
+import androidx.room.Room;
+
+import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
+import io.github.dawncraft.desktopaddons.model.NCPDataSource;
+import io.github.dawncraft.desktopaddons.util.HttpUtils;
 
 /**
- * 曙光桌面小工具APP
+ * 曙光桌面小部件APP
  *
  * @author QingChenW (Wu Chen)
  */
 public class DAApplication extends Application
 {
-    private static Context instance;
     private static SharedPreferences sharedPreferences;
+    private static DADatabase database;
 
-    private ScreenBroadcastReceiver screenReceiver;
+    private ZenModeBroadcastReceiver zenModeBroadcastReceiver;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        instance = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean zenMode = sharedPreferences.getBoolean("zen_mode", false);
-
+        database = Room.databaseBuilder(getApplicationContext(), DADatabase.class, "db")
+                .allowMainThreadQueries()
+                // .enableMultiInstanceInvalidation()
+                .build();
+        NCPDataSource.loadNamesFromRes(this);
+        HttpUtils.init(this);
         createNotificationChannel();
+        boolean zenMode = sharedPreferences.getBoolean("zen_mode_switch", false);
         if (zenMode)
         {
-            screenReceiver = new ScreenBroadcastReceiver();
+            zenModeBroadcastReceiver = new ZenModeBroadcastReceiver();
             IntentFilter filter = new IntentFilter();
-            filter.addAction(Intent.ACTION_SCREEN_OFF);
-            filter.addAction(Intent.ACTION_SCREEN_ON);
             filter.addAction(Intent.ACTION_USER_PRESENT);
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
             // filter.addAction(ScreenBroadcastReceiver.ACTION_SWITCH);
-            instance.registerReceiver(screenReceiver, filter);
+            registerReceiver(zenModeBroadcastReceiver, filter);
         }
     }
 
@@ -49,23 +57,24 @@ public class DAApplication extends Application
     public void onTerminate()
     {
         super.onTerminate();
-        if (screenReceiver != null)
+        if (zenModeBroadcastReceiver != null)
         {
-            instance.unregisterReceiver(screenReceiver);
-            screenReceiver = null;
+            unregisterReceiver(zenModeBroadcastReceiver);
+            zenModeBroadcastReceiver = null;
         }
         sharedPreferences = null;
-        instance = null;
     }
 
     private void createNotificationChannel()
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(ScreenBroadcastReceiver.CHANNEL_ID, name, importance);
+            NotificationManager notificationManager = (NotificationManager)
+                    getSystemService(Context.NOTIFICATION_SERVICE);
+            CharSequence name = getString(R.string.zen_mode_channel_name);
+            String description = getString(R.string.zen_mode_channel_desc);
+            NotificationChannel channel = new NotificationChannel(
+                    ZenModeBroadcastReceiver.CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(description);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             channel.setSound(null, null);
@@ -73,18 +82,17 @@ public class DAApplication extends Application
             channel.enableLights(false);
             channel.setBypassDnd(true);
             channel.setShowBadge(false);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);
         }
     }
 
-    public static Context getInstance()
-    {
-        return instance;
-    }
-
-    public static SharedPreferences getSharedPreferences()
+    public static SharedPreferences getPreferences()
     {
         return sharedPreferences;
+    }
+
+    public static DADatabase getDatabase()
+    {
+        return database;
     }
 }

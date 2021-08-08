@@ -3,4 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/wallpaper_name"
     android:settingsActivity=""
-    android:thumbnail="@drawable/livewallpaper"/>
+    android:thumbnail="@drawable/livewallpaper_preview"/>

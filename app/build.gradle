@@ -9,13 +9,18 @@ android {
         versionCode 13
         versionName '3.0.0'
         vectorDrawables.useSupportLibrary true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
         lintOptions {
             // 这个Android Studio告诉我Google Play需要目标平台26或以上, 而且还不让我编译
             // WTF???我又不用谷歌...
             // 虽然已经适配最新版本了, 但是我懒得去掉这个选项, 就留着吧
             checkReleaseBuilds true
         }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -31,13 +36,26 @@ android {
 }
 
 dependencies {
+    def work_version = "2.5.0"
+    def room_version = "2.3.0"
+    def nav_version = "2.3.5"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation "androidx.work:work-runtime:$work_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.github.alidili:RecyclerViewHelper:1.1.5'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'org.conscrypt:conscrypt-android:2.5.1'
-    implementation 'site.hanschen:glwallpaperservice:0.1.0'
-    testImplementation 'junit:junit:4.13.1'
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
+    implementation 'site.hanschen:glwallpaperservice:0.1.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "androidx.room:room-testing:$room_version"
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation "androidx.work:work-testing:$work_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 }

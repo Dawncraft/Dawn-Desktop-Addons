@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#2196F3</color>
-    <color name="colorAccent">#FF9800</color>
+    <color name="colorAccent">#2E7D32</color>
 
-    <color name="colorBackgraund">#005DFF</color>
+    <color name="colorBackground">#005DFF</color>
     <color name="colorConfirm">#D81D1B</color>
-    <color name="colorSuspect">#F7AB1A</color>
+    <color name="colorSuspect">#FF7300</color>
     <color name="colorCure">#478B50</color>
     <color name="colorDead">#66666C</color>
 </resources>

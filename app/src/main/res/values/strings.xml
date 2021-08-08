@@ -2,54 +2,120 @@
     <string name="app_name">Desktop Addons</string>
     <string name="app_author">Maintained by Dawncraft Studio</string>
 
-    <string name="settings">Settings</string>
+    <string name="activity_settings">Settings</string>
+    <string name="developer_say">Developer want to say</string>
+    <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
+    <!-- 请原谅我的中式英语(笑 -->
+    <string name="hide_app_icon">Hide app icon</string>
+    <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
+    <string name="settings_wallpaper">Live wallpaper</string>
+    <string name="wallpaper_scene_setting">Scene settings</string>
+    <string name="wallpaper_scene_setting_summary">There is nothing</string>
+    <string name="settings_app_widget">APP widget</string>
+    <string name="sentence_list">Submit your sentences</string>
+    <string name="sentence_list_summary">Submit your sentences to Dawncraft server (Login needed)</string>
+    <string name="sentence_source">Set sentence source for sentence widget</string>
+    <string name="sentence_source_summary">Will use hitokoto instead of mine if enabled (Only affect sentence widget)</string>
+    <string name="ncp_data_source">Set data source for NCP widget (Only affect website)</string>
     <string-array name="ncp_data_sources">
-        <item>腾讯新闻</item>
-        <item>丁香园·丁香医生</item>
-        <item>百度</item>
-        <item>搜狗</item>
-        <item>新浪微博</item>
-        <item>知乎</item>
-        <item>高德地图</item>
-        <item>人民网</item>
-        <item>网易新闻</item>
-        <item>凤凰网</item>
-        <item>今日头条</item>
-        <item>阿里健康</item>
+        <item>Tencent News</item>
+        <item>DXY·DX Doctor</item>
+        <item>Baidu</item>
+        <item>Sogou</item>
+        <item>Sina Weibo</item>
+        <item>Zhihu</item>
+        <item>Gaode Map</item>
+        <item>People</item>
+        <item>Netease News</item>
+        <item>Ifeng</item>
+        <item>Toutiao</item>
+        <item>Ali health</item>
         <item>UC</item>
-        <item>GitHub仓库</item>
+        <item>GitHub</item>
     </string-array>
+    <string name="settings_notification">Notification widget</string>
+    <string name="enable_zen_mode_switch">Enable zen mode switch</string>
+    <string name="enable_zen_mode_switch_summary">Restart app to apply</string>
+    <string name="notification_policy_access_permission">Open notification policy access settings</string>
+    <string name="no_notification_policy_access_permission">Have no permission, click to open settings</string>
+    <string name="has_notification_policy_access_permission">Have permission</string>
+    <string name="settings_user">Dawncraft user</string>
+    <string name="user_not_log_in">Not log in</string>
+    <string name="user_log_in_summary">Log in to sync settings and submit your sentences</string>
+    <string name="user_logout">Click to log out</string>
+    <string name="user_logout_confirm">Are you sure to log out?</string>
+    <string name="settings_about">About</string>
+    <string name="check_update">Click to check update</string>
+    <string name="no_update">Version: %s Up to date</string>
+    <string name="has_update">Version: %s Found update: %s</string>
+    <string name="visit_github">Visit GitHub</string>
+    <string name="visit_github_summary">Come to see our GitHub</string>
+    <string name="library_licenses">Third library licenses</string>
+    <string name="library_licenses_summary">Click to view</string>
+
+    <string name="fragment_wallpaper">Wallpaper settings</string>
+
+    <string name="fragment_sentence">Sentence list</string>
+    <string name="get_sentences_failed">Can\'t get sentences</string>
+    <string name="no_more_sentences">No more sentences</string>
+    <string name="add_sentence">Add sentence</string>
+    <string name="sentence_need_login">You must login to submit sentences</string>
+    <string name="sentence">Sentence</string>
+    <string name="sentence_author">Author</string>
+    <string name="sentence_from">From(Optional)</string>
+    <string name="sentence_agreement">提交句子即视为您同意了我们的用户协议</string>
+
+    <string name="fragment_login">Log in</string>
+    <string name="account">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget password? Find it.</string>
+    <string name="find_password">Find it</string>
+    <string name="login">Login</string>
+    <string name="third_login">Use third login</string>
+    <string name="login_use_qq">QQ</string>
+    <string name="login_use_wechat">WeChat</string>
+    <string name="logging_in">Logging in, please wait</string>
+    <string name="login_success">Log in successfully</string>
+    <string name="already_login">Already log in</string>
+    <string name="invalid_account">Please input email</string>
+    <string name="invalid_password">Please input password</string>
+    <string name="wrong_user_or_password">Wrong user or password</string>
+    <string name="login_error">Unknown error</string>
+
+    <string name="ncp_app_widget_config">Select region</string>
+    <string name="invalid_app_widget">Invalid APP widget ID</string>
+    <string name="get_area_list_failed">Get area list failed</string>
+    <string name="search_area">Search area</string>
+    <string name="view_subarea">View subarea</string>
+
+    <string name="invalid_url">Invalid url</string>
+    <string name="open_in_browser">Open in browser</string>
 
     <string name="wallpaper_name">Memorial live wallpaper</string>
-
-    <string name="ncp_app_widget_config">APP widget config</string>
-    <string name="ncp_search_area">Search area</string>
-
-    <string name="ncp_app_widget_title" >nCoV-2019 Statistics</string>
+    <string name="show_layout_border">Show layout border</string>
+    <string name="sentence_app_widget_name">Sentence</string>
+    <string name="sentence_get_failed">Can\'t get sentence. Click to retry.</string>
+    <string name="ncp_app_widget_name">COVID-19 Stats</string>
+    <string name="ncp_app_widget_title">COVID-19 Statistics</string>
+    <string name="ncp_app_widget_region">COVID-19 Stats - %s</string>
     <string name="ncp_app_widget_detail">View detail</string>
     <string name="ncp_app_widget_refresh">Refresh</string>
-    <string name="ncp_app_widget_time" >To date:</string>
+    <string name="ncp_app_widget_time">To date:</string>
     <string name="ncp_app_widget_update_time">Last update:</string>
-    <string name="ncp_app_widget_confirm" >Confirm</string>
-    <string name="ncp_app_widget_suspect" >Suspect</string>
-    <string name="ncp_app_widget_cure" >Cure</string>
-    <string name="ncp_app_widget_dead" >Dead</string>
-
-    <string name="no_network">No Internet connection.</string>
-    <string name="ncp_app_widget_updating">Updating, try it later.</string>
-    <string name="ncp_app_widget_no_data">Can\'t get data.</string>
-    <string name="ncp_app_widget_no_json">Can\'t analyse json.</string>
-    <string name="unknown_error">Unknown error occurred.</string>
-
-    <string name="channel_name">Set zen mode</string>
-    <string name="channel_description">Switch zen mode by click the button on notification</string>
-    <string name="zen_mode_switcher">Switch zen mode</string>
+    <string name="ncp_app_widget_confirm">Confirm</string>
+    <string name="ncp_app_widget_suspect">Suspect</string>
+    <string name="ncp_app_widget_cure">Cure</string>
+    <string name="ncp_app_widget_dead">Dead</string>
+    <string name="zen_mode_channel_name">Zen mode switch notification</string>
+    <string name="zen_mode_channel_desc">Switch zen mode by click the button on notification</string>
+    <string name="zen_mode_switch">Switch zen mode</string>
     <string name="zen_mode_close">Zen mode is closed</string>
     <string name="zen_mode_open">Zen mode is opened</string>
 
-    <string name="none" translatable="false">-</string>
-    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
+    <string name="no_network">No Internet connection.</string>
+    <string name="unknown_error">An unknown error occurred.</string>
 
+    <!-- Don't translate these text. -->
     <string-array name="value_list">
         <item>0</item>
         <item>1</item>
@@ -68,5 +134,7 @@
         <item>14</item>
         <item>15</item>
     </string-array>
+    <string name="none" translatable="false">-</string>
+    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
 
 </resources>

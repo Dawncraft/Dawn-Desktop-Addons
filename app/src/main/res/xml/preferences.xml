@@ -4,48 +4,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        android:title="开发者的废话"
-        android:summary="受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置"
+        android:title="@string/developer_say"
+        android:summary="@string/developer_say_what"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        android:key="hide_app_icon"
+        android:title="@string/hide_app_icon"
+        android:summary="@string/hide_app_icon_summary"
+        android:defaultValue="false"
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory
-        android:title="动态壁纸"
+        android:title="@string/settings_wallpaper"
         app:iconSpaceReserved="false">
 
         <Preference
-            android:title="场景设置"
-            android:summary="然而并没有什么卵用"
+            android:key="wallpaper_scene"
+            android:title="@string/wallpaper_scene_setting"
+            android:summary="@string/wallpaper_scene_setting_summary"
+            app:fragment="io.github.dawncraft.desktopaddons.ui.WallpaperFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="桌面小部件"
+        android:title="@string/settings_app_widget"
         app:iconSpaceReserved="false">
 
+        <Preference
+            android:key="sentence_list"
+            android:title="@string/sentence_list"
+            android:summary="@string/sentence_list_summary"
+            app:fragment="io.github.dawncraft.desktopaddons.ui.SentenceFragment"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:key="sentence_source"
+            android:title="@string/sentence_source"
+            android:summary="@string/sentence_source_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
         <ListPreference
-            android:key="ncp_source"
-            android:defaultValue="0"
+            android:key="ncp_data_source"
+            android:title="@string/ncp_data_source"
             android:entries="@array/ncp_data_sources"
             android:entryValues="@array/value_list"
-            android:title="设置新冠肺炎数据源(只会影响打开的网页)"
+            android:defaultValue="0"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="锁屏小部件"
+        android:title="@string/settings_notification"
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
-            android:key="zen_mode"
-            android:title="是否启用勿扰模式开关"
-            android:summary="重启应用后生效"
+            android:key="zen_mode_switch"
+            android:title="@string/enable_zen_mode_switch"
+            android:summary="@string/enable_zen_mode_switch_summary"
             android:defaultValue="false"
             app:iconSpaceReserved="false" />
+        <!-- TODO 动态注册/注销广播, 无须重启应用 -->
 
         <Preference
-            android:key="permission"
-            android:title="打开勿扰模式权限设置"
+            android:key="notification_policy_access_permission"
+            android:title="@string/notification_policy_access_permission"
             app:isPreferenceVisible="false"
             app:iconSpaceReserved="false">
 
@@ -54,7 +78,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="关于"
+        android:title="@string/settings_user"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="user"
+            android:title="@string/user_not_log_in"
+            android:summary="@string/user_log_in_summary"
+            app:icon="@drawable/ic_person" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_about"
         app:iconSpaceReserved="false" >
 
         <Preference
@@ -63,14 +98,13 @@
             app:iconSpaceReserved="false" />
 
         <Preference
-            android:key="version"
-            android:title="版本"
-            android:summary="点击检查更新(不, 我没写)"
+            android:key="check_update"
+            android:title="@string/check_update"
             app:iconSpaceReserved="false" />
 
         <Preference
-            android:title="访问本项目的GitHub仓库"
-            android:summary="来我们的GitHub看看吧"
+            android:title="@string/visit_github"
+            android:summary="@string/visit_github_summary"
             app:iconSpaceReserved="false">
 
             <intent
@@ -79,8 +113,8 @@
         </Preference>
 
         <Preference
-            android:title="第三方库协议"
-            android:summary="没用啥第三方库, 自己看去吧"
+            android:title="@string/library_licenses"
+            android:summary="@string/library_licenses_summary"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
