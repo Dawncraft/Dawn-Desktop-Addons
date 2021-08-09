@@ -45,7 +45,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scaleType="center"
-            android:src="@drawable/ic_open"
+            android:src="@mipmap/ic_open"
             android:tint="@android:color/white"
             tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 
@@ -60,7 +60,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_refresh"
+            android:src="@mipmap/ic_refresh"
             android:tint="@android:color/white"
             tools:ignore="UseAppTint,TouchTargetSizeCheck" />
 

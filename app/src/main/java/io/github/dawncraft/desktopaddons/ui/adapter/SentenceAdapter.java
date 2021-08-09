@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.dawncraft.desktopaddons.R;
@@ -20,7 +21,7 @@ public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public SentenceAdapter()
     {
-        sentences = new ArrayList<>();
+        sentences = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void addAll(List<Sentence> list)
@@ -53,7 +54,8 @@ public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         {
             ViewHolder sentenceViewHolder = (ViewHolder) holder;
             Sentence sentence = sentences.get(position);
-            sentenceViewHolder.getTextViewSentence().setText(sentence.getSentence());
+            String text = String.format("%s. %s", sentence.getId(), sentence.getSentence());
+            sentenceViewHolder.getTextViewSentence().setText(text);
         }
     }
 

@@ -38,6 +38,7 @@ public class SentenceFragment extends Fragment
     private LoadMoreWrapper loadMoreWrapper;
 
     private SentenceModel sentenceModel;
+    private boolean isLoading = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -64,7 +65,6 @@ public class SentenceFragment extends Fragment
             @Override
             public void onLoadMore()
             {
-                loadMoreWrapper.setLoadStateNotify(loadMoreWrapper.LOADING);
                 loadMoreSentences();
             }
         });
@@ -102,17 +102,17 @@ public class SentenceFragment extends Fragment
                                             @Override
                                             public void onResult(boolean success, String message)
                                             {
+                                                if (success)
+                                                {
+                                                    sentenceAdapter.clear();
+                                                    loadMoreSentences();
+                                                }
                                                 recyclerViewSentences.post(new Runnable()
                                                 {
                                                     @Override
                                                     public void run()
                                                     {
                                                         Utils.toast(getContext(), message);
-                                                        if (success)
-                                                        {
-                                                            clearAllSentences();
-                                                            loadMoreSentences();
-                                                        }
                                                     }
                                                 });
                                             }
@@ -136,12 +136,16 @@ public class SentenceFragment extends Fragment
 
     public void loadMoreSentences()
     {
+        if (isLoading) return;
+        isLoading = true;
+        notifySentencesChanged(loadMoreWrapper.LOADING);
         sentenceModel.getSentences(sentenceAdapter.getItemCount(), COUNT_PER_PAGE,
             new SentenceModel.OnSentencesListener()
             {
                 @Override
                 public void onSentences(List<Sentence> sentences)
                 {
+                    isLoading = false;
                     if (sentences == null)
                     {
                         recyclerViewSentences.post(new Runnable()
@@ -164,12 +168,6 @@ public class SentenceFragment extends Fragment
                     notifySentencesChanged(loadMoreWrapper.LOADING_COMPLETE);
                 }
             });
-    }
-
-    private void clearAllSentences()
-    {
-        sentenceAdapter.clear();
-        notifySentencesChanged(loadMoreWrapper.LOADING_COMPLETE);
     }
 
     private void notifySentencesChanged(int loadingState)

@@ -7,7 +7,7 @@
     android:resizeMode="horizontal"
     android:minWidth="250dp"
     android:minHeight="40dp"
-    android:previewImage="@drawable/app_widget_ncp_info_preview"
+    android:previewImage="@mipmap/app_widget_ncp_info_preview"
     android:updatePeriodMillis="21600000"
     android:configure="io.github.dawncraft.desktopaddons.ui.NCPAppWidgetConfigActivity"
     tools:ignore="UnusedAttribute" />
