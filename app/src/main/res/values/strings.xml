@@ -62,6 +62,8 @@
     <string name="sentence">Sentence: </string>
     <string name="sentence_author">Author: </string>
     <string name="sentence_from">From: </string>
+    <string name="sentence_copy_declaration">We are not responsible for possible copyright issues because of this sentence.</string>
+    <string name="sentence_copy_success">Copy sentence successfully</string>
     <string name="add_sentence">Add sentence</string>
     <string name="sentence_hint">Sentence</string>
     <string name="sentence_author_hint">Author</string>
@@ -138,6 +140,7 @@
         <item>14</item>
         <item>15</item>
     </string-array>
+    <string name="divider" translatable="false">--------</string>
     <string name="none" translatable="false">-</string>
     <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
 

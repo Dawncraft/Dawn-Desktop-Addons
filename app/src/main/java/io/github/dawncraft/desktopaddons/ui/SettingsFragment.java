@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
@@ -84,7 +83,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         if (preferenceVersion != null)
         {
             PackageInfo packageInfo = Utils.getAppInfo(requireContext());
-            preferenceVersion.setSummary(String.format(getString(R.string.no_update),
+            preferenceVersion.setSummary(getString(R.string.no_update,
                     packageInfo != null ? packageInfo.versionName : "null"));
             preferenceVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
             {

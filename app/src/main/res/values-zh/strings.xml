@@ -62,6 +62,8 @@
     <string name="sentence">句子: </string>
     <string name="sentence_author">作者: </string>
     <string name="sentence_from">来源: </string>
+    <string name="sentence_copy_declaration">桌面小部件对您使用此句子可能造成的版权纠纷不予负责</string>
+    <string name="sentence_copy_success">句子已复制到剪贴板中</string>
     <string name="add_sentence">添加句子</string>
     <string name="sentence_hint">句子</string>
     <string name="sentence_author_hint">作者</string>

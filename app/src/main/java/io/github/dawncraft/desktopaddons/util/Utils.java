@@ -1,6 +1,8 @@
 package io.github.dawncraft.desktopaddons.util;
 
 import android.app.NotificationManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -164,6 +166,13 @@ public final class Utils
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndNormalize(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    public static void copyToClipboard(Context context, String text)
+    {
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(context.getPackageName(), text);
+        clipboardManager.setPrimaryClip(clipData);
     }
 
     public static void toast(Context context, String msg)

@@ -6,8 +6,8 @@ android {
         applicationId "io.github.dawncraft.desktopaddons"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 15
-        versionName '3.0.2'
+        versionCode 16
+        versionName '3.0.3'
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
             annotationProcessorOptions {

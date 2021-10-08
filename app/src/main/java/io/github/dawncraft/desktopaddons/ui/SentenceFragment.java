@@ -61,13 +61,48 @@ public class SentenceFragment extends Fragment
                         .inflate(R.layout.dialog_sentence_detail, null, false);
                 TextView textViewSentence = view.findViewById(R.id.textViewSentence);
                 textViewSentence.setText(sentence.getSentence());
-                TextView textViewAuthor = view.findViewById(R.id.textViewAuthor);
-                textViewAuthor.setText(sentence.getAuthor());
-                TextView textViewFrom = view.findViewById(R.id.textViewFrom);
-                textViewFrom.setText(sentence.getFrom());
+                if (sentence.getAuthor() != null)
+                {
+                    view.findViewById(R.id.tableRowAuthor).setVisibility(View.VISIBLE);
+                    TextView textViewAuthor = view.findViewById(R.id.textViewAuthor);
+                    textViewAuthor.setText(sentence.getAuthor());
+                }
+                if (sentence.getFrom() != null)
+                {
+                    view.findViewById(R.id.tableRowFrom).setVisibility(View.VISIBLE);
+                    TextView textViewFrom = view.findViewById(R.id.textViewFrom);
+                    textViewFrom.setText(sentence.getFrom());
+                }
                 new AlertDialog.Builder(requireActivity())
-                        .setTitle(String.format(getString(R.string.sentence_detail), sentence.getId()))
+                        .setTitle(getString(R.string.sentence_detail, sentence.getId()))
                         .setView(view)
+                        .setNeutralButton(android.R.string.copy, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(sentence.getSentence());
+                                if (sentence.getAuthor() != null)
+                                {
+                                    sb.append("\n")
+                                            .append(getString(R.string.sentence_author))
+                                            .append(sentence.getAuthor());
+                                }
+                                if (sentence.getFrom() != null)
+                                {
+                                    sb.append("\n")
+                                            .append(getString(R.string.sentence_from))
+                                            .append(sentence.getFrom());
+                                }
+                                sb.append("\n")
+                                        .append(getString(R.string.divider))
+                                        .append("\n")
+                                        .append(getString(R.string.sentence_copy_declaration));
+                                Utils.copyToClipboard(requireContext(), sb.toString());
+                                Utils.toast(requireContext(), R.string.sentence_copy_success);
+                            }
+                        })
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
             }

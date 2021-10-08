@@ -150,7 +150,7 @@ public class NCPAppWidget extends AppWidgetProvider
             String[] areas = ncpInfo.getRegion().split(",");
             if (areas.length > 1)
             {
-                String title = String.format(context.getString(R.string.ncp_app_widget_region), areas[areas.length - 1]);
+                String title = context.getString(R.string.ncp_app_widget_region, areas[areas.length - 1]);
                 views.setTextViewText(R.id.textViewTitle, title);
             }
             views.setTextViewText(R.id.textViewTime, ncpInfo.getDate());
