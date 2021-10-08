@@ -18,10 +18,21 @@ import io.github.dawncraft.desktopaddons.entity.Sentence;
 public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private final List<Sentence> sentences;
+    private OnSentenceItemListener listener;
 
     public SentenceAdapter()
     {
         sentences = Collections.synchronizedList(new ArrayList<>());
+    }
+
+    public OnSentenceItemListener getOnSentenceItemListener()
+    {
+        return listener;
+    }
+
+    public void setOnSentenceItemListener(OnSentenceItemListener listener)
+    {
+        this.listener = listener;
     }
 
     public void addAll(List<Sentence> list)
@@ -56,6 +67,14 @@ public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Sentence sentence = sentences.get(position);
             String text = String.format("%s. %s", sentence.getId(), sentence.getSentence());
             sentenceViewHolder.getTextViewSentence().setText(text);
+            sentenceViewHolder.getTextViewSentence().setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (listener != null) listener.onClick(sentence);
+                }
+            });
         }
     }
 
@@ -79,5 +98,10 @@ public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         {
             return textViewSentence;
         }
+    }
+
+    public interface OnSentenceItemListener
+    {
+        void onClick(Sentence sentence);
     }
 }

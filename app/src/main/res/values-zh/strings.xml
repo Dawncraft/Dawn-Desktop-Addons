@@ -58,12 +58,16 @@
     <string name="fragment_sentence">句子列表</string>
     <string name="get_sentences_failed">加载句子失败, 请重试</string>
     <string name="no_more_sentences">没有更多句子啦</string>
+    <string name="sentence_detail">显示句子详情 #%d</string>
+    <string name="sentence">句子: </string>
+    <string name="sentence_author">作者: </string>
+    <string name="sentence_from">来源: </string>
     <string name="add_sentence">添加句子</string>
+    <string name="sentence_hint">句子</string>
+    <string name="sentence_author_hint">作者</string>
+    <string name="sentence_from_hint">来源(可选)</string>
+    <string name="sentence_agreement">*提交句子即视为您同意我们的用户协议</string>
     <string name="sentence_need_login">登录后才能提交句子哦~</string>
-    <string name="sentence">句子</string>
-    <string name="sentence_author">作者</string>
-    <string name="sentence_from">来源(可选)</string>
-    <string name="sentence_agreement">提交句子即视为您同意我们的用户协议</string>
 
     <string name="fragment_login">登录</string>
     <string name="account">邮箱</string>

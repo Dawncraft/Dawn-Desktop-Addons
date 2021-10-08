@@ -58,12 +58,16 @@
     <string name="fragment_sentence">Sentence list</string>
     <string name="get_sentences_failed">Can\'t get sentences</string>
     <string name="no_more_sentences">No more sentences</string>
+    <string name="sentence_detail">Sentence detail #%d</string>
+    <string name="sentence">Sentence: </string>
+    <string name="sentence_author">Author: </string>
+    <string name="sentence_from">From: </string>
     <string name="add_sentence">Add sentence</string>
+    <string name="sentence_hint">Sentence</string>
+    <string name="sentence_author_hint">Author</string>
+    <string name="sentence_from_hint">From(Optional)</string>
+    <string name="sentence_agreement">*When submit, you are considered to have agreed to our user agreement.</string>
     <string name="sentence_need_login">You must login to submit sentences</string>
-    <string name="sentence">Sentence</string>
-    <string name="sentence_author">Author</string>
-    <string name="sentence_from">From(Optional)</string>
-    <string name="sentence_agreement">提交句子即视为您同意了我们的用户协议</string>
 
     <string name="fragment_login">Log in</string>
     <string name="account">Email</string>

@@ -55,8 +55,10 @@ public class SentenceModel
         sentence.setSource(Sentence.Source.Dawncraft);
         sentence.setId(data.getInt("id"));
         sentence.setSentence(data.getString("sentence"));
-        sentence.setAuthor(data.getString("author"));
-        sentence.setFrom(data.getString("from"));
+        if (!data.isNull("author"))
+            sentence.setAuthor(data.getString("author"));
+        if (!data.isNull("from"))
+            sentence.setFrom(data.getString("from"));
         return sentence;
     }
 
@@ -94,8 +96,10 @@ public class SentenceModel
                         sentence.setSource(Sentence.Source.Dawncraft);
                         sentence.setId(jsonSentence.getInt("id"));
                         sentence.setSentence(jsonSentence.getString("sentence"));
-                        sentence.setAuthor(jsonSentence.getString("author"));
-                        sentence.setFrom(jsonSentence.getString("from"));
+                        if (!jsonSentence.isNull("author"))
+                            sentence.setAuthor(jsonSentence.getString("author"));
+                        if (!jsonSentence.isNull("from"))
+                            sentence.setFrom(jsonSentence.getString("from"));
                         sentences.add(sentence);
                     }
                     listener.onSentences(sentences);

@@ -52,6 +52,26 @@ public class SentenceFragment extends Fragment
     {
         View root = inflater.inflate(R.layout.fragment_sentence, container, false);
         sentenceAdapter = new SentenceAdapter();
+        sentenceAdapter.setOnSentenceItemListener(new SentenceAdapter.OnSentenceItemListener()
+        {
+            @Override
+            public void onClick(Sentence sentence)
+            {
+                View view = LayoutInflater.from(getContext())
+                        .inflate(R.layout.dialog_sentence_detail, null, false);
+                TextView textViewSentence = view.findViewById(R.id.textViewSentence);
+                textViewSentence.setText(sentence.getSentence());
+                TextView textViewAuthor = view.findViewById(R.id.textViewAuthor);
+                textViewAuthor.setText(sentence.getAuthor());
+                TextView textViewFrom = view.findViewById(R.id.textViewFrom);
+                textViewFrom.setText(sentence.getFrom());
+                new AlertDialog.Builder(requireActivity())
+                        .setTitle(String.format(getString(R.string.sentence_detail), sentence.getId()))
+                        .setView(view)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+            }
+        });
         loadMoreWrapper = new LoadMoreWrapper(sentenceAdapter);
         ProgressBar progressBar = new ProgressBar(getActivity());
         loadMoreWrapper.setLoadingView(progressBar);
@@ -85,8 +105,8 @@ public class SentenceFragment extends Fragment
                 EditText editTextSentence = view.findViewById(R.id.editTextSentence);
                 EditText editTextAuthor = view.findViewById(R.id.editTextAuthor);
                 EditText editTextFrom = view.findViewById(R.id.editTextFrom);
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                builder.setTitle(R.string.add_sentence)
+                new AlertDialog.Builder(requireActivity())
+                        .setTitle(R.string.add_sentence)
                         .setView(view)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
                         {
@@ -120,8 +140,8 @@ public class SentenceFragment extends Fragment
                                 dialog.dismiss();
                             }
                         })
-                        .setNegativeButton(android.R.string.cancel, null);
-                builder.show();
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
             }
         });
         return root;
