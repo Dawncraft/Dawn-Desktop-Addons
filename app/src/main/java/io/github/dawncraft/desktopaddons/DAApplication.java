@@ -41,14 +41,13 @@ public class DAApplication extends Application
         NCPDataSource.loadNamesFromRes(this);
         HttpUtils.init(this);
         createNotificationChannel();
-        boolean zenMode = sharedPreferences.getBoolean("zen_mode_switch", false);
-        if (zenMode)
+        if (sharedPreferences.getBoolean("zen_mode_switch", false))
         {
             zenModeBroadcastReceiver = new ZenModeBroadcastReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_USER_PRESENT);
             filter.addAction(Intent.ACTION_SCREEN_OFF);
-            // filter.addAction(ScreenBroadcastReceiver.ACTION_SWITCH);
+            // filter.addAction(ZenModeBroadcastReceiver.ACTION_SWITCH);
             registerReceiver(zenModeBroadcastReceiver, filter);
         }
     }

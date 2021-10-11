@@ -13,10 +13,13 @@ import site.hanschen.glwallpaperservice.GLWallpaperService;
 public class DawnLiveWallpaper extends GLWallpaperService
 {
     @Override
-    protected GLEngine createGLEngine() {
-        return new GLEngine() {
+    protected GLEngine createGLEngine()
+    {
+        return new GLEngine()
+        {
             @Override
-            protected void setupGLSurfaceView(boolean isPreview) {
+            protected void setupGLSurfaceView(boolean isPreview)
+            {
                 if (GLUtils.isSupportGL20(DawnLiveWallpaper.this))
                 {
                     setEGLContextClientVersion(2);

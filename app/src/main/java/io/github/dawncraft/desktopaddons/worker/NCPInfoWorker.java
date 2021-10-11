@@ -50,8 +50,7 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
         String region = getInputData().getString("region");
         if (appWidgetId == -1 || region == null) return Result.failure();
         ncpInfoModel.getRegionInfo(region, this);
-        RemoteViews views = NCPAppWidget.createRemoteViews(getApplicationContext(), appWidgetId, ncpInfo);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, appWidgetId, ncpInfo);
         if (ncpInfo == null) return Result.retry();
         Log.i(TAG, "Update successfully.");
         return Result.success();

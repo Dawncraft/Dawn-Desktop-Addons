@@ -3,6 +3,7 @@ package io.github.dawncraft.desktopaddons.appwidget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class NCPAppWidget extends AppWidgetProvider
 //                    .beginUniqueWork("ncp-" + appWidgetId, ExistingWorkPolicy.KEEP, workRequest)
 //                    .enqueue();
             // FIXME 使用WorkManager会导致小部件无限更新, 暂时回退到创建新线程
+            // 已找到原因: https://commonsware.com/blog/2018/11/24/workmanager-app-widgets-side-effects.html
             Thread thread = new Thread(new Runnable()
             {
                 @Override
@@ -71,8 +73,7 @@ public class NCPAppWidget extends AppWidgetProvider
                         @Override
                         public void onResponse(NCPInfoModel.Result result, NCPInfo info)
                         {
-                            RemoteViews views = createRemoteViews(context, appWidgetId, info);
-                            appWidgetManager.updateAppWidget(appWidgetId, views);
+                            updateAppWidget(context, appWidgetManager, appWidgetId, info);
                         }
                     });
                 }
@@ -126,7 +127,7 @@ public class NCPAppWidget extends AppWidgetProvider
         }
     }
 
-    public static RemoteViews createRemoteViews(Context context, int appWidgetId, NCPInfo ncpInfo)
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, NCPInfo ncpInfo)
     {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_ncp_info);
         // NOTE Android 3.0起点击小部件默认会跳转至应用主Activity
@@ -160,6 +161,22 @@ public class NCPAppWidget extends AppWidgetProvider
             views.setTextViewText(R.id.textViewCure, String.valueOf(ncpInfo.getCure()));
             views.setTextViewText(R.id.textViewDead, String.valueOf(ncpInfo.getDead()));
         }
-        return views;
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    public static void notifyUpdate(Context context, int[] appWidgetIds)
+    {
+        Intent intent = new Intent(context, NCPAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        context.sendBroadcast(intent);
+    }
+
+    public static void notifyUpdateAll(Context context)
+    {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context, NCPAppWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(componentName);
+        notifyUpdate(context, appWidgetIds);
     }
 }

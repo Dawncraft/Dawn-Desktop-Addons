@@ -143,10 +143,7 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
                 ncpAppWidgetID.id = appWidgetId;
                 ncpAppWidgetID.region = region;
                 DAApplication.getDatabase().ncpAppWidgetDAO().insert(ncpAppWidgetID);
-                Intent intent = new Intent(NCPAppWidgetConfigActivity.this, NCPAppWidget.class);
-                intent.setAction(NCPAppWidget.ACTION_REFRESH);
-                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                sendBroadcast(intent);
+                NCPAppWidget.notifyUpdate(NCPAppWidgetConfigActivity.this, new int[] { appWidgetId });
                 setResult(RESULT_OK, getResultValue());
                 finish();
             }

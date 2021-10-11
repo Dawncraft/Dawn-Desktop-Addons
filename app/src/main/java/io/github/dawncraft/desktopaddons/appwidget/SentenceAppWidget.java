@@ -3,6 +3,7 @@ package io.github.dawncraft.desktopaddons.appwidget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,8 +49,7 @@ public class SentenceAppWidget extends AppWidgetProvider
                     {
                         e.printStackTrace();
                     }
-                    RemoteViews views = createRemoteViews(context, appWidgetId, sentence);
-                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                    updateAppWidget(context, appWidgetManager, appWidgetId, sentence);
                 }
             });
             thread.start();
@@ -79,7 +79,7 @@ public class SentenceAppWidget extends AppWidgetProvider
         }
     }
 
-    public static RemoteViews createRemoteViews(Context context, int appWidgetId, Sentence sentence)
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Sentence sentence)
     {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_sentence);
         Intent intent = new Intent(context, SentenceAppWidget.class);
@@ -102,6 +102,22 @@ public class SentenceAppWidget extends AppWidgetProvider
             sb.insert(0, "——");
             views.setTextViewText(R.id.textViewFrom, sb.toString());
         }
-        return views;
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    public static void notifyUpdate(Context context, int[] appWidgetIds)
+    {
+        Intent intent = new Intent(context, SentenceAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        context.sendBroadcast(intent);
+    }
+
+    public static void notifyUpdateAll(Context context)
+    {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context, SentenceAppWidget.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(componentName);
+        notifyUpdate(context, appWidgetIds);
     }
 }

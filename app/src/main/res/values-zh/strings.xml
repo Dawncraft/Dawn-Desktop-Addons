@@ -107,7 +107,7 @@
     <string name="ncp_app_widget_detail">查看详情</string>
     <string name="ncp_app_widget_refresh">刷新</string>
     <string name="ncp_app_widget_time">截至: </string>
-    <string name="ncp_app_widget_update_time">上次更新:</string>
+    <string name="ncp_app_widget_update_time">上次更新: </string>
     <string name="ncp_app_widget_confirm">现有确诊</string>
     <string name="ncp_app_widget_suspect">疑似病例</string>
     <string name="ncp_app_widget_cure">治愈人数</string>
