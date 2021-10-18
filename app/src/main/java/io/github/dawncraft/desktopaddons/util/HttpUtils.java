@@ -3,7 +3,6 @@ package io.github.dawncraft.desktopaddons.util;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Consumer;
 
 import java.io.IOException;
 import java.util.Arrays;

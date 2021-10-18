@@ -1,7 +1,6 @@
 package io.github.dawncraft.desktopaddons.ui.widget;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.LinearLayout;
