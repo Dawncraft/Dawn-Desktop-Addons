@@ -136,7 +136,7 @@ public class LoginFragment extends Fragment
             @Override
             public void onClick(View widget)
             {
-                Utils.openUrl(requireContext(), "https://dawncraft.cc");
+                Utils.openUrl(requireContext(), "https://h5.dawncraft.cc/forgetPassword");
             }
 
             @Override
