@@ -23,61 +23,7 @@ import okhttp3.Response;
 
 public class UserModel
 {
-    private Request getLoginRequest(String username, String password)
-    {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("username", username);
-            json.put("password", password);
-        }
-        catch (JSONException ignored) {}
-        return new Request.Builder()
-                .url(HttpUtils.DAWNCRAFT_API.newBuilder().addPathSegment("login").build())
-                .post(RequestBody.create(json.toString(), HttpUtils.JSON))
-                .build();
-    }
-
-    private LoginResult handleLoginResponse(Response response) throws IOException
-    {
-        String content = Objects.requireNonNull(response.body()).string();
-        try
-        {
-            JSONObject json = new JSONObject(content);
-            int code = json.getInt("code");
-            switch (code)
-            {
-                case 1001: return LoginResult.INVALID_USERNAME;
-                case 1002: return LoginResult.INVALID_PASSWORD;
-                case 1010: return LoginResult.WRONG_USER_OR_PASSWORD;
-                case 1011: return LoginResult.ALREADY_LOGIN;
-            }
-            JSONObject data = json.getJSONObject("data");
-            String token = data.getString("token");
-            DAApplication.getPreferences().edit().putString("token", token).apply();
-            return LoginResult.SUCCESS;
-        }
-        catch (JSONException ignored) {}
-        return LoginResult.ERROR;
-    }
-
-    public LoginResult syncLogin(String username, String password)
-    {
-        if (TextUtils.isEmpty(username))
-            return LoginResult.INVALID_USERNAME;
-        if (TextUtils.isEmpty(password))
-            return LoginResult.INVALID_PASSWORD;
-        try
-        {
-            Request request = getLoginRequest(username, password);
-            Response response = HttpUtils.getClient().newCall(request).execute();
-            return handleLoginResponse(response);
-        }
-        catch (IOException ignored) {}
-        return LoginResult.ERROR;
-    }
-
-    public void asyncLogin(String username, String password, OnLoginListener listener)
+    public void login(String username, String password, OnLoginListener listener)
     {
         if (TextUtils.isEmpty(username))
         {
@@ -89,7 +35,17 @@ public class UserModel
             listener.onLoginResult(LoginResult.INVALID_PASSWORD);
             return;
         }
-        Request request = getLoginRequest(username, password);
+        JSONObject json = new JSONObject();
+        try
+        {
+            json.put("username", username);
+            json.put("password", password);
+        }
+        catch (JSONException ignored) {}
+        Request request =  new Request.Builder()
+                .url(HttpUtils.DAWNCRAFT_API.newBuilder().addPathSegment("login").build())
+                .post(RequestBody.create(json.toString(), HttpUtils.JSON))
+                .build();
         HttpUtils.getClient().newCall(request).enqueue(new Callback()
         {
             @Override
@@ -101,7 +57,26 @@ public class UserModel
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException
             {
-                listener.onLoginResult(handleLoginResponse(response));
+                String content = Objects.requireNonNull(response.body()).string();
+                try
+                {
+                    JSONObject json = new JSONObject(content);
+                    int code = json.getInt("code");
+                    switch (code)
+                    {
+                        case 1001: listener.onLoginResult(LoginResult.INVALID_USERNAME); return;
+                        case 1002: listener.onLoginResult(LoginResult.INVALID_PASSWORD); return;
+                        case 1010: listener.onLoginResult(LoginResult.WRONG_USER_OR_PASSWORD); return;
+                        case 1011: listener.onLoginResult(LoginResult.ALREADY_LOGIN); return;
+                    }
+                    JSONObject data = json.getJSONObject("data");
+                    String token = data.getString("token");
+                    DAApplication.setToken(token);
+                    listener.onLoginResult(LoginResult.SUCCESS);
+                    return;
+                }
+                catch (JSONException ignored) {}
+                listener.onLoginResult(LoginResult.ERROR);
             }
         });
     }
@@ -117,22 +92,43 @@ public class UserModel
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e)
             {
-                DAApplication.getPreferences().edit().remove("password").remove("token").apply();
+                DAApplication.removeToken();
                 if (consumer != null) consumer.accept(false);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException
             {
-                DAApplication.getPreferences().edit().remove("password").remove("token").apply();
+                DAApplication.removeToken();
                 if (consumer != null) consumer.accept(true);
             }
         });
     }
 
-    public static boolean isLoggedIn()
+    public boolean refreshToken()
     {
-        return DAApplication.getPreferences().contains("token");
+        try
+        {
+            Request request = new Request.Builder()
+                    .url(HttpUtils.DAWNCRAFT_API.newBuilder()
+                            .addPathSegment("user")
+                            .addPathSegment("refreshToken")
+                            .build())
+                    .get()
+                    .build();
+            Response response = HttpUtils.getClient().newCall(request).execute();
+            String content = Objects.requireNonNull(response.body()).string();
+            JSONObject json = new JSONObject(content);
+            if (json.getInt("code") == 200)
+            {
+                JSONObject data = json.getJSONObject("data");
+                String token = data.getString("token");
+                DAApplication.setToken(token);
+                return true;
+            }
+        }
+        catch (IOException | JSONException ignored) {}
+        return false;
     }
 
     public enum LoginResult

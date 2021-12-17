@@ -106,8 +106,8 @@
     <string name="ncp_app_widget_region">COVID-19 Stats - %s</string>
     <string name="ncp_app_widget_detail">View detail</string>
     <string name="ncp_app_widget_refresh">Refresh</string>
-    <string name="ncp_app_widget_time">To date: </string>
-    <string name="ncp_app_widget_update_time">Last update: </string>
+    <string name="ncp_app_widget_time">To date: &#160;</string>
+    <string name="ncp_app_widget_update_time">Last update: &#160;</string>
     <string name="ncp_app_widget_confirm">Confirm</string>
     <string name="ncp_app_widget_suspect">Suspect</string>
     <string name="ncp_app_widget_cure">Cure</string>

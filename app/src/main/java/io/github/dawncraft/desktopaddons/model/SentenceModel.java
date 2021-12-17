@@ -36,7 +36,8 @@ public class SentenceModel
         sentence.setSource(Sentence.Source.Hitokoto);
         sentence.setId(json.getInt("id"));
         sentence.setSentence(json.getString("hitokoto"));
-        sentence.setAuthor(json.getString("from_who"));
+        if (!json.isNull("from_who"))
+            sentence.setAuthor(json.getString("from_who"));
         sentence.setFrom(json.getString("from"));
         return sentence;
     }

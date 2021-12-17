@@ -44,6 +44,16 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
 adb shell
 am start -n io.github.dawncraft.desktopaddons/io.github.dawncraft.desktopaddons.ui.MainActivity
 ```
+用以下命令显示桌面小部件的ID
+```bash
+adb shell dumpsys appwidget
+```
+用以下命令刷新所有桌面小部件(需要root或模拟器)
+```bash
+adb shell
+su
+am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n io.github.dawncraft.desktopaddons/io.github.dawncraft.desktopaddons.broadcast.PackageBroadcastReceiver
+```
 
 ## 特别致谢
 1. 所有在疫情中奉献自己的医护人员

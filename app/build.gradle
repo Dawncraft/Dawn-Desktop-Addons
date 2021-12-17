@@ -4,9 +4,9 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "io.github.dawncraft.desktopaddons"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 18
+        versionCode 19
         versionName '3.1.0-l2d'
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {

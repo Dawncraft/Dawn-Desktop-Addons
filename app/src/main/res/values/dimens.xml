@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_margin">0dp</dimen>
 
     <dimen name="widget_title_size">13sp</dimen>
     <dimen name="widget_time_size">8sp</dimen>

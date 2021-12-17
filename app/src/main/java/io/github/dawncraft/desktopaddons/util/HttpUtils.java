@@ -64,15 +64,10 @@ public final class HttpUtils
         {
             if (response.request().url().host().equals(DAWNCRAFT_API.host()))
             {
-                // NOTE 我的后端在未登录时请求logout会返回401
+                // NOTE 后端在未登录时请求logout会返回401
                 if (response.request().url().toString().contains("/logout"))
                     return null;
-                UserModel userModel = new UserModel();
-                String username = DAApplication.getPreferences().getString("username", null);
-                String password = DAApplication.getPreferences().getString("password", null);
-                if (userModel.syncLogin(username, password) == UserModel.LoginResult.SUCCESS)
-                    return response.request();
-                userModel.logout(null);
+                DAApplication.removeToken();
             }
             return null;
         }
@@ -87,7 +82,13 @@ public final class HttpUtils
             Request request = chain.request();
             if (request.url().host().equals(DAWNCRAFT_API.host()))
             {
-                String token = DAApplication.getPreferences().getString("token", null);
+                // NOTE 避免刷新token时无限递归
+                if (!request.url().toString().contains("/user/refreshToken") && DAApplication.needRefresh())
+                {
+                    UserModel userModel = new UserModel();
+                    userModel.refreshToken();
+                }
+                String token = DAApplication.getToken();
                 if (token != null)
                 {
                     request = request.newBuilder()

@@ -94,4 +94,36 @@ public class DAApplication extends Application
     {
         return database;
     }
+
+    public static boolean hasToken()
+    {
+        return sharedPreferences.contains("token");
+    }
+
+    public static String getToken()
+    {
+        return sharedPreferences.getString("token", null);
+    }
+
+    public static void setToken(String token)
+    {
+        sharedPreferences.edit()
+                .putString("token", token)
+                .putLong("refresh_timer", System.currentTimeMillis())
+                .apply();
+    }
+
+    public static void removeToken()
+    {
+        sharedPreferences.edit()
+                .remove("token")
+                .remove("refresh_timer")
+                .apply();
+    }
+
+    public static boolean needRefresh()
+    {
+        long refreshTimer = sharedPreferences.getLong("refresh_timer", 0);
+        return hasToken() && System.currentTimeMillis() - refreshTimer > 86400 * 1000;
+    }
 }

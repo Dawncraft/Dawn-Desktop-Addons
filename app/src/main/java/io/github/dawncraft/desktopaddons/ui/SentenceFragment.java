@@ -21,10 +21,10 @@ import com.yl.recyclerview.wrapper.LoadMoreWrapper;
 
 import java.util.List;
 
+import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.entity.Sentence;
 import io.github.dawncraft.desktopaddons.model.SentenceModel;
-import io.github.dawncraft.desktopaddons.model.UserModel;
 import io.github.dawncraft.desktopaddons.ui.adapter.SentenceAdapter;
 import io.github.dawncraft.desktopaddons.util.Utils;
 
@@ -130,7 +130,7 @@ public class SentenceFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                if (!UserModel.isLoggedIn())
+                if (!DAApplication.hasToken())
                 {
                     Utils.toast(getContext(), R.string.sentence_need_login);
                     return;

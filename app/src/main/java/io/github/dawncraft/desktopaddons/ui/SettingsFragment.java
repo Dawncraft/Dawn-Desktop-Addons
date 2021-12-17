@@ -90,6 +90,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
+                    // TODO 更新检查
                     Utils.toast(SettingsFragment.this.getContext(), "更新检查尚未实现呢~");
                     return true;
                 }
@@ -108,7 +109,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         Preference preferenceUser = findPreference("user");
         if (preferenceUser != null)
         {
-            if (UserModel.isLoggedIn())
+            if (DAApplication.hasToken())
             {
                 preferenceUser.setTitle(DAApplication.getPreferences().getString("username", ""));
                 preferenceUser.setSummary(R.string.user_logout);
