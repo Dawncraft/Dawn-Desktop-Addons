@@ -3,7 +3,6 @@ package io.github.dawncraft.desktopaddons.worker;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;

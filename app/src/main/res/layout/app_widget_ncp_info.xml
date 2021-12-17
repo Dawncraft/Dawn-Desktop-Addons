@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -30,7 +31,8 @@
             android:text="@string/ncp_app_widget_title"
             android:textColor="@android:color/white"
             android:textSize="@dimen/widget_title_size"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            tools:ignore="RtlHardcoded" />
 
         <!-- app widget 不支持appcompat, 用不了矢量图 -->
         <!-- <androidx.appcompat.widget.AppCompatImageButton /> -->
@@ -66,19 +68,20 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:gravity="center_horizontal|bottom"
-        android:baselineAligned="false">
+        android:columnCount="4"
+        android:rowCount="3">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal|bottom"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,8 +106,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal|bottom"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,23 +131,15 @@
 
         </LinearLayout>
 
-        <!-- 让日期也单行, 防止屏小的手机显示不下 -->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:baselineAligned="false">
+        <!-- NOTE 让日期也单行, 防止屏小的手机显示不下 -->
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewConfirm"
@@ -167,8 +164,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewSuspect"
@@ -193,8 +192,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewCure"
@@ -219,8 +220,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewDead"
@@ -242,6 +245,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </GridLayout>
 
 </LinearLayout>

@@ -1,9 +1,7 @@
 package io.github.dawncraft.desktopaddons.ui;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -42,7 +40,7 @@ public class WebViewActivity extends AppCompatActivity
     {
         menu.add(Menu.NONE, Menu.FIRST, Menu.NONE, R.string.open_in_browser)
                 .setIcon(R.drawable.ic_open_in_browser)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return true;
     }
 

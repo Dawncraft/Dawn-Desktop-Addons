@@ -68,7 +68,7 @@ public class LoginFragment extends Fragment
                         "", getString(R.string.logging_in), true);
                 String username = editTextAccount.getText().toString();
                 String password = editTextPassword.getText().toString();
-                userModel.asyncLogin(username, password, new UserModel.OnLoginListener()
+                userModel.login(username, password, new UserModel.OnLoginListener()
                 {
                     @Override
                     public void onLoginResult(UserModel.LoginResult result)
@@ -81,9 +81,9 @@ public class LoginFragment extends Fragment
                                 progressDialog.dismiss();
                                 if (result == UserModel.LoginResult.SUCCESS)
                                 {
-                                    DAApplication.getPreferences().edit()
+                                    DAApplication.getPreferences()
+                                            .edit()
                                             .putString("username", username)
-                                            .putString("password", password)
                                             .apply();
                                     navController.navigateUp();
                                     return;
