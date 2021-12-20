@@ -50,8 +50,8 @@
     <string name="has_update">版本: %s 发现更新: %s</string>
     <string name="visit_github">访问本项目的GitHub仓库</string>
     <string name="visit_github_summary">来我们的GitHub看看吧</string>
-    <string name="library_licenses">第三方库协议</string>
-    <string name="library_licenses_summary">没用啥第三方库, 自己看去吧</string>
+    <string name="library_licenses">开放源代码许可</string>
+    <string name="library_licenses_summary">点击查看第三方库的开源协议</string>
 
     <string name="fragment_wallpaper">动态壁纸设置</string>
 

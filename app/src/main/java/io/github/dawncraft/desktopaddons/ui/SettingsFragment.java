@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import de.psdev.licensesdialog.LicensesDialog;
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.model.UserModel;
@@ -61,11 +62,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            Preference permissionPreference = findPreference("notification_policy_access_permission");
-            if (permissionPreference != null)
+            Preference preferencePermission = findPreference("notification_policy_access_permission");
+            if (preferencePermission != null)
             {
-                permissionPreference.setVisible(true);
-                permissionPreference.setSummaryProvider(new Preference.SummaryProvider<Preference>()
+                preferencePermission.setVisible(true);
+                preferencePermission.setSummaryProvider(new Preference.SummaryProvider<Preference>()
                 {
                     @Override
                     public CharSequence provideSummary(Preference preference)
@@ -96,10 +97,24 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 }
             });
         }
+        Preference preferenceLicenses = findPreference("view_licenses");
+        if (preferenceLicenses != null)
+        {
+            preferenceLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference)
+                {
+                    showLicenseDialog();
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         refreshUserPreference();
     }
@@ -163,5 +178,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 })
                 .setNegativeButton(android.R.string.no, null);
         builder.show();
+    }
+
+    private void showLicenseDialog()
+    {
+        new LicensesDialog.Builder(requireActivity())
+                .setNotices(R.raw.licenses)
+                .setIncludeOwnLicense(true)
+                .build()
+                .show();
     }
 }
