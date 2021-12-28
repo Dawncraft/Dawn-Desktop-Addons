@@ -122,6 +122,10 @@
     <string name="unknown_error">An unknown error occurred.</string>
 
     <!-- Don't translate these text. -->
+    <string name="github_url" translatable="false">https://github.com/Dawncraft/Dawn-Desktop-Addons</string>
+    <string name="divider" translatable="false">--------</string>
+    <string name="none" translatable="false">-</string>
+    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
     <string-array name="value_list">
         <item>0</item>
         <item>1</item>
@@ -140,8 +144,5 @@
         <item>14</item>
         <item>15</item>
     </string-array>
-    <string name="divider" translatable="false">--------</string>
-    <string name="none" translatable="false">-</string>
-    <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>
 
 </resources>

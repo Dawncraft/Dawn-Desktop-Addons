@@ -20,6 +20,7 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.internal.Util;
 
 public class UserModel
 {
@@ -114,12 +115,12 @@ public class UserModel
                             .addPathSegment("user")
                             .addPathSegment("refreshToken")
                             .build())
-                    .get()
+                    .post(Util.EMPTY_REQUEST)
                     .build();
             Response response = HttpUtils.getClient().newCall(request).execute();
             String content = Objects.requireNonNull(response.body()).string();
             JSONObject json = new JSONObject(content);
-            if (json.getInt("code") == 200)
+            if (json.getInt("code") == 0)
             {
                 JSONObject data = json.getJSONObject("data");
                 String token = data.getString("token");

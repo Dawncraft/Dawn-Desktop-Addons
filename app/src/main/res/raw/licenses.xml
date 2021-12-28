@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+    <notice>
+        <name>Android Jetpack</name>
+        <url>https://github.com/androidx/androidx</url>
+        <copyright>Copyright 2021 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>RecyclerViewHelper</name>
+        <url>https://github.com/alidili/RecyclerViewHelper</url>
+        <copyright>Copyright (C) 2019 YangLe</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>OkHttp</name>
+        <url>https://github.com/square/okhttp</url>
+        <copyright>Copyright 2019 Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Conscrypt</name>
+        <url>https://github.com/google/conscrypt</url>
+        <copyright>Copyright (C) 2017 The Android Open Source Project</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+<!--    <notice>-->
+<!--        <name>GLWallpaperService</name>-->
+<!--        <url>https://github.com/shensky711/GLWallpaperService</url>-->
+<!--        <copyright>Copyright HansChen</copyright>-->
+<!--        <license>No License</license>-->
+<!--    </notice>-->
+</notices>

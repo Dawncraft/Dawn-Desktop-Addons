@@ -6,8 +6,8 @@ android {
         applicationId "io.github.dawncraft.desktopaddons"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 19
-        versionName '3.1.0-l2d'
+        versionCode 20
+        versionName '3.2.0-l2d'
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
             annotationProcessorOptions {
@@ -49,9 +49,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:$nav_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.github.alidili:RecyclerViewHelper:1.1.5'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'site.hanschen:glwallpaperservice:0.1.1'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$room_version"
     androidTestImplementation 'androidx.test:runner:1.3.0'

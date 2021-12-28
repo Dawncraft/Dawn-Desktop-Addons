@@ -109,10 +109,11 @@
 
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/Dawncraft/Dawn-Desktop-Addons" />
+                android:data="@string/github_url" />
         </Preference>
 
         <Preference
+            android:key="view_licenses"
             android:title="@string/library_licenses"
             android:summary="@string/library_licenses_summary"
             app:iconSpaceReserved="false" />
