@@ -18,6 +18,7 @@ import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.entity.Sentence;
 import io.github.dawncraft.desktopaddons.model.SentenceModel;
+import io.github.dawncraft.desktopaddons.util.Utils;
 
 public class SentenceAppWidget extends AppWidgetProvider
 {
@@ -85,7 +86,8 @@ public class SentenceAppWidget extends AppWidgetProvider
         Intent intent = new Intent(context, SentenceAppWidget.class);
         intent.setAction(ACTION_REFRESH);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, intent,
+                Utils.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.layoutSentenceWidget, pendingIntent);
         if (sentence != null)
         {

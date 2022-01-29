@@ -80,7 +80,7 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         }
         Intent intent = new Intent(context, ZenModeBroadcastReceiver.class);
         intent.setAction(ACTION_SWITCH);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, Utils.FLAG_IMMUTABLE);
         notificationLayout.setOnClickPendingIntent(R.id.imageButtonZen, pendingIntent);
         Notification customNotification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)

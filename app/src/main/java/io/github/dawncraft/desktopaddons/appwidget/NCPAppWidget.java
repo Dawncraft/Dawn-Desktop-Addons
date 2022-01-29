@@ -18,6 +18,7 @@ import io.github.dawncraft.desktopaddons.entity.NCPInfo;
 import io.github.dawncraft.desktopaddons.model.NCPDataSource;
 import io.github.dawncraft.desktopaddons.model.NCPInfoModel;
 import io.github.dawncraft.desktopaddons.ui.WebViewActivity;
+import io.github.dawncraft.desktopaddons.util.Utils;
 
 /**
  * 监控新型冠状病毒肺炎疫情数据的桌面小工具
@@ -133,18 +134,19 @@ public class NCPAppWidget extends AppWidgetProvider
         // NOTE Android 3.0起点击小部件默认会跳转至应用主Activity
         // 详见 https://developer.android.google.cn/guide/topics/appwidgets/host#which-version-are-you-targeting
         // 详见 android.appwidget.AppWidgetHostView#onDefaultViewClicked
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(), 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(), Utils.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.layoutNCPWidget, pendingIntent);
         // NOTE Android 8.0 后台限制, 隐式广播无法正常工作
         // 详见 https://www.jianshu.com/p/5283ebc225d5
         Intent intentOpen = new Intent(context, NCPAppWidget.class);
         intentOpen.setAction(ACTION_DETAILS);
-        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, -1, intentOpen, 0);
+        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, -1, intentOpen, Utils.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.imageButtonOpen, pendingIntentOpen);
         Intent intentRefresh = new Intent(context, NCPAppWidget.class);
         intentRefresh.setAction(ACTION_REFRESH);
         intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh,
+                Utils.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);
         if (ncpInfo != null)
         {
