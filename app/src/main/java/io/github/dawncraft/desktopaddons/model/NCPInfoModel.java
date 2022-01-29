@@ -33,6 +33,7 @@ public class NCPInfoModel
 {
     private static final Map<String, Pair<Long, NCPInfo>> CACHE = new ConcurrentHashMap<>();
 
+    @Deprecated
     private JSONObject getGlobalInfo() throws IOException, JSONException
     {
         Request request = new Request.Builder()
@@ -83,61 +84,46 @@ public class NCPInfoModel
             listener.onResponse(Result.CACHED, pair.second);
             return;
         }
-        NCPInfo info = null;
         try
         {
             String[] areas = region.split(",");
-            if (areas.length <= 1)
+            JSONObject data = getChinaInfo();
+            String updateTime = data.getString("lastUpdateTime");
+            for (String area : areas)
             {
-                JSONObject data = getGlobalInfo();
-                info = new NCPInfo();
-                info.setRegion(region);
-                info.setConfirm(data.getInt("nowConfirm"));
-                info.setSuspect(data.getInt("suspectCount"));
-                info.setCure(data.getInt("cure"));
-                info.setDead(data.getInt("deadCount"));
-                info.setDate(DateUtils.formatUTCDate(data.getString("update_time")));
-                info.setUpdateTime(DateUtils.formatCurrentDate());
-            }
-            else
-            {
-                JSONObject data = getChinaInfo();
-                String updateTime = data.getString("lastUpdateTime");
-                for (String area : areas)
+                JSONArray children = data.getJSONArray("children");
+                for (int i = 0; i < children.length(); i++)
                 {
-                    JSONArray children = data.getJSONArray("children");
-                    for (int i = 0; i < children.length(); i++)
+                    JSONObject child = children.getJSONObject(i);
+                    if (area.equals(child.get("name")))
                     {
-                        JSONObject child = children.getJSONObject(i);
-                        if (area.equals(child.get("name")))
-                        {
-                            data = child;
-                            break;
-                        }
+                        data = child;
+                        break;
                     }
                 }
-                JSONObject total = data.getJSONObject("total");
-                info = new NCPInfo();
-                info.setRegion(region);
-                info.setConfirm(total.getInt("nowConfirm"));
-                info.setSuspect(total.getInt("suspect"));
-                info.setCure(total.getInt("heal"));
-                info.setDead(total.getInt("dead"));
-                info.setDate(DateUtils.formatDefaultDate(updateTime));
-                info.setUpdateTime(DateUtils.formatCurrentDate());
             }
+            JSONObject total = data.getJSONObject("total");
+            NCPInfo info = new NCPInfo();
+            info.setRegion(region);
+            info.setConfirm(total.getInt("nowConfirm"));
+            // suspect 字段已被移除 total.getInt("suspect")
+            info.setSuspect(0);
+            info.setCure(total.getInt("heal"));
+            info.setDead(total.getInt("dead"));
+            info.setDate(DateUtils.formatDefaultDate(updateTime));
+            info.setUpdateTime(DateUtils.formatCurrentDate());
             CACHE.put(region, Pair.create(System.currentTimeMillis(), info));
             listener.onResponse(Result.SUCCESS, info);
         }
         catch (IOException e)
         {
             e.printStackTrace();
-            listener.onResponse(Result.IO_ERROR, info);
+            listener.onResponse(Result.IO_ERROR, null);
         }
         catch (JSONException e)
         {
             e.printStackTrace();
-            listener.onResponse(Result.JSON_ERROR, info);
+            listener.onResponse(Result.JSON_ERROR, null);
         }
     }
 

@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
-        applicationId "io.github.dawncraft.desktopaddons"
+        applicationId 'io.github.dawncraft.desktopaddons'
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 20
-        versionName '3.2.0-l2d'
+        targetSdkVersion 31
+        versionCode 21
+        versionName '3.2.1-l2d'
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ['room.schemaLocation': "$projectDir/schemas".toString()]
             }
         }
         lintOptions {
@@ -20,7 +20,7 @@ android {
             // 虽然已经适配最新版本了, 但是我懒得去掉这个选项, 就留着吧
             checkReleaseBuilds true
         }
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -32,22 +32,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '30.0.3'
+    buildToolsVersion '31.0.0'
 }
 
 dependencies {
-    def work_version = "2.6.0"
-    def room_version = "2.3.0"
-    def nav_version = "2.3.5"
+    def work_version = '2.7.1'
+    def room_version = '2.4.1'
+    def nav_version = '2.3.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.preference:preference:1.1.1'
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.github.alidili:RecyclerViewHelper:1.1.5'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
@@ -55,8 +55,8 @@ dependencies {
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.room:room-testing:$room_version"
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.work:work-testing:$work_version"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 }

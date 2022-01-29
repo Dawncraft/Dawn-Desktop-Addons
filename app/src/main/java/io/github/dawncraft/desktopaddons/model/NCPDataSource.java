@@ -42,6 +42,7 @@ public enum NCPDataSource {
     GITHUB("https://github.com/canghailan/Wuhan-2019-nCoV");
 
     // 从各页面逆向出来的API
+    @Deprecated // 该接口似乎已于2022/1/2停止更新
     public static final String QQ_NEWS_GLOBAL = "https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars";
     public static final String QQ_NEWS_CHINA = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
     public static final String QQ_NEWS_FOREIGN = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_foreign";

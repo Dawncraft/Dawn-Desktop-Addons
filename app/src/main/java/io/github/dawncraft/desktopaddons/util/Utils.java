@@ -1,6 +1,7 @@
 package io.github.dawncraft.desktopaddons.util;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -25,6 +26,9 @@ import java.util.Scanner;
 
 public final class Utils
 {
+    public static final int FLAG_IMMUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0;
+    public static final int FLAG_MUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0;
+
     private Utils() {}
 
     public static PackageInfo getAppInfo(Context context)
