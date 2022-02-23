@@ -2,5 +2,5 @@
 <wallpaper
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/wallpaper_name"
-    android:settingsActivity=""
-    android:thumbnail="@mipmap/livewallpaper_preview"/>
+    android:thumbnail="@mipmap/live_wallpaper_preview"
+    android:settingsActivity="io.github.dawncraft.desktopaddons.ui.LiveWallpaperActivity" />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
@@ -8,23 +9,17 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="io.github.dawncraft.desktopaddons.ui.SettingsFragment"
-        android:label="@string/activity_settings" >
-        <action
-            android:id="@+id/action_settingsFragment_to_wallpaperFragment"
-            app:destination="@id/wallpaperFragment" />
+        android:label="@string/activity_settings">
         <action
             android:id="@+id/action_settingsFragment_to_sentenceFragment"
             app:destination="@id/sentenceFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_liveWallpaperActivity"
+            app:destination="@id/liveWallpaperActivity" />
     </fragment>
-
-    <fragment
-        android:id="@+id/wallpaperFragment"
-        android:name="io.github.dawncraft.desktopaddons.ui.WallpaperFragment"
-        android:label="@string/fragment_wallpaper"
-        tools:layout="@layout/fragment_wallpaper" />
 
     <fragment
         android:id="@+id/sentenceFragment"
@@ -37,5 +32,11 @@
         android:name="io.github.dawncraft.desktopaddons.ui.LoginFragment"
         android:label="@string/fragment_login"
         tools:layout="@layout/fragment_login" />
+
+    <activity
+        android:id="@+id/liveWallpaperActivity"
+        android:name="io.github.dawncraft.desktopaddons.ui.LiveWallpaperActivity"
+        android:label="@string/activity_wallpaper"
+        tools:layout="@layout/activity_live_wallpaper" />
 
 </navigation>

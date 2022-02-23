@@ -1,4 +1,4 @@
-package io.github.dawncraft.desktopaddons.wallpaper;
+package io.github.dawncraft.desktopaddons.wallpaper.model;
 
 import android.content.Context;
 import android.content.res.AssetManager;

@@ -5,18 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SentenceFragment">
+    tools:context=".ui.LiveWallpaperActivity$LiveWallpaperFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSentences"
+        android:id="@+id/recyclerViewWallpapers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="20"
-        tools:listitem="@layout/item_sentence" />
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_wallpaper" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonAdd"
@@ -26,7 +28,7 @@
         android:layout_marginRight="24dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
-        android:contentDescription="@string/add_sentence"
+        android:contentDescription="添加壁纸"
         android:focusable="true"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"

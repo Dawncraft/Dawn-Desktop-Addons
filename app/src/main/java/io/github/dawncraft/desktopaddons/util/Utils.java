@@ -1,7 +1,9 @@
 package io.github.dawncraft.desktopaddons.util;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -16,9 +18,16 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.service.wallpaper.WallpaperService;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.InputStream;
 import java.util.List;
@@ -160,6 +169,23 @@ public final class Utils
         {
             e.printStackTrace();
         }
+    }
+
+    // WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
+    @SuppressLint("ObsoleteSdkInt")
+    public static void openLiveWallpaperPreview(Context context, Class<? extends WallpaperService> clazz) {
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+            intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                    new ComponentName(context, clazz));
+        }
+        else
+        {
+            intent = new Intent(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER);
+        }
+        context.startActivity(intent);
     }
 
     public static void openUrl(Context context, String url)

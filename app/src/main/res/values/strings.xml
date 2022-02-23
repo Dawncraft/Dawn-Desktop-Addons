@@ -9,8 +9,8 @@
     <string name="hide_app_icon">Hide app icon</string>
     <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
     <string name="settings_wallpaper">Live wallpaper</string>
-    <string name="wallpaper_scene_setting">Scene settings</string>
-    <string name="wallpaper_scene_setting_summary">There is nothing</string>
+    <string name="wallpaper_list">Wallpaper list</string>
+    <string name="wallpaper_list_summary">View your wallpapers</string>
     <string name="settings_app_widget">APP widget</string>
     <string name="sentence_list">Submit your sentences</string>
     <string name="sentence_list_summary">Submit your sentences to Dawncraft server (Login needed)</string>
@@ -53,7 +53,8 @@
     <string name="library_licenses">Third library licenses</string>
     <string name="library_licenses_summary">Click to view</string>
 
-    <string name="fragment_wallpaper">Wallpaper settings</string>
+    <string name="activity_wallpaper">Wallpaper settings</string>
+    <string name="fragment_wallpaper_editor">Edit wallpaper</string>
 
     <string name="fragment_sentence">Sentence list</string>
     <string name="get_sentences_failed">Can\'t get sentences</string>

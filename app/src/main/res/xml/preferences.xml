@@ -12,18 +12,18 @@
         android:key="hide_app_icon"
         android:title="@string/hide_app_icon"
         android:summary="@string/hide_app_icon_summary"
-        android:defaultValue="false"
+        android:persistent="false"
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         android:title="@string/settings_wallpaper"
         app:iconSpaceReserved="false">
 
-        <Preference
-            android:key="wallpaper_scene"
-            android:title="@string/wallpaper_scene_setting"
-            android:summary="@string/wallpaper_scene_setting_summary"
-            app:fragment="io.github.dawncraft.desktopaddons.ui.WallpaperFragment"
+        <io.github.dawncraft.desktopaddons.ui.widget.NavigationPreference
+            android:key="wallpaper_list"
+            android:title="@string/wallpaper_list"
+            android:summary="@string/wallpaper_list_summary"
+            app:destination="@id/liveWallpaperActivity"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
@@ -31,11 +31,11 @@
         android:title="@string/settings_app_widget"
         app:iconSpaceReserved="false">
 
-        <Preference
+        <io.github.dawncraft.desktopaddons.ui.widget.NavigationPreference
             android:key="sentence_list"
             android:title="@string/sentence_list"
             android:summary="@string/sentence_list_summary"
-            app:fragment="io.github.dawncraft.desktopaddons.ui.SentenceFragment"
+            app:destination="@id/sentenceFragment"
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat

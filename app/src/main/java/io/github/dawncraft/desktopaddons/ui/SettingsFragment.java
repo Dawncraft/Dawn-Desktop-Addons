@@ -10,12 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
-import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import io.github.dawncraft.desktopaddons.DAApplication;
@@ -25,26 +24,17 @@ import io.github.dawncraft.desktopaddons.util.Utils;
 
 public class SettingsFragment extends PreferenceFragmentCompat
 {
-    private NavController navController;
-
     private final Handler handler = new Handler();
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        navController = NavHostFragment.findNavController(this);
-    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        Preference preferenceHideAppIcon = findPreference("hide_app_icon");
+        SwitchPreferenceCompat preferenceHideAppIcon = findPreference("hide_app_icon");
         if (preferenceHideAppIcon != null)
         {
             ComponentName componentName = new ComponentName(requireContext(), MainActivity.ACTIVITY_ALIAS_NAME);
-            preferenceHideAppIcon.setDefaultValue(Utils.isComponentEnabled(requireContext(), componentName));
+            preferenceHideAppIcon.setChecked(!Utils.isComponentEnabled(requireContext(), componentName));
             preferenceHideAppIcon.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
             {
                 @Override
@@ -147,7 +137,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     @Override
                     public boolean onPreferenceClick(Preference preference)
                     {
-                        navController.navigate(R.id.loginFragment);
+                        NavHostFragment.findNavController(SettingsFragment.this)
+                                .navigate(R.id.loginFragment);
                         return true;
                     }
                 });

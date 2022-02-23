@@ -1,9 +1,5 @@
-package io.github.dawncraft.desktopaddons.wallpaper;
+package io.github.dawncraft.desktopaddons.wallpaper.model;
 
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-
-import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import jp.live2d.android.Live2DModelAndroid;
@@ -13,7 +9,7 @@ import jp.live2d.framework.L2DTargetPoint;
 import jp.live2d.motion.Live2DMotion;
 import jp.live2d.motion.MotionQueueManager;
 
-public class Live2DRenderer implements GLSurfaceView.Renderer
+public class Live2DModel extends Model
 {
     private Live2DModelAndroid l2dModel;
     private Live2DMotion l2dMotion;
@@ -23,22 +19,15 @@ public class Live2DRenderer implements GLSurfaceView.Renderer
     private float glWidth;
     private float glHeight;
 
-    public Live2DRenderer()
+    public Live2DModel()
     {
         motionManager = new MotionQueueManager();
         dragManager = new L2DTargetPoint();
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config)
+    public void reshape(GL10 gl, int width, int height)
     {
-        ModelManager.bindGL(gl);
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height)
-    {
-        gl.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
         float modelWidth = l2dModel.getCanvasWidth();
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -55,15 +44,8 @@ public class Live2DRenderer implements GLSurfaceView.Renderer
     }
 
     @Override
-    public void onDrawFrame(GL10 gl)
+    public void render(GL10 gl)
     {
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glDisable(GL10.GL_DEPTH_TEST);
-        gl.glDisable(GL10.GL_CULL_FACE);
         l2dModel.loadParam();
         if (motionManager.isFinished())
         {
@@ -84,16 +66,14 @@ public class Live2DRenderer implements GLSurfaceView.Renderer
             l2dPhysics.updateParam(l2dModel);
         l2dModel.setGL(gl);
         l2dModel.update();
+        float modelHeight = l2dModel.getCanvasHeight();
+        float ratio = glWidth / l2dModel.getCanvasWidth();
+        // gl.glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+        gl.glTranslatef(0.0f, Math.max(glHeight / ratio - modelHeight, 0), 0.0f);
         l2dModel.draw();
     }
 
-    public void setModel(Live2DModelAndroid model, Live2DMotion motion, L2DPhysics physics)
-    {
-        l2dModel = model;
-        l2dMotion = motion;
-        l2dPhysics = physics;
-    }
-
+    @Override
     public void drag(float x, float y)
     {
         // int[] viewport = new int[4];
@@ -103,8 +83,16 @@ public class Live2DRenderer implements GLSurfaceView.Renderer
         dragManager.set(screenX, screenY);
     }
 
+    @Override
     public void resetDrag()
     {
         dragManager.set(0, 0);
+    }
+
+    public void setModel(Live2DModelAndroid model, Live2DMotion motion, L2DPhysics physics)
+    {
+        l2dModel = model;
+        l2dMotion = motion;
+        l2dPhysics = physics;
     }
 }
