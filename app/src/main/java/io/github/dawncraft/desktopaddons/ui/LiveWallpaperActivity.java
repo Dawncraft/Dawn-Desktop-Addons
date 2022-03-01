@@ -46,6 +46,14 @@ public class LiveWallpaperActivity extends AppCompatActivity
         temp.texturePaths = new String[] { "hbl/texture_00.png", "hbl/texture_01.png", "hbl/texture_02.png", "hbl/texture_03.png" };
         temp.motionPaths = new String[] { "hbl/action/idle.mtn" };
         FAKE_WALLPAPERS.add(temp);
+        temp = new Wallpaper();
+        temp.id = 2;
+        temp.name = "锅包肉";
+        temp.modelPath = "gbr/model.moc";
+        temp.texturePaths = new String[] { "gbr/texture_00.png" };
+        temp.motionPaths = new String[] { "gbr/action/idle.mtn" };
+        temp.physicsPath = "gbr/moc/physics.json";
+        FAKE_WALLPAPERS.add(temp);
     }
 
     private NavController navController;
