@@ -99,6 +99,7 @@
     <string name="open_in_browser">在浏览器中打开</string>
 
     <string name="wallpaper_name">珍贵的回忆动态桌面</string>
+    <string name="switch_5g">5G</string>
     <string name="show_layout_border">显示布局边界</string>
     <string name="sentence_app_widget_name">一言</string>
     <string name="sentence_get_failed">获取句子失败, 点击重试</string>

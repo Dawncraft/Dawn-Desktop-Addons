@@ -99,6 +99,7 @@
     <string name="open_in_browser">Open in browser</string>
 
     <string name="wallpaper_name">Memorial live wallpaper</string>
+    <string name="switch_5g">Switch 5G</string>
     <string name="show_layout_border">Show layout border</string>
     <string name="sentence_app_widget_name">Sentence</string>
     <string name="sentence_get_failed">Can\'t get sentence. Click to retry.</string>
