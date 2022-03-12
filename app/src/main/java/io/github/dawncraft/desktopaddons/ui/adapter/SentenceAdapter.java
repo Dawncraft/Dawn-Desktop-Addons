@@ -53,9 +53,8 @@ public class SentenceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sentence, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_sentence, parent, false));
     }
 
     @Override

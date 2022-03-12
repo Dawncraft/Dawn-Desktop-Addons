@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="io.github.dawncraft.desktopaddons">
 
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <uses-feature android:glEsVersion="0x00020000" android:required="false" />
     <uses-feature android:name="android.software.live_wallpaper" />
@@ -29,18 +29,15 @@
             android:label="@string/activity_settings"
             android:launchMode="singleTask"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
             </intent-filter>
         </activity>
-
         <activity-alias
             android:name=".ui.MainActivityAlias"
             android:label="@string/app_name"
             android:targetActivity=".ui.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,42 +48,46 @@
             android:name=".ui.NCPAppWidgetConfigActivity"
             android:label="@string/ncp_app_widget_config"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.WebViewActivity"
             android:taskAffinity="io.github.dawncraft.desktopaddons.WebViewActivity">
+            <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
         </activity>
-        <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
 
         <service
             android:name=".wallpaper.DawnLiveWallpaper"
             android:label="@string/wallpaper_name"
             android:permission="android.permission.BIND_WALLPAPER"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>
-
             <meta-data
                 android:name="android.service.wallpaper"
                 android:resource="@xml/livewallpaper" />
         </service>
-
+        <service
+            android:name=".quicksetting.SwitchFifthGTile"
+            android:label="@string/switch_5g"
+            android:icon="@drawable/ic_5g"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
         <service
             android:name=".quicksetting.ShowLayoutTile"
             android:label="@string/show_layout_border"
             android:icon="@drawable/ic_border_all"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE"/>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
@@ -94,46 +95,37 @@
             android:name=".appwidget.SentenceAppWidget"
             android:label="@string/sentence_app_widget_name"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="desktopaddons.intent.action.REFRESH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_sentence" />
         </receiver>
-
         <receiver
             android:name=".appwidget.NCPAppWidget"
             android:label="@string/ncp_app_widget_name"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="desktopaddons.intent.action.DETAILS" />
                 <action android:name="desktopaddons.intent.action.REFRESH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_ncp_info" />
         </receiver>
-
         <receiver
             android:name=".broadcast.PackageBroadcastReceiver"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".broadcast.ZenModeBroadcastReceiver"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="desktopaddons.intent.action.SWITCH_ZEN_MODE" />
             </intent-filter>

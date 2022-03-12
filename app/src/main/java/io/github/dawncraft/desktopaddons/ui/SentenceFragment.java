@@ -124,7 +124,7 @@ public class SentenceFragment extends Fragment
             }
         });
         recyclerViewSentences.setAdapter(loadMoreWrapper);
-        FloatingActionButton buttonAdd = root.findViewById(R.id.floatingActionButton);
+        FloatingActionButton buttonAdd = root.findViewById(R.id.floatingActionButtonAdd);
         buttonAdd.setOnClickListener(new View.OnClickListener()
         {
             @Override
