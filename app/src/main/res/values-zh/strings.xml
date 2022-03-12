@@ -6,6 +6,9 @@
     <string name="activity_settings">设置</string>
     <string name="developer_say">开发者的废话</string>
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
+    <string name="request_permissions">申请权限</string>
+    <string name="request_permissions_summary">某些手机(例如华为和荣耀)的5G快捷开关需要申请权限, 点击申请</string>
+    <string name="request_permissions_finished_summary">您已同意所有权限, 感谢您的理解!</string>
     <string name="hide_app_icon">隐藏桌面图标</string>
     <string name="hide_app_icon_summary">对Android10以上系统无效, 隐藏后可以从应用设置页或者ADB命令打开</string>
     <string name="settings_wallpaper">动态壁纸</string>

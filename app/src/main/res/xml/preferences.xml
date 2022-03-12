@@ -8,6 +8,12 @@
         android:summary="@string/developer_say_what"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        android:key="request_permissions"
+        android:title="@string/request_permissions"
+        android:summary="@string/request_permissions_summary"
+        app:iconSpaceReserved="false" />
+
     <SwitchPreferenceCompat
         android:key="hide_app_icon"
         android:title="@string/hide_app_icon"

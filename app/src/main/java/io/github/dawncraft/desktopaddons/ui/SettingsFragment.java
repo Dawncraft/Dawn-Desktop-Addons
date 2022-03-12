@@ -1,15 +1,20 @@
 package io.github.dawncraft.desktopaddons.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.Preference;
@@ -106,7 +111,47 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onResume()
     {
         super.onResume();
+        refreshPermissionsPreference();
         refreshUserPreference();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        if (requestCode == 233)
+        {
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED))
+            {
+                Utils.toast(getContext(), R.string.request_permissions_finished_summary);
+                refreshPermissionsPreference();
+            }
+        }
+    }
+
+    private void refreshPermissionsPreference()
+    {
+        Preference preferencePermissions = findPreference("request_permissions");
+        if (preferencePermissions != null)
+        {
+            preferencePermissions.setSummary(R.string.request_permissions_summary);
+            int permissionStatus = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE);
+            if (permissionStatus != PackageManager.PERMISSION_GRANTED)
+            {
+                preferencePermissions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+                {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference)
+                    {
+                        ActivityCompat.requestPermissions(requireActivity(), new String[] { Manifest.permission.READ_PHONE_STATE }, 233);
+                        return true;
+                    }
+                });
+            }
+            else
+            {
+                preferencePermissions.setSummary(R.string.request_permissions_finished_summary);
+            }
+        }
     }
 
     private void refreshUserPreference()

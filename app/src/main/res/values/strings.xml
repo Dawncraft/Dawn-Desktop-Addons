@@ -6,6 +6,9 @@
     <string name="developer_say">Developer want to say</string>
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
     <!-- 请原谅我的中式英语(笑 -->
+    <string name="request_permissions">Request permissions</string>
+    <string name="request_permissions_summary">Some phones need to request permissions to use 5g quick settings, click this to request</string>
+    <string name="request_permissions_finished_summary">You had allowed all permissions, thank you!</string>
     <string name="hide_app_icon">Hide app icon</string>
     <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
     <string name="settings_wallpaper">Live wallpaper</string>
