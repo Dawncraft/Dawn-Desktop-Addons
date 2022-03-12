@@ -18,6 +18,7 @@ public abstract class FifthGHelper
         switch (android.os.Build.BRAND)
         {
             case "Xiaomi":
+            case "Redmi":
                 instance = new MIUI();
                 break;
             default:
@@ -81,7 +82,7 @@ public abstract class FifthGHelper
             {
                 Class<?> clazz = Class.forName(CLASS_NAME);
                 Object telephonyManager = getTelephonyManager(clazz);
-                Method method = clazz.getMethod("setUserFiveGEnabled", Boolean.class);
+                Method method = clazz.getMethod("setUserFiveGEnabled", Boolean.TYPE);
                 method.invoke(telephonyManager, enable);
             }
             catch (Exception e)
