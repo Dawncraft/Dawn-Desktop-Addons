@@ -1,7 +1,9 @@
 package io.github.dawncraft.desktopaddons.util;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -16,6 +18,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.service.wallpaper.WallpaperService;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
