@@ -3,6 +3,7 @@ package io.github.dawncraft.desktopaddons.quicksetting;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -26,7 +27,7 @@ public class ShowLayoutTile extends TileService
         // NOTE 在设置中没找到显示布局边界
         // Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED)
         String property = Utils.getProperty("debug.layout");
-        if (property != null)
+        if (!TextUtils.isEmpty(property))
         {
             getQsTile().setState(Boolean.parseBoolean(property) ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
         }

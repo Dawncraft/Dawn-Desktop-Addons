@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.StringRes;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Scanner;
 
@@ -149,6 +150,7 @@ public final class Utils
         FifthGHelper.instance.setFifthGEnabled(enable);
     }
 
+    // android.os.SystemProperties#get(String)
     public static String getProperty(String key)
     {
         try
@@ -168,6 +170,7 @@ public final class Utils
         return null;
     }
 
+    // android.os.SystemProperties#set(String, String)
     public static void setProperty(String key, String value)
     {
         try
@@ -178,6 +181,17 @@ public final class Utils
         {
             e.printStackTrace();
         }
+    }
+
+    // 并没有什么卵用, 因为这个Activity的exported不为true
+    // 而且Android12以上这个Activity又没了
+    // https://android.googlesource.com/platform/packages/apps/Settings/+/refs/heads/master/src/com/android/settings/development/qstile/
+    public static void openDevTileConfig(Context context)
+    {
+        Intent intent = new Intent();
+        intent.setClassName("com.android.settings",
+                "com.android.settings.qstile.DevelopmentTileConfigActivity");
+        context.startActivity(intent);
     }
 
     public static void openUrl(Context context, String url)
