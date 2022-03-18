@@ -16,19 +16,18 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
 4. An app widget that can open/close zen mode.
    一个用于开启或关闭勿扰模式的锁屏通知
    ![Screenshot2](./screenshot-2.png)
-5. A quick setting that can show layout borders.(WIP)
+5. A quick setting that can enable or disable 5G.(Only can be used on XiaoMi)
+   一个用于开关5G的快捷开关(只能用于小米/红米手机, 华为/荣耀在授予权限的前提下能显示5G状态, 但无法切换, 除非root并作为系统应用安装, 其他手机等待适配中)
+6. A quick setting that can show layout borders.(WIP)
    一个用于开启或关闭开发者选项中显示布局边界选项的快捷开关(开发中，目前版本需要root)
 
 ## Bugs
 1. 各种bug
 
 ## TODO
-1. ~~加入缓存~~
-2. ~~将获取新冠肺炎数据放在Service中~~(放弃)
-3. ~~新冠肺炎小部件可选择地区~~
-4. ~~新冠肺炎小部件打开自定义界面, 而非网页~~
-5. ~~支持其他数据源~~(放弃支持)
-6. 修改或删除句子
+1. 修改或删除句子
+2. UI全面使用Google Material Design并适配暗黑模式
+3. 在Android 12上首次添加小部件时使用默认配置, 无需手动配置
 
 ## 测试机型
 - HM Note 1S(Android4.4.4/MIUI9.2稳定版) 新冠肺炎小部件可用(由old-android分支维护)
@@ -58,6 +57,7 @@ am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n io.github.dawncraft
 ## 特别致谢
 1. 所有在疫情中奉献自己的医护人员
 2. 腾讯新闻API
+3. 感谢[FiveGSwitcher](https://github.com/ysy950803/FiveGSwitcher)为5G快捷开关功能提供的思路
 
 ## 更新日志
 懒得写了...

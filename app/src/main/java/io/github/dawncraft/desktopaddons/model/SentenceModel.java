@@ -31,15 +31,7 @@ public class SentenceModel
                 .build();
         Response response = HttpUtils.getClient().newCall(request).execute();
         String content = Objects.requireNonNull(response.body()).string();
-        JSONObject json = new JSONObject(content);
-        Sentence sentence = new Sentence();
-        sentence.setSource(Sentence.Source.Hitokoto);
-        sentence.setId(json.getInt("id"));
-        sentence.setSentence(json.getString("hitokoto"));
-        if (!json.isNull("from_who"))
-            sentence.setAuthor(json.getString("from_who"));
-        sentence.setFrom(json.getString("from"));
-        return sentence;
+        return parseHitokoto(new JSONObject(content));
     }
 
     public Sentence getSentence() throws IOException, JSONException
@@ -51,16 +43,24 @@ public class SentenceModel
         Response response = HttpUtils.getClient().newCall(request).execute();
         String content = Objects.requireNonNull(response.body()).string();
         JSONObject json = new JSONObject(content);
-        JSONObject data = json.getJSONObject("data");
-        Sentence sentence = new Sentence();
-        sentence.setSource(Sentence.Source.Dawncraft);
-        sentence.setId(data.getInt("id"));
-        sentence.setSentence(data.getString("sentence"));
-        if (!data.isNull("author"))
-            sentence.setAuthor(data.getString("author"));
-        if (!data.isNull("from"))
-            sentence.setFrom(data.getString("from"));
-        return sentence;
+        return parseSentence(json.getJSONObject("data"));
+    }
+
+    public Sentence getSentence(int id) throws IOException, JSONException
+    {
+        Request request = new Request.Builder()
+                .url(HttpUtils.DAWNCRAFT_API.newBuilder()
+                        .addPathSegments("sentence/get")
+                        .addQueryParameter("id", String.valueOf(id - 1))
+                        .addQueryParameter("count", "1")
+                        .build())
+                .get()
+                .build();
+        Response response = HttpUtils.getClient().newCall(request).execute();
+        String content = Objects.requireNonNull(response.body()).string();
+        JSONObject json = new JSONObject(content);
+        JSONArray data = json.getJSONArray("data");
+        return parseSentence(data.getJSONObject(0));
     }
 
     public void getSentences(int id, int count, OnSentencesListener listener)
@@ -92,15 +92,7 @@ public class SentenceModel
                     List<Sentence> sentences = new ArrayList<>();
                     for (int i = 0; i < data.length(); i++)
                     {
-                        JSONObject jsonSentence = data.getJSONObject(i);
-                        Sentence sentence = new Sentence();
-                        sentence.setSource(Sentence.Source.Dawncraft);
-                        sentence.setId(jsonSentence.getInt("id"));
-                        sentence.setSentence(jsonSentence.getString("sentence"));
-                        if (!jsonSentence.isNull("author"))
-                            sentence.setAuthor(jsonSentence.getString("author"));
-                        if (!jsonSentence.isNull("from"))
-                            sentence.setFrom(jsonSentence.getString("from"));
+                        Sentence sentence = parseSentence(data.getJSONObject(i));
                         sentences.add(sentence);
                     }
                     listener.onSentences(sentences);
@@ -153,6 +145,35 @@ public class SentenceModel
                 }
             }
         });
+    }
+
+    private static Sentence parseHitokoto(JSONObject json) throws JSONException
+    {
+        if (json == null) return null;
+        Sentence sentence = new Sentence();
+        sentence.setSource(Sentence.Source.Hitokoto);
+        sentence.setId(json.getInt("id"));
+        sentence.setUUID(json.getString("uuid"));
+        sentence.setSentence(json.getString("hitokoto"));
+        if (!json.isNull("from_who"))
+            sentence.setAuthor(json.getString("from_who"));
+        sentence.setFrom(json.getString("from"));
+        return sentence;
+    }
+
+    private static Sentence parseSentence(JSONObject json) throws JSONException
+    {
+        if (json == null) return null;
+        Sentence sentence = new Sentence();
+        sentence.setSource(Sentence.Source.Dawncraft);
+        sentence.setId(json.getInt("id"));
+        sentence.setUUID(String.valueOf(sentence.getId()));
+        sentence.setSentence(json.getString("sentence"));
+        if (!json.isNull("author"))
+            sentence.setAuthor(json.getString("author"));
+        if (!json.isNull("from"))
+            sentence.setFrom(json.getString("from"));
+        return sentence;
     }
 
     public interface OnSentencesListener

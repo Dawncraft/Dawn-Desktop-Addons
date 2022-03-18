@@ -44,13 +44,6 @@
             app:destination="@id/sentenceFragment"
             app:iconSpaceReserved="false" />
 
-        <SwitchPreferenceCompat
-            android:key="sentence_source"
-            android:title="@string/sentence_source"
-            android:summary="@string/sentence_source_summary"
-            android:defaultValue="false"
-            app:iconSpaceReserved="false" />
-
         <ListPreference
             android:key="ncp_data_source"
             android:title="@string/ncp_data_source"

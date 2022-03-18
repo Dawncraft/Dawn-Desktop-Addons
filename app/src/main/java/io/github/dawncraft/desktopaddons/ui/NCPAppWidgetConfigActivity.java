@@ -1,7 +1,5 @@
 package io.github.dawncraft.desktopaddons.ui;
 
-import android.appwidget.AppWidgetManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -10,8 +8,6 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,14 +18,16 @@ import java.util.List;
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.appwidget.NCPAppWidget;
+import io.github.dawncraft.desktopaddons.dao.NCPAppWidgetDAO;
 import io.github.dawncraft.desktopaddons.entity.NCPAppWidgetID;
 import io.github.dawncraft.desktopaddons.entity.QQNewsNCPInfo;
 import io.github.dawncraft.desktopaddons.model.NCPInfoModel;
 import io.github.dawncraft.desktopaddons.ui.adapter.AreaAdapter;
 import io.github.dawncraft.desktopaddons.ui.adapter.AutoCompleteAdapter;
+import io.github.dawncraft.desktopaddons.ui.base.AppWidgetConfigActivity;
 import io.github.dawncraft.desktopaddons.util.Utils;
 
-public class NCPAppWidgetConfigActivity extends AppCompatActivity
+public class NCPAppWidgetConfigActivity extends AppWidgetConfigActivity
 {
     private Button buttonConfirm;
     private AutoCompleteAdapter<String> autoCompleteAdapter;
@@ -37,9 +35,9 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
     private AreaAdapter areaAdapter;
 
     private Handler handler;
+    private NCPAppWidgetDAO ncpAppWidgetDAO;
     private NCPInfoModel ncpInfoModel;
 
-    private int appWidgetId;
     private List<QQNewsNCPInfo> rootArea;
     private Deque<QQNewsNCPInfo> areaPath;
 
@@ -48,19 +46,11 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         handler = new Handler();
+        ncpAppWidgetDAO = DAApplication.getDatabase().ncpAppWidgetDAO();
         ncpInfoModel = new NCPInfoModel();
-        // 读取桌面小部件id
-        Bundle extras = getIntent().getExtras();
-        if (extras == null)
-        {
-            Utils.toast(this, R.string.invalid_app_widget);
-            finish();
-            return;
-        }
-        appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        setResult(RESULT_CANCELED, getResultValue());
         // 初始化视图
         setContentView(R.layout.activity_ncp_info_config);
+        setFinishOnTouchOutside(false);
         autoCompleteAdapter = new AutoCompleteAdapter<>(this, android.R.layout.simple_list_item_1);
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         autoCompleteTextView.setThreshold(1);
@@ -142,10 +132,8 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
                 NCPAppWidgetID ncpAppWidgetID = new NCPAppWidgetID();
                 ncpAppWidgetID.id = appWidgetId;
                 ncpAppWidgetID.region = region;
-                DAApplication.getDatabase().ncpAppWidgetDAO().insert(ncpAppWidgetID);
-                NCPAppWidget.notifyUpdate(NCPAppWidgetConfigActivity.this, new int[] { appWidgetId });
-                setResult(RESULT_OK, getResultValue());
-                finish();
+                ncpAppWidgetDAO.insert(ncpAppWidgetID);
+                applyConfig();
             }
         });
         Button buttonCancel = findViewById(R.id.buttonCancel);
@@ -204,6 +192,13 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    @Override
+    protected void applyConfig()
+    {
+        NCPAppWidget.notifyUpdate(this, new int[] { appWidgetId });
+        super.applyConfig();
+    }
+
     // TODO 腾讯新闻最多只有3层所以暂时写死, 改成递归
     // dbq我又写垃圾代码了, 但是我想不动用递归应该怎么写了
     private void initAutoComplete()
@@ -245,13 +240,6 @@ public class NCPAppWidgetConfigActivity extends AppCompatActivity
             areaAdapter.setAreaList(areaPath.getLast().getChildren(), false);
         }
         listView.setAdapter(areaAdapter);
-    }
-
-    private Intent getResultValue()
-    {
-        Intent intent = new Intent();
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        return intent;
     }
 
     private static QQNewsNCPInfo findInList(List<QQNewsNCPInfo> list, String area)

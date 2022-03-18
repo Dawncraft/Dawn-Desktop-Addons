@@ -5,8 +5,12 @@
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/app_widget_sentence"
     android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
     android:minWidth="200dp"
     android:minHeight="40dp"
     android:previewImage="@mipmap/app_widget_sentence_preview"
     android:updatePeriodMillis="86400000"
+    android:configure="io.github.dawncraft.desktopaddons.ui.SentenceAppWidgetConfigActivity"
+    android:widgetFeatures="reconfigurable"
     tools:ignore="UnusedAttribute" />

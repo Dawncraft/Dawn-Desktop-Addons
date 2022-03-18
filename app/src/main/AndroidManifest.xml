@@ -44,19 +44,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
-
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:taskAffinity="io.github.dawncraft.desktopaddons.WebViewActivity">
+            <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
+        </activity>
         <activity
             android:name=".ui.NCPAppWidgetConfigActivity"
             android:label="@string/ncp_app_widget_config"
+            android:theme="@style/AppTheme.Dialog"
+            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.WebViewActivity"
-            android:taskAffinity="io.github.dawncraft.desktopaddons.WebViewActivity">
-            <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
+            android:name=".ui.SentenceAppWidgetConfigActivity"
+            android:label="@string/sentence_app_widget_config"
+            android:theme="@style/AppTheme.Dialog"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
         </activity>
 
         <service

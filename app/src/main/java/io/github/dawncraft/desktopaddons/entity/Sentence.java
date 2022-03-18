@@ -3,6 +3,7 @@ package io.github.dawncraft.desktopaddons.entity;
 public class Sentence
 {
     private int id;
+    private String uuid;
     private String sentence;
     private String author;
     private String from;
@@ -16,6 +17,16 @@ public class Sentence
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    public String getUUID()
+    {
+        return uuid;
+    }
+
+    public void setUUID(String uuid)
+    {
+        this.uuid = uuid;
     }
 
     public String getSentence()

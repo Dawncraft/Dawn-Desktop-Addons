@@ -5,10 +5,13 @@
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/app_widget_ncp_info"
     android:resizeMode="horizontal"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
     android:minWidth="250dp"
     android:minHeight="40dp"
     android:previewImage="@mipmap/app_widget_ncp_info_preview"
     android:updatePeriodMillis="21600000"
     android:configure="io.github.dawncraft.desktopaddons.ui.NCPAppWidgetConfigActivity"
+    android:widgetFeatures="reconfigurable"
     tools:ignore="UnusedAttribute" />
     <!--  为了适配Oppo这种一行5个应用的奇葩手机, 暂时就先让宽度可控  -->

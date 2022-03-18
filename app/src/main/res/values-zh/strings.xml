@@ -17,8 +17,6 @@
     <string name="settings_app_widget">桌面小部件</string>
     <string name="sentence_list">提交你的句子</string>
     <string name="sentence_list_summary">向曙光工艺服务器提交你的句子(需要登录)</string>
-    <string name="sentence_source">设置一言小部件句子来源</string>
-    <string name="sentence_source_summary">开启后会使用一言的句子而不是我自己的句子(只影响桌面小部件)</string>
     <string name="ncp_data_source">设置新冠肺炎小部件数据源(只会影响打开的网页)</string>
     <string-array name="ncp_data_sources">
         <item>腾讯新闻</item>
@@ -62,11 +60,13 @@
     <string name="get_sentences_failed">加载句子失败, 请重试</string>
     <string name="no_more_sentences">没有更多句子啦</string>
     <string name="sentence_detail">显示句子详情 #%d</string>
-    <string name="sentence">句子: </string>
-    <string name="sentence_author">作者: </string>
-    <string name="sentence_from">来源: </string>
+    <string name="sentence">句子:</string>
+    <string name="sentence_author">作者:</string>
+    <string name="sentence_from">来源:</string>
     <string name="sentence_copy_declaration">桌面小部件对您使用此句子可能造成的版权纠纷不予负责</string>
     <string name="sentence_copy_success">句子已复制到剪贴板中</string>
+    <string name="sentence_pin">固定到桌面</string>
+    <string name="sentence_pin_failed">无法将一言小部件添加到桌面</string>
     <string name="add_sentence">添加句子</string>
     <string name="sentence_hint">句子</string>
     <string name="sentence_author_hint">作者</string>
@@ -91,14 +91,25 @@
     <string name="wrong_user_or_password">用户不存在或密码错误</string>
     <string name="login_error">登录时发生未知错误</string>
 
+    <string name="invalid_url">无效的网址</string>
+    <string name="open_in_browser">在浏览器中打开</string>
+
     <string name="ncp_app_widget_config">选择地区</string>
     <string name="invalid_app_widget">无效的桌面小部件</string>
     <string name="get_area_list_failed">获取地区列表失败</string>
     <string name="search_area">搜索地区</string>
     <string name="view_subarea">浏览子地区</string>
 
-    <string name="invalid_url">无效的网址</string>
-    <string name="open_in_browser">在浏览器中打开</string>
+    <string name="sentence_app_widget_config">选择句子</string>
+    <string name="sentence_source">句子来源</string>
+    <string-array name="sentence_sources">
+        <item>一言</item>
+        <item>我的服务器</item>
+    </string-array>
+    <string name="sentence_number">句子序号</string>
+    <string name="sentence_number_hint">留空为随机句子</string>
+    <string name="sentence_not_found">未找到这句话</string>
+    <string name="sentence_get_not_implemented">一言接口的固定句子功能尚未实装</string>
 
     <string name="wallpaper_name">珍贵的回忆动态桌面</string>
     <string name="switch_5g">5G</string>

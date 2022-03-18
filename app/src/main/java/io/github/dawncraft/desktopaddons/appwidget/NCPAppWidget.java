@@ -29,9 +29,12 @@ public class NCPAppWidget extends AppWidgetProvider
 {
     public static final String ACTION_DETAILS = "desktopaddons.intent.action.DETAILS";
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
+    public static final String ACTION_PINNED = "desktopaddons.intent.action.PINNED";
+    public static final String EXTRA_NCP_REGION = "ncpRegion";
     private static final String TAG = "NCPAppWidget";
 
     private final NCPAppWidgetDAO ncpAppWidgetDAO = DAApplication.getDatabase().ncpAppWidgetDAO();
+    private final NCPInfoModel ncpInfoModel = new NCPInfoModel();
     
     @Override
     public void onEnabled(Context context)
@@ -53,7 +56,6 @@ public class NCPAppWidget extends AppWidgetProvider
     {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         final PendingResult pendingResult = goAsync();
-        NCPInfoModel ncpInfoModel = new NCPInfoModel();
         for (int appWidgetId : appWidgetIds)
         {
             NCPAppWidgetID ncpAppWidgetID = ncpAppWidgetDAO.findById(appWidgetId);
@@ -126,11 +128,50 @@ public class NCPAppWidget extends AppWidgetProvider
                 onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
             }
         }
+        else if (ACTION_PINNED.equals(action))
+        {
+            Log.d(TAG, "Action pinned");
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
+            {
+                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                NCPAppWidgetID ncpAppWidgetID = new NCPAppWidgetID();
+                ncpAppWidgetID.id = appWidgetId;
+                ncpAppWidgetID.region = extras.getString(EXTRA_NCP_REGION);
+                ncpAppWidgetDAO.insert(ncpAppWidgetID);
+                onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+            }
+        }
+    }
+
+    public static RemoteViews createViews(Context context, NCPInfo ncpInfo)
+    {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_ncp_info);
+        if (ncpInfo != null)
+        {
+            String[] areas = ncpInfo.getRegion().split(",");
+            if (areas.length > 1)
+            {
+                String title = context.getString(R.string.ncp_app_widget_region, areas[areas.length - 1]);
+                views.setTextViewText(R.id.textViewTitle, title);
+            }
+            else
+            {
+                views.setTextViewText(R.id.textViewTitle, context.getString(R.string.ncp_app_widget_title));
+            }
+            views.setTextViewText(R.id.textViewTime, ncpInfo.getDate());
+            views.setTextViewText(R.id.textViewUpdate, ncpInfo.getUpdateTime());
+            views.setTextViewText(R.id.textViewConfirm, String.valueOf(ncpInfo.getConfirm()));
+            views.setTextViewText(R.id.textViewSuspect, String.valueOf(ncpInfo.getSuspect()));
+            views.setTextViewText(R.id.textViewCure, String.valueOf(ncpInfo.getCure()));
+            views.setTextViewText(R.id.textViewDead, String.valueOf(ncpInfo.getDead()));
+        }
+        return views;
     }
 
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, NCPInfo ncpInfo)
     {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_ncp_info);
+        RemoteViews views = createViews(context, ncpInfo);
         // NOTE Android 3.0起点击小部件默认会跳转至应用主Activity
         // 详见 https://developer.android.google.cn/guide/topics/appwidgets/host#which-version-are-you-targeting
         // 详见 android.appwidget.AppWidgetHostView#onDefaultViewClicked
@@ -148,21 +189,6 @@ public class NCPAppWidget extends AppWidgetProvider
         PendingIntent pendingIntentRefresh = PendingIntent.getBroadcast(context, appWidgetId, intentRefresh,
                 Utils.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.imageButtonRefresh, pendingIntentRefresh);
-        if (ncpInfo != null)
-        {
-            String[] areas = ncpInfo.getRegion().split(",");
-            if (areas.length > 1)
-            {
-                String title = context.getString(R.string.ncp_app_widget_region, areas[areas.length - 1]);
-                views.setTextViewText(R.id.textViewTitle, title);
-            }
-            views.setTextViewText(R.id.textViewTime, ncpInfo.getDate());
-            views.setTextViewText(R.id.textViewUpdate, ncpInfo.getUpdateTime());
-            views.setTextViewText(R.id.textViewConfirm, String.valueOf(ncpInfo.getConfirm()));
-            views.setTextViewText(R.id.textViewSuspect, String.valueOf(ncpInfo.getSuspect()));
-            views.setTextViewText(R.id.textViewCure, String.valueOf(ncpInfo.getCure()));
-            views.setTextViewText(R.id.textViewDead, String.valueOf(ncpInfo.getDead()));
-        }
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -180,5 +206,23 @@ public class NCPAppWidget extends AppWidgetProvider
         ComponentName componentName = new ComponentName(context, NCPAppWidget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(componentName);
         notifyUpdate(context, appWidgetIds);
+    }
+
+    public static boolean requestPin(Context context, NCPInfo ncpInfo)
+    {
+        if (!Utils.isPinAppWidgetSupported(context)) return false;
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context, NCPAppWidget.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, createViews(context, ncpInfo));
+        Intent intent = new Intent(context, NCPAppWidget.class);
+        intent.setAction(ACTION_PINNED);
+        if (ncpInfo != null)
+        {
+            intent.putExtra(EXTRA_NCP_REGION, ncpInfo.getRegion());
+        }
+        PendingIntent successCallback = PendingIntent.getBroadcast(context, 0, intent,
+                Utils.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        return appWidgetManager.requestPinAppWidget(componentName, extras, successCallback);
     }
 }

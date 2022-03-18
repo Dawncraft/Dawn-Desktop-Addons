@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    android:padding="@dimen/widget_margin"
+    android:padding="@dimen/app_widget_margin"
     android:focusable="true">
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:singleLine="true"
             android:text="@string/ncp_app_widget_title"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/widget_title_size"
+            android:textSize="@dimen/app_widget_title_size"
             android:textStyle="bold|italic"
             tools:ignore="RtlHardcoded" />
 
@@ -89,7 +89,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_time"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_time_size" />
+                android:textSize="@dimen/app_widget_time_size" />
 
             <TextView
                 android:id="@+id/textViewTime"
@@ -99,7 +99,7 @@
                 android:singleLine="true"
                 android:text="@string/unknown_date"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_time_size" />
+                android:textSize="@dimen/app_widget_time_size" />
 
         </LinearLayout>
 
@@ -117,7 +117,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_update_time"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_time_size" />
+                android:textSize="@dimen/app_widget_time_size" />
 
             <TextView
                 android:id="@+id/textViewUpdate"
@@ -127,7 +127,7 @@
                 android:singleLine="true"
                 android:text="@string/unknown_date"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_time_size" />
+                android:textSize="@dimen/app_widget_time_size" />
 
         </LinearLayout>
 
@@ -148,7 +148,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/none"
                 android:textColor="@color/colorConfirm"
-                android:textSize="@dimen/widget_number_size"
+                android:textSize="@dimen/app_widget_number_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -157,7 +157,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_confirm"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_text_size" />
+                android:textSize="@dimen/app_widget_text_size" />
 
         </LinearLayout>
 
@@ -176,7 +176,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/none"
                 android:textColor="#EF6C00"
-                android:textSize="@dimen/widget_number_size"
+                android:textSize="@dimen/app_widget_number_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -185,7 +185,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_suspect"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_text_size" />
+                android:textSize="@dimen/app_widget_text_size" />
 
         </LinearLayout>
 
@@ -204,7 +204,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/none"
                 android:textColor="@color/colorCure"
-                android:textSize="@dimen/widget_number_size"
+                android:textSize="@dimen/app_widget_number_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -213,7 +213,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_cure"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_text_size" />
+                android:textSize="@dimen/app_widget_text_size" />
 
         </LinearLayout>
 
@@ -232,7 +232,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/none"
                 android:textColor="@color/colorDead"
-                android:textSize="@dimen/widget_number_size"
+                android:textSize="@dimen/app_widget_number_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -241,7 +241,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/ncp_app_widget_dead"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/widget_text_size" />
+                android:textSize="@dimen/app_widget_text_size" />
 
         </LinearLayout>
 

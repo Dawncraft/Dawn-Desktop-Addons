@@ -16,6 +16,7 @@ import io.github.dawncraft.desktopaddons.util.Utils;
 public class WebViewActivity extends AppCompatActivity
 {
     private String url;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +30,7 @@ public class WebViewActivity extends AppCompatActivity
             return;
         }
         setContentView(R.layout.activity_web_view);
-        WebView webView = findViewById(R.id.webView);
+        webView = findViewById(R.id.webView);
         webView.setWebViewClient(new MyWebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
@@ -53,6 +54,17 @@ public class WebViewActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (webView.canGoBack())
+        {
+            webView.goBack();
+            return;
+        }
+        super.onBackPressed();
     }
 
     private class MyWebViewClient extends WebViewClient

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -16,14 +17,29 @@ import java.io.IOException;
 
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
+import io.github.dawncraft.desktopaddons.dao.SentenceAppWidgetDAO;
 import io.github.dawncraft.desktopaddons.entity.Sentence;
+import io.github.dawncraft.desktopaddons.entity.SentenceAppWidgetID;
 import io.github.dawncraft.desktopaddons.model.SentenceModel;
 import io.github.dawncraft.desktopaddons.util.Utils;
 
 public class SentenceAppWidget extends AppWidgetProvider
 {
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";
+    public static final String ACTION_PINNED = "desktopaddons.intent.action.PINNED";
+    public static final String EXTRA_SENTENCE_SOURCE = "sentenceSource";
+    public static final String EXTRA_SENTENCE_ID = "sentenceId";
     private static final String TAG = "SentenceAppWidget";
+
+    private final SentenceAppWidgetDAO sentenceAppWidgetDAO = DAApplication.getDatabase().sentenceAppWidgetDAO();
+    private final SentenceModel sentenceModel = new SentenceModel();
+
+    @Override
+    public void onDisabled(Context context)
+    {
+        super.onDisabled(context);
+        sentenceAppWidgetDAO.deleteAll();
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
@@ -32,10 +48,10 @@ public class SentenceAppWidget extends AppWidgetProvider
         // 主线程上不能执行耗费时间过长的操作, 也不能执行网络等操作, 除非开启严格模式, 但正式环境不应使用严格模式
         // 应该开新线程或者用协程, AsyncTask, Service, WorkManager等, 这里因为比较简单就直接开了新线程
         final PendingResult pendingResult = goAsync();
-        SentenceModel sentenceModel = new SentenceModel();
-        boolean useHitokoto = DAApplication.getPreferences().getBoolean("sentence_source", false);
         for (int appWidgetId : appWidgetIds)
         {
+            SentenceAppWidgetID sentenceAppWidgetID = sentenceAppWidgetDAO.findById(appWidgetId);
+            if (sentenceAppWidgetID == null) continue;
             Thread thread = new Thread(new Runnable()
             {
                 @Override
@@ -44,7 +60,19 @@ public class SentenceAppWidget extends AppWidgetProvider
                     Sentence sentence = null;
                     try
                     {
-                        sentence = useHitokoto ? sentenceModel.getHitokoto() : sentenceModel.getSentence();
+                        switch (sentenceAppWidgetID.source)
+                        {
+                            case Hitokoto:
+                                sentence = sentenceModel.getHitokoto();
+                                break;
+                            case Dawncraft:
+                                if (TextUtils.isEmpty(sentenceAppWidgetID.sid)) {
+                                    sentence = sentenceModel.getSentence();
+                                } else {
+                                    sentence = sentenceModel.getSentence(Integer.parseInt(sentenceAppWidgetID.sid));
+                                }
+                                break;
+                        }
                     }
                     catch (IOException | JSONException e)
                     {
@@ -64,6 +92,16 @@ public class SentenceAppWidget extends AppWidgetProvider
     }
 
     @Override
+    public void onDeleted(Context context, int[] appWidgetIds)
+    {
+        super.onDeleted(context, appWidgetIds);
+        for (int appWidgetId : appWidgetIds)
+        {
+            sentenceAppWidgetDAO.deleteById(appWidgetId);
+        }
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent)
     {
         super.onReceive(context, intent);
@@ -78,17 +116,26 @@ public class SentenceAppWidget extends AppWidgetProvider
                 onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
             }
         }
+        else if (ACTION_PINNED.equals(action))
+        {
+            Log.d(TAG, "Action pinned");
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
+            {
+                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+                SentenceAppWidgetID sentenceAppWidgetID = new SentenceAppWidgetID();
+                sentenceAppWidgetID.id = appWidgetId;
+                sentenceAppWidgetID.source = Sentence.Source.valueOf(extras.getString(EXTRA_SENTENCE_SOURCE));
+                sentenceAppWidgetID.sid = extras.getString(EXTRA_SENTENCE_ID);
+                sentenceAppWidgetDAO.insert(sentenceAppWidgetID);
+                onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+            }
+        }
     }
 
-    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Sentence sentence)
+    public static RemoteViews createViews(Context context, Sentence sentence)
     {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_sentence);
-        Intent intent = new Intent(context, SentenceAppWidget.class);
-        intent.setAction(ACTION_REFRESH);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, intent,
-                Utils.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.layoutSentenceWidget, pendingIntent);
         if (sentence != null)
         {
             views.setTextViewText(R.id.textViewSentence, sentence.getSentence());
@@ -104,6 +151,18 @@ public class SentenceAppWidget extends AppWidgetProvider
             sb.insert(0, "——");
             views.setTextViewText(R.id.textViewFrom, sb.toString());
         }
+        return views;
+    }
+
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Sentence sentence)
+    {
+        RemoteViews views = createViews(context, sentence);
+        Intent intent = new Intent(context, SentenceAppWidget.class);
+        intent.setAction(ACTION_REFRESH);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, intent,
+                Utils.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.layoutSentenceWidget, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -121,5 +180,25 @@ public class SentenceAppWidget extends AppWidgetProvider
         ComponentName componentName = new ComponentName(context, SentenceAppWidget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(componentName);
         notifyUpdate(context, appWidgetIds);
+    }
+
+    public static boolean requestPin(Context context, Sentence sentence)
+    {
+        if (!Utils.isPinAppWidgetSupported(context)) return false;
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context, SentenceAppWidget.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PREVIEW, createViews(context, sentence));
+        Intent intent = new Intent(context, SentenceAppWidget.class);
+        intent.setAction(ACTION_PINNED);
+        if (sentence != null)
+        {
+            intent.putExtra(EXTRA_SENTENCE_SOURCE, sentence.getSource().name());
+            intent.putExtra(EXTRA_SENTENCE_ID, sentence.getUUID());
+        }
+        // NOTE 又踩坑啦, 这个Intent是会变的, 所以应该用FLAG_MUTABLE
+        PendingIntent successCallback = PendingIntent.getBroadcast(context, 0, intent,
+                Utils.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        return appWidgetManager.requestPinAppWidget(componentName, extras, successCallback);
     }
 }

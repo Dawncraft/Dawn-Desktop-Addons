@@ -4,16 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/abc_dialog_padding_top_material"
     android:orientation="vertical"
     tools:context=".ui.NCPAppWidgetConfigActivity">
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="16dp"
-        android:hint="@string/search_area" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:hint="@string/search_area"
+            android:inputType="text"
+            android:minHeight="@dimen/editable_min_height"
+            android:paddingHorizontal="12dp"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:layout_width="match_parent"

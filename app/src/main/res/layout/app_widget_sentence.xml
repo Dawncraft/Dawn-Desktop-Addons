@@ -8,7 +8,7 @@
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/widget_margin">
+    android:padding="@dimen/app_widget_margin">
 
     <TextView
         android:id="@+id/textViewSentence"
@@ -19,7 +19,7 @@
         android:shadowColor="@android:color/black"
         android:shadowRadius="5"
         android:text="@string/sentence_get_failed"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         tools:ignore="TextContrastCheck"
         tools:text="沉舟侧畔千帆过，病树前头万木春。" />
@@ -32,7 +32,7 @@
         android:paddingHorizontal="8dp"
         android:shadowColor="@android:color/black"
         android:shadowRadius="5"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         android:textSize="14sp"
         tools:ignore="TextContrastCheck"
         tools:text="——刘禹锡, 《酬乐天扬州初逢席上见赠》" />

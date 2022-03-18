@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/abc_dialog_padding_top_material"
+    android:orientation="vertical"
+    tools:context=".ui.SentenceAppWidgetConfigActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:text="@string/sentence_source" />
+
+    <Spinner
+        android:id="@+id/spinnerSource"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/editable_min_height"
+        android:layout_marginHorizontal="16dp"
+        android:entries="@array/sentence_sources"
+        tools:listitem="@android:layout/simple_spinner_item" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:text="@string/sentence_number" />
+
+    <EditText
+        android:id="@+id/editTextSentence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/editable_min_height"
+        android:layout_marginHorizontal="12dp"
+        android:hint="@string/sentence_number_hint"
+        android:inputType="text"
+        android:paddingHorizontal="12dp"
+        android:textSize="16sp"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no" />
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/buttonConfirm"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -17,8 +17,6 @@
     <string name="settings_app_widget">APP widget</string>
     <string name="sentence_list">Submit your sentences</string>
     <string name="sentence_list_summary">Submit your sentences to Dawncraft server (Login needed)</string>
-    <string name="sentence_source">Set sentence source for sentence widget</string>
-    <string name="sentence_source_summary">Will use hitokoto instead of mine if enabled (Only affect sentence widget)</string>
     <string name="ncp_data_source">Set data source for NCP widget (Only affect website)</string>
     <string-array name="ncp_data_sources">
         <item>Tencent News</item>
@@ -62,11 +60,13 @@
     <string name="get_sentences_failed">Can\'t get sentences</string>
     <string name="no_more_sentences">No more sentences</string>
     <string name="sentence_detail">Sentence detail #%d</string>
-    <string name="sentence">Sentence: </string>
-    <string name="sentence_author">Author: </string>
-    <string name="sentence_from">From: </string>
+    <string name="sentence">Sentence:</string>
+    <string name="sentence_author">Author:</string>
+    <string name="sentence_from">From:</string>
     <string name="sentence_copy_declaration">We are not responsible for possible copyright issues because of this sentence.</string>
     <string name="sentence_copy_success">Copy sentence successfully</string>
+    <string name="sentence_pin">Pin</string>
+    <string name="sentence_pin_failed">Pin sentence to launcher failed</string>
     <string name="add_sentence">Add sentence</string>
     <string name="sentence_hint">Sentence</string>
     <string name="sentence_author_hint">Author</string>
@@ -91,14 +91,25 @@
     <string name="wrong_user_or_password">Wrong user or password</string>
     <string name="login_error">Unknown error</string>
 
+    <string name="invalid_url">Invalid url</string>
+    <string name="open_in_browser">Open in browser</string>
+
     <string name="ncp_app_widget_config">Select region</string>
     <string name="invalid_app_widget">Invalid APP widget ID</string>
     <string name="get_area_list_failed">Get area list failed</string>
     <string name="search_area">Search area</string>
     <string name="view_subarea">View subarea</string>
 
-    <string name="invalid_url">Invalid url</string>
-    <string name="open_in_browser">Open in browser</string>
+    <string name="sentence_app_widget_config">Select sentence</string>
+    <string name="sentence_source">Sentence source</string>
+    <string-array name="sentence_sources">
+        <item>Hitokoto</item>
+        <item>Dawncraft</item>
+    </string-array>
+    <string name="sentence_number">Sentence order number</string>
+    <string name="sentence_number_hint">Left blank for random sentences</string>
+    <string name="sentence_not_found">Can\'t find this sentence</string>
+    <string name="sentence_get_not_implemented">Pinning Hitokoto sentence has not been implemented</string>
 
     <string name="wallpaper_name">Memorial live wallpaper</string>
     <string name="switch_5g">Switch 5G</string>

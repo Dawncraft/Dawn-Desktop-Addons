@@ -1,9 +1,8 @@
 package io.github.dawncraft.desktopaddons.util;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.WallpaperManager;
+import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -18,13 +17,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.service.wallpaper.WallpaperService;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Scanner;
 
@@ -192,6 +189,12 @@ public final class Utils
         intent.setClassName("com.android.settings",
                 "com.android.settings.qstile.DevelopmentTileConfigActivity");
         context.startActivity(intent);
+    }
+
+    public static boolean isPinAppWidgetSupported(Context context)
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                AppWidgetManager.getInstance(context).isRequestPinAppWidgetSupported();
     }
 
     public static void openUrl(Context context, String url)

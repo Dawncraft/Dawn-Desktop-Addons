@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
+import io.github.dawncraft.desktopaddons.appwidget.SentenceAppWidget;
 import io.github.dawncraft.desktopaddons.entity.Sentence;
 import io.github.dawncraft.desktopaddons.model.SentenceModel;
 import io.github.dawncraft.desktopaddons.ui.adapter.SentenceAdapter;
@@ -73,7 +74,7 @@ public class SentenceFragment extends Fragment
                     TextView textViewFrom = view.findViewById(R.id.textViewFrom);
                     textViewFrom.setText(sentence.getFrom());
                 }
-                new AlertDialog.Builder(requireActivity())
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
                         .setTitle(getString(R.string.sentence_detail, sentence.getId()))
                         .setView(view)
                         .setNeutralButton(android.R.string.copy, new DialogInterface.OnClickListener()
@@ -100,11 +101,25 @@ public class SentenceFragment extends Fragment
                                         .append("\n")
                                         .append(getString(R.string.sentence_copy_declaration));
                                 Utils.copyToClipboard(requireContext(), sb.toString());
-                                Utils.toast(requireContext(), R.string.sentence_copy_success);
+                                Utils.toast(getContext(), R.string.sentence_copy_success);
                             }
                         })
-                        .setPositiveButton(android.R.string.ok, null)
-                        .show();
+                        .setPositiveButton(android.R.string.ok, null);
+                if (Utils.isPinAppWidgetSupported(requireContext()))
+                {
+                    builder.setNegativeButton(R.string.sentence_pin, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            if (!SentenceAppWidget.requestPin(getContext(), sentence))
+                            {
+                                Utils.toast(getContext(), R.string.sentence_pin_failed);
+                            }
+                        }
+                    });
+                }
+                builder.show();
             }
         });
         loadMoreWrapper = new LoadMoreWrapper(sentenceAdapter);
