@@ -10,16 +10,16 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
    一个可加载自定义模型的动态壁纸(未完成)
 2. An app widget that can show a sentence every day. 一个展示一言的桌面小部件, API可选择一言([Hitokoto](https://hitokoto.cn/))或曙光工艺服务器.
    ![Screenshot3](./screenshot-3.png)
-3. An app widget that can monitor Novel coronavirus pneumonia's statistics.The API comes from Tencent News.
+3. An app widget that can monitor Novel coronavirus pneumonia's statistics. The API comes from Tencent News.
    一个用于监测新型冠状病毒肺炎的桌面小工具，API来自于腾讯新闻
    ![Screenshot1](./screenshot-1.png)
 4. An app widget that can open/close zen mode.
    一个用于开启或关闭勿扰模式的锁屏通知
    ![Screenshot2](./screenshot-2.png)
-5. A quick setting that can enable or disable 5G.(Only can be used on XiaoMi)
-   一个用于开关5G的快捷开关(只能用于小米/红米手机, 华为/荣耀在授予权限的前提下能显示5G状态, 但无法切换, 除非root并作为系统应用安装, 其他手机等待适配中)
-6. A quick setting that can show layout borders.(WIP)
-   一个用于开启或关闭开发者选项中显示布局边界选项的快捷开关(开发中，目前版本需要root)
+5. A quick setting that can enable or disable 5G. (Only can be used on XiaoMi)
+   一个用于开关5G的快捷开关(小米/红米开箱即用, 华为/荣耀需要root且安装Sui模块, 其他手机待适配)
+6. A quick setting that can show layout borders.
+   一个用于开启或关闭开发者选项中显示布局边界选项的快捷开关(需要Shizuku)
 
 ## Bugs
 1. 各种bug
@@ -40,8 +40,7 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
 
 另外如果隐藏了桌面图标，可以通过以下命令打开设置界面：
 ```bash
-adb shell
-am start -n io.github.dawncraft.desktopaddons/io.github.dawncraft.desktopaddons.ui.MainActivity
+adb shell am start -n io.github.dawncraft.desktopaddons/.ui.MainActivity
 ```
 用以下命令显示桌面小部件的ID
 ```bash
@@ -49,15 +48,19 @@ adb shell dumpsys appwidget
 ```
 用以下命令刷新所有桌面小部件(需要root或模拟器)
 ```bash
-adb shell
-su
-am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n io.github.dawncraft.desktopaddons/io.github.dawncraft.desktopaddons.broadcast.PackageBroadcastReceiver
+adb shell su am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n io.github.dawncraft.desktopaddons/.broadcast.PackageBroadcastReceiver
+```
+用以下命令开关显示布局
+```bash
+adb shell setprop debug.layout true/false
+adb shell service call activity 1599295570
 ```
 
 ## 特别致谢
 1. 所有在疫情中奉献自己的医护人员
 2. 腾讯新闻API
-3. 感谢[FiveGSwitcher](https://github.com/ysy950803/FiveGSwitcher)为5G快捷开关功能提供的思路
+3. 感谢[Shizuku](https://github.com/RikkaApps/Shizuku)使一些功能成为可能
+4. 感谢[FiveGSwitcher](https://github.com/ysy950803/FiveGSwitcher)为5G快捷开关功能提供的思路
 
 ## 更新日志
 懒得写了...

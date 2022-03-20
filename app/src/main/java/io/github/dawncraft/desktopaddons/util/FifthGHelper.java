@@ -4,11 +4,19 @@
  */
 package io.github.dawncraft.desktopaddons.util;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Parcel;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+
+import rikka.shizuku.Shizuku;
+import rikka.shizuku.SystemServiceHelper;
 
 public abstract class FifthGHelper
 {
@@ -16,7 +24,7 @@ public abstract class FifthGHelper
 
     static
     {
-        switch (android.os.Build.BRAND)
+        switch (Build.BRAND)
         {
             case "Xiaomi":
             case "Redmi":
@@ -106,6 +114,29 @@ public abstract class FifthGHelper
         private static final int NETWORK_TYPE_5G = 1;
         // public static final boolean IS_SUPPORT_5G = (HwTelephonyManager.getDefault().getModemMaxCapability(0) >= 4);
 
+        public static void PackageManager_grantRuntimePermission(String packageName, String permission, int user)
+        {
+            Parcel data = SystemServiceHelper.obtainParcel("package", "android.content.pm.IPackageManager", "grantRuntimePermission");
+            Parcel reply = Parcel.obtain();
+            data.writeString(packageName);
+            data.writeString(permission);
+            data.writeInt(user);
+            try
+            {
+                Shizuku.transactRemote(data, reply, 0);
+                reply.readException();
+            }
+            catch (Exception e)
+            {
+                Log.e("EMUI", "PackageManager#grantRuntimePermission", e);
+            }
+            finally
+            {
+                data.recycle();
+                reply.recycle();
+            }
+        }
+
         private Object getTelephonyManager(Class<?> clazz) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
         {
             Method method = clazz.getMethod("getDefault");
@@ -121,6 +152,9 @@ public abstract class FifthGHelper
         @Override
         public boolean isFifthGSupported()
         {
+            // 华为操作5G的API需要READ_PHONE_STATE和MODIFY_PHONE_STATE权限, 这里用Shizuku获取权限
+            if (!Shizuku.pingBinder() || Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED)
+                return false;
             try
             {
                 Class<?> clazz = Class.forName(CLASS_NAME);
@@ -138,6 +172,7 @@ public abstract class FifthGHelper
         @Override
         public boolean isFifthGEnabled()
         {
+            PackageManager_grantRuntimePermission("io.github.dawncraft.desktopaddons", Manifest.permission.READ_PHONE_STATE, 0);
             try
             {
                 Class<?> clazz = Class.forName(CLASS_NAME);
@@ -153,10 +188,17 @@ public abstract class FifthGHelper
             return false;
         }
 
+        /*
+        at com.android.internal.telephony.IHwTelephony$Stub$Proxy.setServiceAbilityForSlotId(IHwTelephony.java:2514)
+        at android.telephony.HwTelephonyManagerInner.setServiceAbility(HwTelephonyManagerInner.java:1085)
+        at android.telephony.HwTelephonyManager.setServiceAbility(HwTelephonyManager.java:562)
+        不过估计也没用
+         */
         @Override
         public void setFifthGEnabled(boolean enable)
         {
-            // FIXME No modify permission or carrier privilege.
+            // MODIFY_PHONE_STATE 需要应用与系统签名相同或者位于系统应用目录下
+            PackageManager_grantRuntimePermission("io.github.dawncraft.desktopaddons", Manifest.permission.MODIFY_PHONE_STATE, 0);
             try
             {
                 Class<?> clazz = Class.forName(CLASS_NAME);

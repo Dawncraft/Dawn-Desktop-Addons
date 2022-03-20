@@ -6,9 +6,11 @@
     <string name="activity_settings">设置</string>
     <string name="developer_say">开发者的废话</string>
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
-    <string name="request_permissions">申请权限</string>
-    <string name="request_permissions_summary">某些手机(例如华为和荣耀)的5G快捷开关需要申请权限, 点击申请</string>
-    <string name="request_permissions_finished_summary">您已同意所有权限, 感谢您的理解!</string>
+    <string name="check_shizuku">Shizuku支持</string>
+    <string name="shizuku_not_found">部分功能需要安装Shizuku或在已root的情况下安装Sui模块才可使用</string>
+    <string name="shizuku_no_permission">检测到Shizuku: %d, 点击授予权限</string>
+    <string name="shizuku_has_permission">检测到Shizuku: %d, 已授予权限</string>
+    <string name="request_permission_successfully">您已同意所有权限, 感谢您的理解!</string>
     <string name="hide_app_icon">隐藏桌面图标</string>
     <string name="hide_app_icon_summary">对Android10以上系统无效, 隐藏后可以从应用设置页或者ADB命令打开</string>
     <string name="settings_wallpaper">动态壁纸</string>
@@ -35,11 +37,16 @@
         <item>GitHub仓库</item>
     </string-array>
     <string name="settings_notification">锁屏小部件</string>
-    <string name="enable_zen_mode_switch">是否启用勿扰模式开关</string>
-    <string name="enable_zen_mode_switch_summary">重启应用后生效</string>
     <string name="notification_policy_access_permission">打开勿扰模式权限设置</string>
     <string name="no_notification_policy_access_permission">该功能需要手动授予修改勿扰模式的权限, 点击打开设置</string>
     <string name="has_notification_policy_access_permission">您已授予修改勿扰模式的权限</string>
+    <string name="enable_zen_mode_switch">是否启用勿扰模式开关</string>
+    <string name="enable_zen_mode_switch_summary">无需重启应用即可生效</string>
+    <string name="settings_quick_setting">快捷设置图块</string>
+    <string name="fifthg_switch">是否启用5G开关</string>
+    <string name="fifthg_switch_summary">如果你的系统还自带该图块则无需使用, 目前仅小米/红米可用, 华为/荣耀需安装Shizuku, 其他手机暂不支持</string>
+    <string name="dev_tiles_switch">是否启用显示布局边界</string>
+    <string name="dev_tiles_switch_summary">如果能够使用开发者设置中的快捷设置开发者图块则不要使用这个, 需要Shizuku</string>
     <string name="settings_user">曙光工艺账户</string>
     <string name="user_not_log_in">未登录</string>
     <string name="user_log_in_summary">登录账号以同步个人设置或上传句子</string>

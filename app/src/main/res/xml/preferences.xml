@@ -9,16 +9,16 @@
         app:iconSpaceReserved="false" />
 
     <Preference
-        android:key="request_permissions"
-        android:title="@string/request_permissions"
-        android:summary="@string/request_permissions_summary"
+        android:key="check_shizuku"
+        android:title="@string/check_shizuku"
         app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        android:key="hide_app_icon"
+    <io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference
         android:title="@string/hide_app_icon"
         android:summary="@string/hide_app_icon_summary"
         android:persistent="false"
+        app:reverse="true"
+        app:targetClass="io.github.dawncraft.desktopaddons.ui.MainActivityAlias"
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory
@@ -26,7 +26,6 @@
         app:iconSpaceReserved="false">
 
         <io.github.dawncraft.desktopaddons.ui.widget.NavigationPreference
-            android:key="wallpaper_scene"
             android:title="@string/wallpaper_scene_setting"
             android:summary="@string/wallpaper_scene_setting_summary"
             app:destination="@id/wallpaperFragment"
@@ -38,7 +37,6 @@
         app:iconSpaceReserved="false">
 
         <io.github.dawncraft.desktopaddons.ui.widget.NavigationPreference
-            android:key="sentence_list"
             android:title="@string/sentence_list"
             android:summary="@string/sentence_list_summary"
             app:destination="@id/sentenceFragment"
@@ -58,32 +56,55 @@
         android:title="@string/settings_notification"
         app:iconSpaceReserved="false">
 
+        <Preference
+            android:key="notification_policy_access_permission"
+            android:title="@string/notification_policy_access_permission"
+            app:iconSpaceReserved="false">
+
+            <intent android:action="android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS" />
+        </Preference>
+
         <SwitchPreferenceCompat
             android:key="zen_mode_switch"
             android:title="@string/enable_zen_mode_switch"
             android:summary="@string/enable_zen_mode_switch_summary"
             android:defaultValue="false"
+            android:enabled="false"
             app:iconSpaceReserved="false" />
-        <!-- TODO 动态注册/注销广播, 无须重启应用 -->
 
-        <Preference
-            android:key="notification_policy_access_permission"
-            android:title="@string/notification_policy_access_permission"
-            app:isPreferenceVisible="false"
-            app:iconSpaceReserved="false">
+    </PreferenceCategory>
 
-            <intent android:action="android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS" />
-        </Preference>
+    <PreferenceCategory
+        android:title="@string/settings_quick_setting"
+        app:iconSpaceReserved="false">
+
+        <io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference
+            android:key="5g_switch"
+            android:title="@string/fifthg_switch"
+            android:summary="@string/fifthg_switch_summary"
+            android:persistent="false"
+            android:enabled="false"
+            app:targetClass="io.github.dawncraft.desktopaddons.quicksetting.SwitchFifthGTile"
+            app:iconSpaceReserved="false" />
+
+        <io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference
+            android:key="dev_tiles_switch"
+            android:title="@string/dev_tiles_switch"
+            android:summary="@string/dev_tiles_switch_summary"
+            android:persistent="false"
+            android:enabled="false"
+            app:targetClass="io.github.dawncraft.desktopaddons.quicksetting.DevelopmentTiles$ShowLayout"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/settings_user"
         app:iconSpaceReserved="false">
 
-        <Preference
-            android:key="user"
+        <io.github.dawncraft.desktopaddons.ui.widget.UserPreference
             android:title="@string/user_not_log_in"
             android:summary="@string/user_log_in_summary"
+            app:destination="@id/loginFragment"
             app:icon="@drawable/ic_person" />
     </PreferenceCategory>
 

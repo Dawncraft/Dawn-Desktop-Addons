@@ -3,4 +3,9 @@
     <declare-styleable name="NavigationPreference">
         <attr name="destination" format="reference" />
     </declare-styleable>
+    <declare-styleable name="ComponentSwitchPreference">
+        <attr name="reverse" format="boolean" />
+        <attr name="targetPackage" format="string" />
+        <attr name="targetClass" format="string" />
+    </declare-styleable>
 </resources>

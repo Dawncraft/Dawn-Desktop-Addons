@@ -1,10 +1,13 @@
 package io.github.dawncraft.desktopaddons.broadcast;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,6 +32,8 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
     public static final String CHANNEL_ID = "ZEN_MODE";
     public static final int NOTIFICATION_ID = 233;
     private static final String TAG = "ZenModeBroadcast";
+
+    private static ZenModeBroadcastReceiver instance;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -71,10 +76,7 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
             }
             else
             {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    color = context.getColor(android.R.color.holo_blue_light);
-                else
-                    color = context.getResources().getColor(android.R.color.holo_blue_light);
+                color = context.getColor(android.R.color.holo_blue_light);
             }
             notificationLayout.setInt(R.id.imageButtonZen, "setColorFilter", color);
         }
@@ -98,5 +100,47 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
                 .build();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(NOTIFICATION_ID, customNotification);
+    }
+
+    public static void register(Context context)
+    {
+        if (instance != null)
+        {
+            Log.e(TAG, "Receiver has been registered");
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            CharSequence name = context.getString(R.string.zen_mode_channel_name);
+            String description = context.getString(R.string.zen_mode_channel_desc);
+            NotificationChannel channel = new NotificationChannel(
+                    ZenModeBroadcastReceiver.CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(description);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel.setSound(null, null);
+            channel.setVibrationPattern(null);
+            channel.enableLights(false);
+            channel.setBypassDnd(true);
+            channel.setShowBadge(false);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.createNotificationChannel(channel);
+        }
+        instance = new ZenModeBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        // filter.addAction(ZenModeBroadcastReceiver.ACTION_SWITCH);
+        context.getApplicationContext().registerReceiver(instance, filter);
+    }
+
+    public static void unregister(Context context)
+    {
+        if (instance != null)
+        {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.cancel(NOTIFICATION_ID);
+            context.getApplicationContext().unregisterReceiver(instance);
+            instance = null;
+        }
     }
 }

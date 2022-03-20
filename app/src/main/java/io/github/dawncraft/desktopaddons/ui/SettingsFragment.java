@@ -1,79 +1,56 @@
 package io.github.dawncraft.desktopaddons.ui;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Consumer;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import de.psdev.licensesdialog.LicensesDialog;
-import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
-import io.github.dawncraft.desktopaddons.model.UserModel;
+import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
+import io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference;
+import io.github.dawncraft.desktopaddons.util.SystemPropertyUtils;
 import io.github.dawncraft.desktopaddons.util.Utils;
+import rikka.shizuku.Shizuku;
 
-public class SettingsFragment extends PreferenceFragmentCompat
+public class SettingsFragment extends PreferenceFragmentCompat implements Shizuku.OnRequestPermissionResultListener
 {
-    private final Handler handler = new Handler();
+    public static final int PERMISSION_REQUEST_CODE = 233;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        Shizuku.addRequestPermissionResultListener(this);
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        SwitchPreferenceCompat preferenceHideAppIcon = findPreference("hide_app_icon");
-        if (preferenceHideAppIcon != null)
+        SwitchPreferenceCompat preferenceZenMode = findPreference("zen_mode_switch");
+        if (preferenceZenMode != null)
         {
-            ComponentName componentName = new ComponentName(requireContext(), MainActivity.ACTIVITY_ALIAS_NAME);
-            preferenceHideAppIcon.setChecked(!Utils.isComponentEnabled(requireContext(), componentName));
-            preferenceHideAppIcon.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+            preferenceZenMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
             {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue)
                 {
                     if (newValue instanceof Boolean)
                     {
-                        boolean hidden = (boolean) newValue;
-                        Utils.setComponentEnabled(requireContext(), componentName, !hidden);
+                        if ((Boolean) newValue)
+                            ZenModeBroadcastReceiver.register(requireContext());
+                        else
+                            ZenModeBroadcastReceiver.unregister(requireContext());
                         return true;
                     }
                     return false;
                 }
             });
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            Preference preferencePermission = findPreference("notification_policy_access_permission");
-            if (preferencePermission != null)
-            {
-                preferencePermission.setVisible(true);
-                preferencePermission.setSummaryProvider(new Preference.SummaryProvider<Preference>()
-                {
-                    @Override
-                    public CharSequence provideSummary(Preference preference)
-                    {
-                        NotificationManager notificationManager = (NotificationManager)
-                                requireContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                        return getString(notificationManager.isNotificationPolicyAccessGranted() ?
-                                R.string.has_notification_policy_access_permission :
-                                R.string.no_notification_policy_access_permission);
-                    }
-                });
-            }
         }
         Preference preferenceVersion = findPreference("check_update");
         if (preferenceVersion != null)
@@ -87,7 +64,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 public boolean onPreferenceClick(Preference preference)
                 {
                     // TODO 更新检查
-                    Utils.toast(SettingsFragment.this.getContext(), "更新检查尚未实现呢~");
+                    Utils.toast(getContext(), "更新检查尚未实现呢~");
                     return true;
                 }
             });
@@ -100,7 +77,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 @Override
                 public boolean onPreferenceClick(Preference preference)
                 {
-                    showLicenseDialog();
+                    new LicensesDialog.Builder(requireActivity())
+                            .setNotices(R.raw.licenses)
+                            .setIncludeOwnLicense(true)
+                            .build()
+                            .show();
                     return true;
                 }
             });
@@ -111,117 +92,89 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onResume()
     {
         super.onResume();
-        refreshPermissionsPreference();
-        refreshUserPreference();
+        refreshShizuku();
+        Preference preferencePermission = findPreference("notification_policy_access_permission");
+        SwitchPreferenceCompat preferenceZenMode = findPreference("zen_mode_switch");
+        if (preferencePermission != null && preferenceZenMode != null)
+        {
+            boolean flag = Utils.isZenModeGranted(requireContext());
+            preferencePermission.setSummary(flag ? R.string.has_notification_policy_access_permission
+                    : R.string.no_notification_policy_access_permission);
+            preferenceZenMode.setEnabled(flag);
+            if (!flag && preferenceZenMode.isChecked())
+            {
+                ZenModeBroadcastReceiver.unregister(getContext());
+                preferenceZenMode.setChecked(false);
+            }
+        }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    public void onDestroy()
     {
-        if (requestCode == 233)
+        super.onDestroy();
+        Shizuku.removeRequestPermissionResultListener(this);
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, int grantResult)
+    {
+        if (requestCode == PERMISSION_REQUEST_CODE)
         {
-            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED))
+            if (grantResult == PackageManager.PERMISSION_GRANTED)
             {
-                Utils.toast(getContext(), R.string.request_permissions_finished_summary);
-                refreshPermissionsPreference();
+                refreshShizuku();
+                Utils.toast(getContext(), R.string.request_permission_successfully);
             }
         }
     }
 
-    private void refreshPermissionsPreference()
+    private void refreshShizuku()
     {
-        Preference preferencePermissions = findPreference("request_permissions");
-        if (preferencePermissions != null)
+        Preference preferenceCheckShizuku = findPreference("check_shizuku");
+        if (preferenceCheckShizuku != null)
         {
-            preferencePermissions.setSummary(R.string.request_permissions_summary);
-            int permissionStatus = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE);
-            if (permissionStatus != PackageManager.PERMISSION_GRANTED)
+            if (Shizuku.pingBinder())
             {
-                preferencePermissions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+                int version = Shizuku.getVersion();
+                if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED)
                 {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference)
+                    preferenceCheckShizuku.setSummary(getString(R.string.shizuku_no_permission, version));
+                    preferenceCheckShizuku.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
                     {
-                        ActivityCompat.requestPermissions(requireActivity(), new String[] { Manifest.permission.READ_PHONE_STATE }, 233);
-                        return true;
-                    }
-                });
-            }
-            else
-            {
-                preferencePermissions.setSummary(R.string.request_permissions_finished_summary);
-            }
-        }
-    }
-
-    private void refreshUserPreference()
-    {
-        Preference preferenceUser = findPreference("user");
-        if (preferenceUser != null)
-        {
-            if (DAApplication.hasToken())
-            {
-                preferenceUser.setTitle(DAApplication.getPreferences().getString("username", ""));
-                preferenceUser.setSummary(R.string.user_logout);
-                preferenceUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-                {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference)
-                    {
-                        showLogoutDialog();
-                        return true;
-                    }
-                });
-            }
-            else
-            {
-                preferenceUser.setTitle(R.string.user_not_log_in);
-                preferenceUser.setSummary(R.string.user_log_in_summary);
-                preferenceUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-                {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference)
-                    {
-                        NavHostFragment.findNavController(SettingsFragment.this)
-                                .navigate(R.id.loginFragment);
-                        return true;
-                    }
-                });
-            }
-        }
-    }
-
-    private void showLogoutDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage(R.string.user_logout_confirm)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        UserModel userModel = new UserModel();
-                        userModel.logout(new Consumer<Boolean>()
+                        @Override
+                        public boolean onPreferenceClick(Preference preference)
                         {
-                            @Override
-                            public void accept(Boolean success)
+                            if (!Shizuku.shouldShowRequestPermissionRationale())
                             {
-                                handler.post(SettingsFragment.this::refreshUserPreference);
+                                Shizuku.requestPermission(PERMISSION_REQUEST_CODE);
+                                return true;
                             }
-                        });
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null);
-        builder.show();
-    }
-
-    private void showLicenseDialog()
-    {
-        new LicensesDialog.Builder(requireActivity())
-                .setNotices(R.raw.licenses)
-                .setIncludeOwnLicense(true)
-                .build()
-                .show();
+                            return false;
+                        }
+                    });
+                }
+                else
+                {
+                    preferenceCheckShizuku.setSummary(getString(R.string.shizuku_has_permission, version));
+                    preferenceCheckShizuku.setOnPreferenceClickListener(null);
+                }
+            }
+            else
+            {
+                preferenceCheckShizuku.setSummary(R.string.shizuku_not_found);
+                preferenceCheckShizuku.setOnPreferenceClickListener(null);
+            }
+        }
+        ComponentSwitchPreference preferenceFifthG = findPreference("5g_switch");
+        if (preferenceFifthG != null)
+        {
+            preferenceFifthG.setEnabled(Utils.isFifthGSupported());
+        }
+        ComponentSwitchPreference preferenceDevTiles = findPreference("dev_tiles_switch");
+        if (preferenceDevTiles != null)
+        {
+            preferenceDevTiles.setEnabled(SystemPropertyUtils.isDevelopmentSettingsEnabled(requireContext()));
+        }
     }
 }

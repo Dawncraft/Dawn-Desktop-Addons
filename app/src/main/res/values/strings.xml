@@ -6,9 +6,11 @@
     <string name="developer_say">Developer want to say</string>
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
     <!-- 请原谅我的中式英语(笑 -->
-    <string name="request_permissions">Request permissions</string>
-    <string name="request_permissions_summary">Some phones need to request permissions to use 5g quick settings, click this to request</string>
-    <string name="request_permissions_finished_summary">You had allowed all permissions, thank you!</string>
+    <string name="check_shizuku">Shizuku support</string>
+    <string name="shizuku_not_found">部分功能需要安装Shizuku或在已root的情况下安装Sui模块才可使用</string>
+    <string name="shizuku_no_permission">Shizuku: %d, Click to grant permissions</string>
+    <string name="shizuku_has_permission">Shizuku: %d, permissions are granted</string>
+    <string name="request_permission_successfully">You had allowed all permissions, thank you!</string>
     <string name="hide_app_icon">Hide app icon</string>
     <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
     <string name="settings_wallpaper">Live wallpaper</string>
@@ -35,11 +37,16 @@
         <item>GitHub</item>
     </string-array>
     <string name="settings_notification">Notification widget</string>
-    <string name="enable_zen_mode_switch">Enable zen mode switch</string>
-    <string name="enable_zen_mode_switch_summary">Restart app to apply</string>
     <string name="notification_policy_access_permission">Open notification policy access settings</string>
     <string name="no_notification_policy_access_permission">Have no permission, click to open settings</string>
     <string name="has_notification_policy_access_permission">Have permission</string>
+    <string name="enable_zen_mode_switch">Enable zen mode switch</string>
+    <string name="enable_zen_mode_switch_summary">Will be applied immediately</string>
+    <string name="settings_quick_setting">Quick setting tiles</string>
+    <string name="fifthg_switch">Enable 5G switch</string>
+    <string name="fifthg_switch_summary">No need if there is the same tile in your system, only support XiaoMi and Huawei (Huawei need Shizuku)</string>
+    <string name="dev_tiles_switch">Enable debug layout</string>
+    <string name="dev_tiles_switch_summary">If you can access Quick setting developer tile in development settings, don\'t use this (need Shizuku)</string>
     <string name="settings_user">Dawncraft user</string>
     <string name="user_not_log_in">Not log in</string>
     <string name="user_log_in_summary">Log in to sync settings and submit your sentences</string>

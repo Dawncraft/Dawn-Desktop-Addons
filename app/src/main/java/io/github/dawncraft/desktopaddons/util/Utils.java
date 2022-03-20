@@ -11,23 +11,17 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Scanner;
 
 public final class Utils
 {
-    public static final int FLAG_IMMUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0;
+    public static final int FLAG_IMMUTABLE = PendingIntent.FLAG_IMMUTABLE;
     public static final int FLAG_MUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0;
 
     private Utils() {}
@@ -49,9 +43,8 @@ public final class Utils
     public static boolean isComponentEnabled(Context context, ComponentName componentName)
     {
         PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> list = packageManager.queryIntentActivities(
-                new Intent().setComponent(componentName), PackageManager.MATCH_DEFAULT_ONLY);
-        return !list.isEmpty();
+        int state = packageManager.getComponentEnabledSetting(componentName);
+        return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     }
 
     public static void setComponentEnabled(Context context, ComponentName componentName, boolean enabled)
@@ -59,77 +52,36 @@ public final class Utils
         if (isComponentEnabled(context, componentName) == enabled) return;
         PackageManager packageManager = context.getPackageManager();
         packageManager.setComponentEnabledSetting(componentName,
-                enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
     }
 
-    public static boolean isNetworkAvailable(Context context)
+    public static boolean isZenModeGranted(Context context)
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        return notificationManager.isNotificationPolicyAccessGranted();
     }
 
     public static boolean isZenMode(Context context)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            NotificationManager notificationManager = (NotificationManager)
-                    context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (notificationManager.isNotificationPolicyAccessGranted())
-            {
-                int mode = notificationManager.getCurrentInterruptionFilter();
-                return mode > NotificationManager.INTERRUPTION_FILTER_ALL;
-            }
-            else
-            {
-                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        }
-        else
-        {
-            AudioManager audioManager = (AudioManager)
-                    context.getSystemService(Context.AUDIO_SERVICE);
-            int mode = audioManager.getRingerMode();
-            return mode > AudioManager.RINGER_MODE_SILENT;
-        }
-        return false;
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        int mode = notificationManager.getCurrentInterruptionFilter();
+        return mode > NotificationManager.INTERRUPTION_FILTER_ALL;
     }
 
-    // Android 5.0后直接操作勿扰模式的方法被设为hide, 可能是因为勿扰模式改成了NotificationManager
-    // 详见 https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces
     public static void setZenMode(Context context, boolean flag)
     {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if (notificationManager.isNotificationPolicyAccessGranted())
-            {
-                // TODO 使用NotificationManager.Policy切换勿扰模式
-                // 另见 ZenPolicy, 在Android 6.0后ZenPolicy改为了NotificationManager.Policy
-                // NotificationManager.Policy policy = new NotificationManager.Policy();
-                // notificationManager.setNotificationPolicy();
-                int newMode = flag ? NotificationManager.INTERRUPTION_FILTER_PRIORITY : NotificationManager.INTERRUPTION_FILTER_ALL;
-                notificationManager.setInterruptionFilter(newMode);
-            }
-            else
-            {
-                Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        }
-        else
-        {
-            AudioManager audioManager = (AudioManager)
-                    context.getSystemService(Context.AUDIO_SERVICE);
-            int newMode = flag ? AudioManager.RINGER_MODE_SILENT : AudioManager.RINGER_MODE_NORMAL;
-            audioManager.setRingerMode(newMode);
-        }
+        // TODO 使用NotificationManager.Policy切换勿扰模式
+        // NotificationManager.Policy policy = new NotificationManager.Policy();
+        // notificationManager.setNotificationPolicy();
+        int mode = flag ? NotificationManager.INTERRUPTION_FILTER_PRIORITY
+                : NotificationManager.INTERRUPTION_FILTER_ALL;
+        notificationManager.setInterruptionFilter(mode);
     }
 
     public static boolean isFifthGSupported()
@@ -145,50 +97,6 @@ public final class Utils
     public static void setFifthGEnabled(boolean enable)
     {
         FifthGHelper.instance.setFifthGEnabled(enable);
-    }
-
-    // android.os.SystemProperties#get(String)
-    public static String getProperty(String key)
-    {
-        try
-        {
-            InputStream inputStream = Runtime.getRuntime()
-                    .exec("/system/bin/getprop " + key)
-                    .getInputStream();
-            Scanner in = new Scanner(inputStream);
-            String value = in.next();
-            in.close();
-            return value;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // android.os.SystemProperties#set(String, String)
-    public static void setProperty(String key, String value)
-    {
-        try
-        {
-            Runtime.getRuntime().exec("/system/bin/setprop " + key + " " + value);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    // 并没有什么卵用, 因为这个Activity的exported不为true
-    // 而且Android12以上这个Activity又没了
-    // https://android.googlesource.com/platform/packages/apps/Settings/+/refs/heads/master/src/com/android/settings/development/qstile/
-    public static void openDevTileConfig(Context context)
-    {
-        Intent intent = new Intent();
-        intent.setClassName("com.android.settings",
-                "com.android.settings.qstile.DevelopmentTileConfigActivity");
-        context.startActivity(intent);
     }
 
     public static boolean isPinAppWidgetSupported(Context context)
