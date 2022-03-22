@@ -9,6 +9,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.work.Operation;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
@@ -26,6 +28,7 @@ import io.github.dawncraft.desktopaddons.ui.adapter.AreaAdapter;
 import io.github.dawncraft.desktopaddons.ui.adapter.AutoCompleteAdapter;
 import io.github.dawncraft.desktopaddons.ui.base.AppWidgetConfigActivity;
 import io.github.dawncraft.desktopaddons.util.Utils;
+import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 
 public class NCPAppWidgetConfigActivity extends AppWidgetConfigActivity
 {

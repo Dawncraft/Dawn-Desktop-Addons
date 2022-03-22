@@ -23,8 +23,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/editable_min_height"
-                android:inputType="textEmailAddress"
+                android:paddingHorizontal="8dp"
+                android:drawableStart="@drawable/ic_account"
+                android:drawablePadding="12dp"
                 android:hint="@string/account"
+                android:inputType="textEmailAddress"
                 android:selectAllOnFocus="true"
                 android:imeOptions="actionNext" />
 
@@ -40,8 +43,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/editable_min_height"
-                android:inputType="textPassword"
+                android:paddingHorizontal="8dp"
+                android:drawableStart="@drawable/ic_key"
+                android:drawablePadding="12dp"
                 android:hint="@string/password"
+                android:inputType="textPassword"
                 android:selectAllOnFocus="true"
                 android:imeOptions="actionDone" />
 
@@ -70,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:text="@string/third_login" />
 
@@ -88,6 +94,10 @@
                 android:contentDescription="@string/login_use_qq"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_qq" />
+            
+            <Space
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
 
             <ImageButton
                 android:id="@+id/buttonLoginWeChat"

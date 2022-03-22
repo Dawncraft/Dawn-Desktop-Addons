@@ -3,8 +3,12 @@ package io.github.dawncraft.desktopaddons.ui;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -15,6 +19,7 @@ import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
 import io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference;
 import io.github.dawncraft.desktopaddons.util.SystemPropertyUtils;
 import io.github.dawncraft.desktopaddons.util.Utils;
+import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 import rikka.shizuku.Shizuku;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Shizuku.OnRequestPermissionResultListener
@@ -32,6 +37,51 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+        EditTextPreference preferenceUpdateInterval = findPreference("ncp_update_interval");
+        if (preferenceUpdateInterval != null)
+        {
+            preferenceUpdateInterval.setSummaryProvider(new Preference.SummaryProvider<EditTextPreference>()
+            {
+                @Override
+                public CharSequence provideSummary(EditTextPreference preference)
+                {
+                    int interval = Integer.parseInt(preference.getText());
+                    if (interval > 0)
+                    {
+                        return getString(R.string.ncp_update_interval_unit, interval);
+                    }
+                    return getString(R.string.ncp_update_interval_manual);
+                }
+            });
+            preferenceUpdateInterval.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener()
+            {
+                @Override
+                public void onBindEditText(@NonNull EditText editText)
+                {
+                    editText.setHint(R.string.ncp_update_interval_edit_hint);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
+            });
+            preferenceUpdateInterval.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+            {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue)
+                {
+                    if (newValue instanceof String)
+                    {
+                        try
+                        {
+                            int interval = Integer.parseInt((String) newValue);
+                            NCPInfoWorker.stopAllWorks(getContext());
+                            NCPInfoWorker.startSyncWork(getContext(), interval);
+                            return true;
+                        }
+                        catch (NumberFormatException ignored) {}
+                    }
+                    return false;
+                }
+            });
+        }
         SwitchPreferenceCompat preferenceZenMode = findPreference("zen_mode_switch");
         if (preferenceZenMode != null)
         {

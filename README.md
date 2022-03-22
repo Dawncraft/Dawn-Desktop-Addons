@@ -26,8 +26,7 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
 
 ## TODO
 1. 修改或删除句子
-2. UI全面使用Google Material Design并适配暗黑模式
-3. 在Android 12上首次添加小部件时使用默认配置, 无需手动配置
+2. 在Android 12上首次添加小部件时使用默认配置, 无需手动配置
 
 ## 测试机型
 - HM Note 1S(Android4.4.4/MIUI9.2稳定版) 新冠肺炎小部件可用(由old-android分支维护)

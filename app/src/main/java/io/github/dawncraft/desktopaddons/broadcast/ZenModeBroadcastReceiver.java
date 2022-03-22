@@ -68,24 +68,18 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         if (checked)
         {
             notificationLayout.setTextViewText(R.id.textViewZen, context.getString(R.string.zen_mode_open));
-            int color;
             TypedValue typedValue = new TypedValue();
-            if (context.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true))
-            {
-                color = typedValue.data;
-            }
-            else
-            {
-                color = context.getColor(android.R.color.holo_blue_light);
-            }
+            int color = context.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true)
+                    ? typedValue.data : context.getColor(android.R.color.holo_blue_light);
             notificationLayout.setInt(R.id.imageButtonZen, "setColorFilter", color);
         }
         Intent intent = new Intent(context, ZenModeBroadcastReceiver.class);
         intent.setAction(ACTION_SWITCH);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, Utils.FLAG_IMMUTABLE);
         notificationLayout.setOnClickPendingIntent(R.id.imageButtonZen, pendingIntent);
+        // NOTE Android 5.0 之后, 谷歌为了使通知栏图标更加统一, 小图标必须是背景镂空只包含黑白两色的透明图片, 否则出错会变成小白块
         Notification customNotification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setShowWhen(false)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setContent(notificationLayout)

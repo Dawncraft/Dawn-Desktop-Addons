@@ -16,9 +16,9 @@ import io.github.dawncraft.desktopaddons.dao.NCPAppWidgetDAO;
 import io.github.dawncraft.desktopaddons.entity.NCPAppWidgetID;
 import io.github.dawncraft.desktopaddons.entity.NCPInfo;
 import io.github.dawncraft.desktopaddons.model.NCPDataSource;
-import io.github.dawncraft.desktopaddons.model.NCPInfoModel;
-import io.github.dawncraft.desktopaddons.ui.WebViewActivity;
+import io.github.dawncraft.desktopaddons.util.HttpUtils;
 import io.github.dawncraft.desktopaddons.util.Utils;
+import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 
 /**
  * 监控新型冠状病毒肺炎疫情数据的桌面小工具
@@ -34,61 +34,36 @@ public class NCPAppWidget extends AppWidgetProvider
     private static final String TAG = "NCPAppWidget";
 
     private final NCPAppWidgetDAO ncpAppWidgetDAO = DAApplication.getDatabase().ncpAppWidgetDAO();
-    private final NCPInfoModel ncpInfoModel = new NCPInfoModel();
-    
+
     @Override
     public void onEnabled(Context context)
     {
         super.onEnabled(context);
+        int interval = Integer.parseInt(DAApplication.getPreferences()
+                        .getString("ncp_update_interval", "360"));
+        NCPInfoWorker.startSyncWork(context, interval);
     }
 
     @Override
     public void onDisabled(Context context)
     {
         super.onDisabled(context);
-//        WorkManager.getInstance(context)
-//                .cancelAllWork();
+        NCPInfoWorker.stopAllWorks(context);
         ncpAppWidgetDAO.deleteAll();
     }
 
+    // NOTE 在onUpdate中使用WorkManager会导致小部件无限更新, 因此现在仅由WorkManager更新
+    // 原因: https://commonsware.com/blog/2018/11/24/workmanager-app-widgets-side-effects.html
+    // NOTE 在启用/禁用组件时系统会收到ACTION_PACKAGE_CHANGED广播, 进而向AppWidgetProvider发送ACTION_APPWIDGET_UPDATE广播
+    // 所以onUpdate这个方法还不能删(捂脸
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
     {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        final PendingResult pendingResult = goAsync();
         for (int appWidgetId : appWidgetIds)
         {
-            NCPAppWidgetID ncpAppWidgetID = ncpAppWidgetDAO.findById(appWidgetId);
-            if (ncpAppWidgetID == null) continue;
-//            OneTimeWorkRequest workRequest = NCPInfoWorker.requestWork(appWidgetId, ncpAppWidgetID.region);
-//            WorkManager.getInstance(context)
-//                    .beginUniqueWork("ncp-" + appWidgetId, ExistingWorkPolicy.KEEP, workRequest)
-//                    .enqueue();
-            // FIXME 使用WorkManager会导致小部件无限更新, 暂时回退到创建新线程
-            // 已找到原因: https://commonsware.com/blog/2018/11/24/workmanager-app-widgets-side-effects.html
-            Thread thread = new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    ncpInfoModel.getRegionInfo(ncpAppWidgetID.region, new NCPInfoModel.OnRegionDataListener()
-                    {
-                        @Override
-                        public void onResponse(NCPInfoModel.Result result, NCPInfo info)
-                        {
-                            updateAppWidget(context, appWidgetManager, appWidgetId, info);
-                        }
-                    });
-                }
-            });
-            thread.start();
-            try
-            {
-                thread.join();
-            }
-            catch (InterruptedException ignored) {}
+            NCPInfoWorker.requestWork(context, appWidgetId);
         }
-        pendingResult.finish();
     }
 
     @Override
@@ -97,8 +72,6 @@ public class NCPAppWidget extends AppWidgetProvider
         super.onDeleted(context, appWidgetIds);
         for (int appWidgetId : appWidgetIds)
         {
-//            WorkManager.getInstance(context)
-//                    .cancelUniqueWork("ncp-" + appWidgetId);
             ncpAppWidgetDAO.deleteById(appWidgetId);
         }
     }
@@ -113,10 +86,7 @@ public class NCPAppWidget extends AppWidgetProvider
             Log.d(TAG, "Action open");
             int id = Integer.parseInt(DAApplication.getPreferences().getString("ncp_data_source", "0"));
             String url = NCPDataSource.getSourceUrl(id);
-            Intent newIntent = new Intent(context, WebViewActivity.class);
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            newIntent.putExtra("url", url);
-            context.startActivity(newIntent);
+            HttpUtils.openUrl(context, url, true);
         }
         else if (ACTION_REFRESH.equals(action))
         {
@@ -125,7 +95,7 @@ public class NCPAppWidget extends AppWidgetProvider
             if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID))
             {
                 int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
-                onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+                NCPInfoWorker.requestWork(context, appWidgetId);
             }
         }
         else if (ACTION_PINNED.equals(action))
@@ -139,7 +109,7 @@ public class NCPAppWidget extends AppWidgetProvider
                 ncpAppWidgetID.id = appWidgetId;
                 ncpAppWidgetID.region = extras.getString(EXTRA_NCP_REGION);
                 ncpAppWidgetDAO.insert(ncpAppWidgetID);
-                onUpdate(context, AppWidgetManager.getInstance(context), new int[] { appWidgetId });
+                NCPInfoWorker.requestWork(context, appWidgetId);
             }
         }
     }
@@ -172,7 +142,7 @@ public class NCPAppWidget extends AppWidgetProvider
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, NCPInfo ncpInfo)
     {
         RemoteViews views = createViews(context, ncpInfo);
-        // NOTE Android 3.0起点击小部件默认会跳转至应用主Activity
+        // NOTE Android 3.0 起点击小部件默认会跳转至应用主Activity
         // 详见 https://developer.android.google.cn/guide/topics/appwidgets/host#which-version-are-you-targeting
         // 详见 android.appwidget.AppWidgetHostView#onDefaultViewClicked
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(), Utils.FLAG_IMMUTABLE);

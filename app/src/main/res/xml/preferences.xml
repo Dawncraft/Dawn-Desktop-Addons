@@ -50,6 +50,13 @@
             android:defaultValue="0"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            android:key="ncp_update_interval"
+            android:title="@string/ncp_update_interval"
+            android:defaultValue="360"
+            android:dialogMessage="@string/ncp_update_interval_edit_message"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -71,7 +78,6 @@
             android:defaultValue="false"
             android:enabled="false"
             app:iconSpaceReserved="false" />
-
     </PreferenceCategory>
 
     <PreferenceCategory

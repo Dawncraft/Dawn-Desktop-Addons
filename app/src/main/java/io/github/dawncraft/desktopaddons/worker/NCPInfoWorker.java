@@ -8,28 +8,41 @@ import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.Operation;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.appwidget.NCPAppWidget;
+import io.github.dawncraft.desktopaddons.dao.NCPAppWidgetDAO;
+import io.github.dawncraft.desktopaddons.entity.NCPAppWidgetID;
 import io.github.dawncraft.desktopaddons.entity.NCPInfo;
 import io.github.dawncraft.desktopaddons.model.NCPInfoModel;
 
 /**
  * 在后台更新新冠肺炎疫情数据的Worker
  * <br />
- * 有bug, 会导致桌面小部件无限更新, 暂时不使用
+ * 将所有的小部件更新逻辑都交由Worker处理
  *
  * @author QingChenW
  */
 public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataListener
 {
     private static final String TAG = "NCPInfoWorker";
+    private static final String WORK_TAG = "ncp";
+
     private final AppWidgetManager appWidgetManager;
+    private final NCPAppWidgetDAO ncpAppWidgetDAO;
     private final NCPInfoModel ncpInfoModel;
     private NCPInfo ncpInfo;
 
@@ -37,6 +50,7 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
     {
         super(context, workerParams);
         appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+        ncpAppWidgetDAO = DAApplication.getDatabase().ncpAppWidgetDAO();
         ncpInfoModel = new NCPInfoModel();
     }
 
@@ -44,14 +58,17 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
     @Override
     public Result doWork()
     {
-        Log.i(TAG, "Start to update.");
+        Log.d(TAG, "Start to update");
         int appWidgetId = getInputData().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        String region = getInputData().getString("region");
-        if (appWidgetId == -1 || region == null) return Result.failure();
-        ncpInfoModel.getRegionInfo(region, this);
-        NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, appWidgetId, ncpInfo);
-        if (ncpInfo == null) return Result.retry();
-        Log.i(TAG, "Update successfully.");
+        List<NCPAppWidgetID> widgets = appWidgetId < 0 ? ncpAppWidgetDAO.getAll()
+                : Collections.singletonList(ncpAppWidgetDAO.findById(appWidgetId));
+        for (NCPAppWidgetID ncpAppWidgetID : widgets)
+        {
+            ncpInfoModel.getRegionInfo(ncpAppWidgetID.region, this);
+            NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, appWidgetId, ncpInfo);
+            if (ncpInfo == null) return Result.retry();
+        }
+        Log.d(TAG, "Update successfully");
         return Result.success();
     }
 
@@ -61,36 +78,66 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
         switch (result)
         {
             case CACHED:
-                Log.i(TAG, "Load from cache.");
+                Log.d(TAG, "Load from cache");
             case SUCCESS:
                 ncpInfo = info;
                 break;
             case IO_ERROR:
-                Log.e(TAG, "Can't get data.");
+                Log.e(TAG, "Can't get data");
                 break;
             case JSON_ERROR:
-                Log.e(TAG, "Can't analyse JSON.");
+                Log.e(TAG, "Can't analyse JSON");
                 break;
             case UNKNOWN_ERROR:
-                Log.e(TAG, "An unknown error occurred.");
+                Log.e(TAG, "An unknown error occurred");
                 break;
         }
     }
 
-    public static OneTimeWorkRequest requestWork(int appWidgetId, String region)
+    public static Operation startSyncWork(Context context, int updateInterval)
     {
-        return new OneTimeWorkRequest.Builder(NCPInfoWorker.class)
+        if (updateInterval <= 0)
+        {
+            // Log.w(TAG, "Update interval is lower than zero, can't start work");
+            return null;
+        }
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(
+                NCPInfoWorker.class, updateInterval, TimeUnit.MINUTES)
+                .addTag(WORK_TAG)
                 .setConstraints(new Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiresBatteryNotLow(true)
                         .build())
                 .setBackoffCriteria(
-                        BackoffPolicy.EXPONENTIAL,
+                        BackoffPolicy.LINEAR,
                         OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
                         TimeUnit.MILLISECONDS)
+                .build();
+        return WorkManager.getInstance(context)
+                .enqueueUniquePeriodicWork(WORK_TAG, ExistingPeriodicWorkPolicy.KEEP, workRequest);
+    }
+
+    public static Operation requestWork(Context context, int appWidgetId)
+    {
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(NCPInfoWorker.class)
+                .addTag(WORK_TAG)
+                .setConstraints(new Constraints.Builder()
+                        // NOTE 如果wifi连接受限的话, 即便是能连上网, 该Worker也不会执行
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build())
                 .setInputData(new Data.Builder()
                         .putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                        .putString("region", region)
                         .build())
+                // 此Worker似乎不需要成为加急任务
+                // .setExpedited(OutOfQuotaPolicy.DROP_WORK_REQUEST)
                 .build();
+        return WorkManager.getInstance(context)
+                .enqueueUniqueWork(WORK_TAG + appWidgetId, ExistingWorkPolicy.KEEP, workRequest);
+    }
+
+    public static Operation stopAllWorks(Context context)
+    {
+        return WorkManager.getInstance(context)
+                .cancelAllWorkByTag(WORK_TAG);
     }
 }

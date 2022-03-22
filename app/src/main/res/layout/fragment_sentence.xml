@@ -26,11 +26,14 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:contentDescription="@string/add_sentence"
+        android:tooltipText="@string/add_sentence"
         android:focusable="true"
+        android:tint="@android:color/white"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="32dp"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        tools:ignore="UnusedAttribute" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

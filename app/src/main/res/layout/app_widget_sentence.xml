@@ -8,7 +8,8 @@
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/app_widget_margin">
+    android:padding="@dimen/app_widget_margin"
+    android:theme="@style/AppWidgetTheme">
 
     <TextView
         android:id="@+id/textViewSentence"

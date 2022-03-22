@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#2196F3</color>
-    <color name="colorAccent">#2E7D32</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 
-    <color name="colorBackground">#005DFF</color>
-    <color name="colorConfirm">#D81D1B</color>
-    <color name="colorSuspect">#FF7300</color>
-    <color name="colorCure">#478B50</color>
-    <color name="colorDead">#66666C</color>
+    <color name="primary">#03A9F4</color>
+    <color name="primary_dark">#2196F3</color>
+    <color name="accent">#2E7D32</color>
+
+    <color name="ncp_title_background">#005DFF</color>
+    <color name="ncp_confirm">#D81D1B</color>
+    <color name="ncp_suspect">#EF6C00</color>
+    <color name="ncp_cure">#478B50</color>
+    <color name="ncp_dead">#666666</color>
 </resources>

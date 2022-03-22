@@ -27,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.model.UserModel;
+import io.github.dawncraft.desktopaddons.util.HttpUtils;
 import io.github.dawncraft.desktopaddons.util.Utils;
 
 public class LoginFragment extends Fragment
@@ -36,7 +37,6 @@ public class LoginFragment extends Fragment
     private EditText editTextPassword;
 
     private NavController navController;
-
     private UserModel userModel;
 
     @Override
@@ -136,7 +136,7 @@ public class LoginFragment extends Fragment
             @Override
             public void onClick(View widget)
             {
-                Utils.openUrl(requireContext(), "https://h5.dawncraft.cc/forgetPassword");
+                HttpUtils.openUrl(requireContext(), "https://h5.dawncraft.cc/forgetPassword", false);
             }
 
             @Override

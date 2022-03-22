@@ -19,7 +19,7 @@
     <string name="settings_app_widget">桌面小部件</string>
     <string name="sentence_list">提交你的句子</string>
     <string name="sentence_list_summary">向曙光工艺服务器提交你的句子(需要登录)</string>
-    <string name="ncp_data_source">设置新冠肺炎小部件数据源(只会影响打开的网页)</string>
+    <string name="ncp_data_source">新冠肺炎小部件数据源(只影响打开的网页)</string>
     <string-array name="ncp_data_sources">
         <item>腾讯新闻</item>
         <item>丁香园·丁香医生</item>
@@ -36,6 +36,11 @@
         <item>UC</item>
         <item>GitHub仓库</item>
     </string-array>
+    <string name="ncp_update_interval">新冠肺炎小部件更新间隔</string>
+    <string name="ncp_update_interval_unit">%d 分钟</string>
+    <string name="ncp_update_interval_manual">手动更新</string>
+    <string name="ncp_update_interval_edit_message">未联网或电量低时不会更新</string>
+    <string name="ncp_update_interval_edit_hint">单位分钟, 0为手动更新</string>
     <string name="settings_notification">锁屏小部件</string>
     <string name="notification_policy_access_permission">打开勿扰模式权限设置</string>
     <string name="no_notification_policy_access_permission">该功能需要手动授予修改勿扰模式的权限, 点击打开设置</string>

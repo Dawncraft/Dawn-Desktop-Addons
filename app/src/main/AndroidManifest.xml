@@ -33,6 +33,7 @@
             android:label="@string/activity_settings"
             android:launchMode="singleTask"
             android:exported="true">
+            <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
             </intent-filter>
@@ -47,11 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
-        <activity
-            android:name=".ui.WebViewActivity"
-            android:taskAffinity="io.github.dawncraft.desktopaddons.WebViewActivity">
-            <!-- 对于Activity的启动模式可以看看这个视频: https://www.bilibili.com/video/BV1CA41177Se -->
-        </activity>
         <activity
             android:name=".ui.NCPAppWidgetConfigActivity"
             android:label="@string/ncp_app_widget_config"

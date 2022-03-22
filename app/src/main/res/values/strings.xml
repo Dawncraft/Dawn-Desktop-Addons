@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Desktop Addons</string>
     <string name="app_author">Maintained by Dawncraft Studio</string>
@@ -7,7 +8,7 @@
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
     <!-- 请原谅我的中式英语(笑 -->
     <string name="check_shizuku">Shizuku support</string>
-    <string name="shizuku_not_found">部分功能需要安装Shizuku或在已root的情况下安装Sui模块才可使用</string>
+    <string name="shizuku_not_found">You need install Shizuku or Sui if root to make some functions work</string>
     <string name="shizuku_no_permission">Shizuku: %d, Click to grant permissions</string>
     <string name="shizuku_has_permission">Shizuku: %d, permissions are granted</string>
     <string name="request_permission_successfully">You had allowed all permissions, thank you!</string>
@@ -36,6 +37,11 @@
         <item>UC</item>
         <item>GitHub</item>
     </string-array>
+    <string name="ncp_update_interval">Set refresh interval for NCP widget</string>
+    <string name="ncp_update_interval_unit">%d Minute(s)</string>
+    <string name="ncp_update_interval_manual">Refresh manually</string>
+    <string name="ncp_update_interval_edit_message">Will not update if not connect to network or low battery</string>
+    <string name="ncp_update_interval_edit_hint">Minute, 0 is refreshing manually</string>
     <string name="settings_notification">Notification widget</string>
     <string name="notification_policy_access_permission">Open notification policy access settings</string>
     <string name="no_notification_policy_access_permission">Have no permission, click to open settings</string>

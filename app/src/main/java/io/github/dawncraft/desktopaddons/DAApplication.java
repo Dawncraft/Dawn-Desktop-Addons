@@ -9,6 +9,7 @@ import androidx.room.Room;
 import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
 import io.github.dawncraft.desktopaddons.model.NCPDataSource;
 import io.github.dawncraft.desktopaddons.util.HttpUtils;
+import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 
 /**
  * 曙光桌面小部件APP
@@ -35,6 +36,9 @@ public class DAApplication extends Application
         {
             ZenModeBroadcastReceiver.register(this);
         }
+        int interval = Integer.parseInt(DAApplication.getPreferences()
+                .getString("ncp_update_interval", "360"));
+        NCPInfoWorker.startSyncWork(this, interval);
     }
 
     @Override

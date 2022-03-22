@@ -7,16 +7,16 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class Utils
@@ -43,8 +43,37 @@ public final class Utils
     public static boolean isComponentEnabled(Context context, ComponentName componentName)
     {
         PackageManager packageManager = context.getPackageManager();
-        int state = packageManager.getComponentEnabledSetting(componentName);
-        return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+        switch (packageManager.getComponentEnabledSetting(componentName)) {
+            case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+                return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
+                return false;
+            case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+            default:
+                try
+                {
+                    PackageInfo packageInfo = packageManager.getPackageInfo(componentName.getPackageName(),
+                            PackageManager.GET_ACTIVITIES
+                                    | PackageManager.GET_SERVICES
+                                    | PackageManager.GET_DISABLED_COMPONENTS);
+                    List<ComponentInfo> components = new ArrayList<>();
+                    if (packageInfo.activities != null)
+                        Collections.addAll(components, packageInfo.activities);
+                    if (packageInfo.services != null)
+                        Collections.addAll(components, packageInfo.services);
+                    for (ComponentInfo componentInfo : components)
+                    {
+                        if (componentInfo.name.equals(componentName.getClassName()))
+                        {
+                            return componentInfo.isEnabled();
+                        }
+                    }
+                }
+                catch (PackageManager.NameNotFoundException ignored) {}
+        }
+        return false;
     }
 
     public static void setComponentEnabled(Context context, ComponentName componentName, boolean enabled)
@@ -103,16 +132,6 @@ public final class Utils
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                 AppWidgetManager.getInstance(context).isRequestPinAppWidgetSupported();
-    }
-
-    public static void openUrl(Context context, String url)
-    {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        // NOTE 踩坑了! 在Activity之外startActivity时必须用FLAG_ACTIVITY_NEW_TASK参数
-        // 详见android.app.ContextImpl#startActivity(android.content.Intent, android.os.Bundle)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndNormalize(Uri.parse(url));
-        context.startActivity(intent);
     }
 
     public static void copyToClipboard(Context context, String text)

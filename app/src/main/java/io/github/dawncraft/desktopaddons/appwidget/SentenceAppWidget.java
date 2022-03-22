@@ -14,6 +14,11 @@ import android.widget.RemoteViews;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
@@ -31,6 +36,7 @@ public class SentenceAppWidget extends AppWidgetProvider
     public static final String EXTRA_SENTENCE_ID = "sentenceId";
     private static final String TAG = "SentenceAppWidget";
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final SentenceAppWidgetDAO sentenceAppWidgetDAO = DAApplication.getDatabase().sentenceAppWidgetDAO();
     private final SentenceModel sentenceModel = new SentenceModel();
 
@@ -38,6 +44,7 @@ public class SentenceAppWidget extends AppWidgetProvider
     public void onDisabled(Context context)
     {
         super.onDisabled(context);
+        executorService.shutdown();
         sentenceAppWidgetDAO.deleteAll();
     }
 
@@ -47,48 +54,47 @@ public class SentenceAppWidget extends AppWidgetProvider
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         // 主线程上不能执行耗费时间过长的操作, 也不能执行网络等操作, 除非开启严格模式, 但正式环境不应使用严格模式
         // 应该开新线程或者用协程, AsyncTask, Service, WorkManager等, 这里因为比较简单就直接开了新线程
-        final PendingResult pendingResult = goAsync();
+        PendingResult pendingResult = goAsync();
+        List<Callable<Void>> taskList = new ArrayList<>();
         for (int appWidgetId : appWidgetIds)
         {
             SentenceAppWidgetID sentenceAppWidgetID = sentenceAppWidgetDAO.findById(appWidgetId);
             if (sentenceAppWidgetID == null) continue;
-            Thread thread = new Thread(new Runnable()
+            taskList.add(new Callable<Void>()
             {
                 @Override
-                public void run()
+                public Void call() throws JSONException, IOException
                 {
                     Sentence sentence = null;
-                    try
+                    switch (sentenceAppWidgetID.source)
                     {
-                        switch (sentenceAppWidgetID.source)
-                        {
-                            case Hitokoto:
-                                sentence = sentenceModel.getHitokoto();
-                                break;
-                            case Dawncraft:
-                                if (TextUtils.isEmpty(sentenceAppWidgetID.sid)) {
-                                    sentence = sentenceModel.getSentence();
-                                } else {
-                                    sentence = sentenceModel.getSentence(Integer.parseInt(sentenceAppWidgetID.sid));
-                                }
-                                break;
-                        }
-                    }
-                    catch (IOException | JSONException e)
-                    {
-                        e.printStackTrace();
+                        case Hitokoto:
+                            sentence = sentenceModel.getHitokoto();
+                            break;
+                        case Dawncraft:
+                            if (TextUtils.isEmpty(sentenceAppWidgetID.sid))
+                                sentence = sentenceModel.getSentence();
+                            else
+                                sentence = sentenceModel.getSentence(Integer.parseInt(sentenceAppWidgetID.sid));
+                            break;
                     }
                     updateAppWidget(context, appWidgetManager, appWidgetId, sentence);
+                    return null;
                 }
             });
-            thread.start();
-            try
-            {
-                thread.join();
-            }
-            catch (InterruptedException ignored) {}
         }
-        pendingResult.finish();
+        try
+        {
+            executorService.invokeAll(taskList);
+        }
+        catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
+        finally
+        {
+            pendingResult.finish();
+        }
     }
 
     @Override

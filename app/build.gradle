@@ -50,11 +50,12 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
+    implementation 'androidx.browser:browser:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.github.alidili:RecyclerViewHelper:1.1.5'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'site.hanschen:glwallpaperservice:0.1.1'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     implementation "dev.rikka.shizuku:api:$shizuku_version"

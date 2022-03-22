@@ -1,8 +1,11 @@
 package io.github.dawncraft.desktopaddons.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,6 +29,7 @@ public final class HttpUtils
     public static final HttpUrl DAWNCRAFT_API = new HttpUrl.Builder().scheme("https").host("api.dawncraft.cc").build();
     private static final List<String> FORCE_CACHE_URLS = Arrays.asList("view.inews.qq.com");
     private static OkHttpClient client;
+    private static CustomTabsIntent.Builder customTabsBuilder;
 
     private HttpUtils() {}
 
@@ -37,6 +41,17 @@ public final class HttpUtils
                 .addInterceptor(new AuthInterceptor())
                 .addNetworkInterceptor(new CacheInterceptor())
                 .build();
+        customTabsBuilder = new CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM);
+                /* 有亿点点丑
+                .setDefaultColorSchemeParams(
+                        new CustomTabColorSchemeParams.Builder()
+                                .setToolbarColor(context.getColor(R.color.colorPrimary))
+                                .setSecondaryToolbarColor(context.getColor(R.color.colorPrimaryDark))
+                                .build()
+                );
+                 */
     }
 
     /**
@@ -55,6 +70,16 @@ public final class HttpUtils
     public static OkHttpClient getClient()
     {
         return client;
+    }
+
+    public static void openUrl(Context context, String url, boolean newTask)
+    {
+        CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+        // NOTE 踩坑了! 在Activity之外startActivity时必须用FLAG_ACTIVITY_NEW_TASK参数
+        // 详见android.app.ContextImpl#startActivity(android.content.Intent, android.os.Bundle)
+        if (newTask)
+            customTabsIntent.intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        customTabsIntent.launchUrl(context, Uri.parse(url));
     }
 
     public static class DawnAuthenticator implements Authenticator
