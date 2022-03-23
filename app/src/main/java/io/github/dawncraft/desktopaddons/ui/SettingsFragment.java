@@ -46,11 +46,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
                 public CharSequence provideSummary(EditTextPreference preference)
                 {
                     int interval = Integer.parseInt(preference.getText());
-                    if (interval > 0)
-                    {
-                        return getString(R.string.ncp_update_interval_unit, interval);
-                    }
-                    return getString(R.string.ncp_update_interval_manual);
+                    return interval > 0 ? getString(R.string.ncp_update_interval_unit, interval)
+                            : getString(R.string.ncp_update_interval_manual);
                 }
             });
             preferenceUpdateInterval.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener()

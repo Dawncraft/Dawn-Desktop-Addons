@@ -132,7 +132,7 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
                 // .setExpedited(OutOfQuotaPolicy.DROP_WORK_REQUEST)
                 .build();
         return WorkManager.getInstance(context)
-                .enqueueUniqueWork(WORK_TAG + appWidgetId, ExistingWorkPolicy.KEEP, workRequest);
+                .enqueueUniqueWork(WORK_TAG + appWidgetId, ExistingWorkPolicy.REPLACE, workRequest);
     }
 
     public static Operation stopAllWorks(Context context)

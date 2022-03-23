@@ -11,7 +11,7 @@
     <string name="shizuku_not_found">You need install Shizuku or Sui if root to make some functions work</string>
     <string name="shizuku_no_permission">Shizuku: %d, Click to grant permissions</string>
     <string name="shizuku_has_permission">Shizuku: %d, permissions are granted</string>
-    <string name="request_permission_successfully">You had allowed all permissions, thank you!</string>
+    <string name="request_permission_successfully">You have allowed all permissions, thank you!</string>
     <string name="hide_app_icon">Hide app icon</string>
     <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
     <string name="settings_wallpaper">Live wallpaper</string>
