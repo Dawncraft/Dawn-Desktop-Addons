@@ -37,6 +37,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+        Preference preference = findPreference("ignore_battery_optimization");
+        if (preference != null)
+        {
+            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Utils.requestRunInBackground(getContext());
+                    return true;
+                }
+            });
+        }
         EditTextPreference preferenceUpdateInterval = findPreference("ncp_update_interval");
         if (preferenceUpdateInterval != null)
         {

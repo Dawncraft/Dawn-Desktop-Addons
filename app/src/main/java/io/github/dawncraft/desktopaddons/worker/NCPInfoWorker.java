@@ -65,7 +65,7 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
         for (NCPAppWidgetID ncpAppWidgetID : widgets)
         {
             ncpInfoModel.getRegionInfo(ncpAppWidgetID.region, this);
-            NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, appWidgetId, ncpInfo);
+            NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, ncpAppWidgetID.id, ncpInfo);
             if (ncpInfo == null) return Result.retry();
         }
         Log.d(TAG, "Update successfully");
@@ -101,8 +101,9 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
             // Log.w(TAG, "Update interval is lower than zero, can't start work");
             return null;
         }
-        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(
-                NCPInfoWorker.class, updateInterval, TimeUnit.MINUTES)
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(NCPInfoWorker.class,
+                updateInterval, TimeUnit.MINUTES,
+                PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
                 .addTag(WORK_TAG)
                 .setConstraints(new Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)

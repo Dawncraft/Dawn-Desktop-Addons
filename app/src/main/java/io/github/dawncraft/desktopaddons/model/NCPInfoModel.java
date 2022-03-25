@@ -110,7 +110,7 @@ public class NCPInfoModel
             info.setSuspect(0);
             info.setCure(total.getInt("heal"));
             info.setDead(total.getInt("dead"));
-            info.setDate(DateUtils.formatDefaultDate(updateTime));
+            info.setDate(DateUtils.formatDefaultDate(updateTime, "GMT+8"));
             info.setUpdateTime(DateUtils.formatCurrentDate());
             CACHE.put(region, Pair.create(System.currentTimeMillis(), info));
             listener.onResponse(Result.SUCCESS, info);
