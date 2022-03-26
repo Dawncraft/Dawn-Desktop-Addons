@@ -1,12 +1,12 @@
 package io.github.dawncraft.desktopaddons.ui.widget;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.util.Consumer;
 import androidx.preference.Preference;
 

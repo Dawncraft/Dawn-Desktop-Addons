@@ -28,7 +28,7 @@
         android:allowBackup="false"
         android:launchMode="singleInstance"
         android:excludeFromRecents="true"
-        android:extractNativeLibs="true">
+        android:extractNativeLibs="false">
         <!-- NOTE 最小SDK版本高于23时默认不压缩库, 详见 https://blog.csdn.net/xiaxl/article/details/115253074 -->
 
         <activity

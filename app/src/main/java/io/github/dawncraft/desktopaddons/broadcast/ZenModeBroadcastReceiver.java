@@ -107,9 +107,8 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         {
             CharSequence name = context.getString(R.string.zen_mode_channel_name);
             String description = context.getString(R.string.zen_mode_channel_desc);
-            // NOTE 使用 IMPORTANCE_DEFAULT 似乎无法关掉声音
             NotificationChannel channel = new NotificationChannel(
-                    ZenModeBroadcastReceiver.CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW);
+                    ZenModeBroadcastReceiver.CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(description);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             channel.setSound(null, null);

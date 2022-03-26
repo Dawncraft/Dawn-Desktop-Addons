@@ -33,7 +33,7 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="0dp"
         android:layout_weight="0"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:contentDescription="@string/zen_mode_switch"
         android:focusable="true"

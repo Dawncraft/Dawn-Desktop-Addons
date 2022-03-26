@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+    android:layout_height="?attr/listPreferredItemHeightSmall"
     android:orientation="horizontal"
-    android:background="?android:attr/listChoiceBackgroundIndicator"
+    android:background="?attr/listChoiceBackgroundIndicator"
     android:descendantFocusability="blocksDescendants">
 
     <TextView
@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:paddingHorizontal="24dp"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textAppearance="?attr/textAppearanceListItemSmall"
         tools:text="中国" />
 
     <ImageButton
