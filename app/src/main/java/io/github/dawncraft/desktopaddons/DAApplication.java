@@ -1,16 +1,13 @@
 package io.github.dawncraft.desktopaddons;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
 import io.github.dawncraft.desktopaddons.model.NCPDataSource;
-import io.github.dawncraft.desktopaddons.service.DaemonService;
 import io.github.dawncraft.desktopaddons.util.HttpUtils;
 import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 
@@ -28,12 +25,6 @@ public class DAApplication extends Application
     public void onCreate()
     {
         super.onCreate();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (!getProcessName().equals(getPackageName()))
-            {
-                return;
-            }
-        }
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         database = Room.databaseBuilder(this, DADatabase.class, "db")
                 .allowMainThreadQueries()
@@ -48,8 +39,6 @@ public class DAApplication extends Application
         int interval = Integer.parseInt(sharedPreferences
                 .getString("ncp_update_interval", "360"));
         NCPInfoWorker.startSyncWork(this, interval);
-        //Intent intent = new Intent(this, DaemonService.class);
-        //startService(intent);
     }
 
     @Override

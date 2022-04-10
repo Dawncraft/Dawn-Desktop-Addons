@@ -74,7 +74,9 @@
 
         <service
             android:name=".service.DaemonService"
-            android:process=":daemon"
+            android:exported="true" />
+        <service
+            android:name=".service.DaemonService$InternalService"
             android:exported="false" />
         <service
             android:name=".wallpaper.DawnLiveWallpaper"
@@ -147,6 +149,8 @@
             android:name=".broadcast.ZenModeBroadcastReceiver"
             android:exported="false">
             <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
                 <action android:name="desktopaddons.intent.action.SWITCH_ZEN_MODE" />
             </intent-filter>
         </receiver>
