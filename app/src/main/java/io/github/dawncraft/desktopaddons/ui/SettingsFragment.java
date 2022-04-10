@@ -2,6 +2,7 @@ package io.github.dawncraft.desktopaddons.ui;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
@@ -25,29 +26,20 @@ import rikka.shizuku.Shizuku;
 public class SettingsFragment extends PreferenceFragmentCompat implements Shizuku.OnRequestPermissionResultListener
 {
     public static final int PERMISSION_REQUEST_CODE = 233;
+    private static final boolean ENABLE_SHIZUKU = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Shizuku.addRequestPermissionResultListener(this);
+        if (ENABLE_SHIZUKU)
+            Shizuku.addRequestPermissionResultListener(this);
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        Preference preference = findPreference("ignore_battery_optimization");
-        if (preference != null)
-        {
-            preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Utils.requestRunInBackground(getContext());
-                    return true;
-                }
-            });
-        }
         EditTextPreference preferenceUpdateInterval = findPreference("ncp_update_interval");
         if (preferenceUpdateInterval != null)
         {
@@ -89,6 +81,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
                     return false;
                 }
             });
+        }
+        Preference preferenceZenPermission = findPreference("notification_policy_access_permission");
+        if (preferenceZenPermission != null)
+        {
+            preferenceZenPermission.setEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
         }
         SwitchPreferenceCompat preferenceZenMode = findPreference("zen_mode_switch");
         if (preferenceZenMode != null)
@@ -171,7 +168,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
     public void onDestroy()
     {
         super.onDestroy();
-        Shizuku.removeRequestPermissionResultListener(this);
+        if (ENABLE_SHIZUKU)
+            Shizuku.removeRequestPermissionResultListener(this);
     }
 
     @Override
@@ -192,7 +190,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
         Preference preferenceCheckShizuku = findPreference("check_shizuku");
         if (preferenceCheckShizuku != null)
         {
-            if (Shizuku.pingBinder())
+            if (!ENABLE_SHIZUKU)
+            {
+                preferenceCheckShizuku.setEnabled(false);
+                preferenceCheckShizuku.setSummary(R.string.shizuku_not_support);
+            }
+            else if (Shizuku.pingBinder())
             {
                 int version = Shizuku.getVersion();
                 if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED)
@@ -224,15 +227,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
                 preferenceCheckShizuku.setOnPreferenceClickListener(null);
             }
         }
+        boolean isTileSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
         ComponentSwitchPreference preferenceFifthG = findPreference("5g_switch");
         if (preferenceFifthG != null)
         {
-            preferenceFifthG.setEnabled(Utils.isFifthGSupported());
+            preferenceFifthG.setEnabled(isTileSupported && Utils.isFifthGSupported());
         }
         ComponentSwitchPreference preferenceDevTiles = findPreference("dev_tiles_switch");
         if (preferenceDevTiles != null)
         {
-            preferenceDevTiles.setEnabled(SystemPropertyUtils.isDevelopmentSettingsEnabled(requireContext()));
+            preferenceDevTiles.setEnabled(isTileSupported &&
+                    SystemPropertyUtils.isDevelopmentSettingsEnabled(requireContext()));
         }
     }
 }

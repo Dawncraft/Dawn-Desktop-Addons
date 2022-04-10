@@ -8,6 +8,7 @@
     <string name="developer_say_what">受Android限制, 应用需要在启动一次后才能开启后台服务, 所以被迫需要一个界面, 不过你也可以在这里调整一些设置</string>
     <!-- 请原谅我的中式英语(笑 -->
     <string name="check_shizuku">Shizuku support</string>
+    <string name="shizuku_not_support">Shizuku only support Android 6.0 and above</string>
     <string name="shizuku_not_found">You need install Shizuku or Sui if root to make some functions work</string>
     <string name="shizuku_no_permission">Shizuku: %d, Click to grant permissions</string>
     <string name="shizuku_has_permission">Shizuku: %d, permissions are granted</string>

@@ -11,12 +11,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
 
     <uses-feature android:glEsVersion="0x00020000" android:required="false" />
     <uses-feature android:name="android.software.live_wallpaper" />
+
+    <uses-sdk tools:overrideLibrary="rikka.shizuku.provider,rikka.shizuku.api,rikka.shizuku.shared,rikka.shizuku.aidl"/>
 
     <application
         android:name=".DAApplication"
@@ -28,7 +29,8 @@
         android:allowBackup="false"
         android:launchMode="singleInstance"
         android:excludeFromRecents="true"
-        android:extractNativeLibs="false">
+        android:extractNativeLibs="true"
+        tools:targetApi="m">
         <!-- NOTE 最小SDK版本高于23时默认不压缩库, 详见 https://blog.csdn.net/xiaxl/article/details/115253074 -->
 
         <activity
@@ -74,7 +76,7 @@
 
         <service
             android:name=".service.DaemonService"
-            android:exported="true" />
+            android:exported="false" />
         <service
             android:name=".service.DaemonService$InternalService"
             android:exported="false" />
@@ -149,8 +151,6 @@
             android:name=".broadcast.ZenModeBroadcastReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.intent.action.SCREEN_OFF" />
                 <action android:name="desktopaddons.intent.action.SWITCH_ZEN_MODE" />
             </intent-filter>
         </receiver>
@@ -161,7 +161,8 @@
             android:multiprocess="false"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL"
+            tools:targetApi="m" />
 
     </application>
 

@@ -7,14 +7,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.media.AudioManager;
 import android.os.Build;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
@@ -25,7 +22,7 @@ import java.util.List;
 
 public final class Utils
 {
-    public static final int FLAG_IMMUTABLE = PendingIntent.FLAG_IMMUTABLE;
+    public static final int FLAG_IMMUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0;
     public static final int FLAG_MUTABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0;
 
     private Utils() {}
@@ -90,51 +87,55 @@ public final class Utils
                 PackageManager.DONT_KILL_APP);
     }
 
-    public static boolean canRunInBackground(Context context)
-    {
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        return powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
-    }
-
-    public static void requestRunInBackground(Context context)
-    {
-        try
-        {
-            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent.setData(Uri.parse("package:" + context.getPackageName()));
-            context.startActivity(intent);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public static boolean isZenModeGranted(Context context)
     {
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        return notificationManager.isNotificationPolicyAccessGranted();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            NotificationManager notificationManager = (NotificationManager)
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
+            return notificationManager.isNotificationPolicyAccessGranted();
+        }
+        return true;
     }
 
     public static boolean isZenMode(Context context)
     {
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        int mode = notificationManager.getCurrentInterruptionFilter();
-        return mode > NotificationManager.INTERRUPTION_FILTER_ALL;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            NotificationManager notificationManager = (NotificationManager)
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
+            int mode = notificationManager.getCurrentInterruptionFilter();
+            return mode > NotificationManager.INTERRUPTION_FILTER_ALL;
+        }
+        else
+        {
+            AudioManager audioManager = (AudioManager)
+                    context.getSystemService(Context.AUDIO_SERVICE);
+            int mode = audioManager.getRingerMode();
+            return mode > AudioManager.RINGER_MODE_SILENT;
+        }
     }
 
     public static void setZenMode(Context context, boolean flag)
     {
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // TODO 使用NotificationManager.Policy切换勿扰模式
-        // NotificationManager.Policy policy = new NotificationManager.Policy();
-        // notificationManager.setNotificationPolicy();
-        int mode = flag ? NotificationManager.INTERRUPTION_FILTER_PRIORITY
-                : NotificationManager.INTERRUPTION_FILTER_ALL;
-        notificationManager.setInterruptionFilter(mode);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            NotificationManager notificationManager = (NotificationManager)
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
+            // TODO 使用NotificationManager.Policy切换勿扰模式
+            // NotificationManager.Policy policy = new NotificationManager.Policy();
+            // notificationManager.setNotificationPolicy();
+            int mode = flag ? NotificationManager.INTERRUPTION_FILTER_PRIORITY
+                    : NotificationManager.INTERRUPTION_FILTER_ALL;
+            notificationManager.setInterruptionFilter(mode);
+        }
+        else
+        {
+            AudioManager audioManager = (AudioManager)
+                    context.getSystemService(Context.AUDIO_SERVICE);
+            int newMode = flag ? AudioManager.RINGER_MODE_SILENT : AudioManager.RINGER_MODE_NORMAL;
+            audioManager.setRingerMode(newMode);
+        }
     }
 
     public static boolean isFifthGSupported()

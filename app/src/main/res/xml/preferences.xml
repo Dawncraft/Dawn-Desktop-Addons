@@ -13,12 +13,6 @@
         android:title="@string/check_shizuku"
         app:iconSpaceReserved="false" />
 
-    <Preference
-        android:key="ignore_battery_optimization"
-        android:title="允许休眠时在后台运行"
-        android:summary="(测试用, 请不要开启这个) 某些国产Android系统后台限制太严重了, 就连WorkManger都不能幸免, 如果你遭遇到桌面小部件更新不及时/锁屏小部件不出现等问题请点此忽略电源优化"
-        app:iconSpaceReserved="false" />
-
     <io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference
         android:title="@string/hide_app_icon"
         android:summary="@string/hide_app_icon_summary"

@@ -70,6 +70,7 @@ public final class SystemPropertyUtils
             try
             {
                 ShizukuSystemProperties.set(key, value);
+                return;
             }
             catch (Exception e)
             {

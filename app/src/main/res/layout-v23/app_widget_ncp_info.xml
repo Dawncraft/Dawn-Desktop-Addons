@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutNCPWidget"
     android:layout_width="match_parent"
@@ -21,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/ncp_title_background"
-            android:contentDescription="@string/ncp_app_widget_title"
             android:paddingStart="20dp"
             android:paddingLeft="20dp"
             android:paddingTop="4dp"
@@ -35,6 +35,8 @@
             android:textStyle="bold|italic"
             tools:ignore="RtlHardcoded" />
 
+        <!-- app widget 不支持appcompat, 用不了矢量图 -->
+        <!-- <androidx.appcompat.widget.AppCompatImageButton /> -->
         <ImageButton
             android:id="@+id/imageButtonOpen"
             android:layout_width="32dp"
@@ -67,68 +69,78 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingLeft="16dp"
-            android:paddingEnd="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/ncp_app_widget_time"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/app_widget_time_size"
-            tools:ignore="RtlHardcoded" />
-
-        <TextView
-            android:id="@+id/textViewTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:text="@string/unknown_date"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/app_widget_time_size" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingLeft="8dp"
-            android:paddingEnd="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/ncp_app_widget_update_time"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/app_widget_time_size"
-            tools:ignore="RtlHardcoded" />
-
-        <TextView
-            android:id="@+id/textViewUpdate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:text="@string/unknown_date"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/app_widget_time_size" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:columnCount="4"
+        android:rowCount="3">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_horizontal|bottom"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/ncp_app_widget_time"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/app_widget_time_size" />
+
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:singleLine="true"
+                android:text="@string/unknown_date"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/app_widget_time_size" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|bottom"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/ncp_app_widget_update_time"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/app_widget_time_size" />
+
+            <TextView
+                android:id="@+id/textViewUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:singleLine="true"
+                android:text="@string/unknown_date"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/app_widget_time_size" />
+
+        </LinearLayout>
+
+        <!-- NOTE 让日期也单行, 防止屏小的手机显示不下 -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewConfirm"
@@ -151,10 +163,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewSuspect"
@@ -173,13 +187,16 @@
                 android:text="@string/ncp_app_widget_suspect"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/app_widget_text_size" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewCure"
@@ -198,13 +215,16 @@
                 android:text="@string/ncp_app_widget_cure"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/app_widget_text_size" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2">
 
             <TextView
                 android:id="@+id/textViewDead"
@@ -223,8 +243,9 @@
                 android:text="@string/ncp_app_widget_dead"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/app_widget_text_size" />
+
         </LinearLayout>
 
-    </LinearLayout>
+    </GridLayout>
 
 </LinearLayout>

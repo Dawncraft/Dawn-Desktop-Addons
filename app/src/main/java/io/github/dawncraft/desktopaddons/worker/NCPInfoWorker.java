@@ -60,8 +60,24 @@ public class NCPInfoWorker extends Worker implements NCPInfoModel.OnRegionDataLi
     {
         Log.d(TAG, "Start to update");
         int appWidgetId = getInputData().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        List<NCPAppWidgetID> widgets = appWidgetId < 0 ? ncpAppWidgetDAO.getAll()
-                : Collections.singletonList(ncpAppWidgetDAO.findById(appWidgetId));
+        List<NCPAppWidgetID> widgets;
+        if (appWidgetId < 0)
+        {
+            widgets = ncpAppWidgetDAO.getAll();
+        }
+        else
+        {
+            NCPAppWidgetID ncpAppWidgetID = ncpAppWidgetDAO.findById(appWidgetId);
+            if (ncpAppWidgetID != null)
+            {
+                widgets = Collections.singletonList(ncpAppWidgetID);
+            }
+            else
+            {
+                NCPAppWidget.updateAppWidget(getApplicationContext(), appWidgetManager, appWidgetId, null);
+                return Result.success();
+            }
+        }
         for (NCPAppWidgetID ncpAppWidgetID : widgets)
         {
             ncpInfoModel.getRegionInfo(ncpAppWidgetID.region, this);
