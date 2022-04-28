@@ -44,8 +44,10 @@ public enum NCPDataSource {
     // 从各页面逆向出来的API
     @Deprecated // 该接口似乎已于2022/1/2停止更新
     public static final String QQ_NEWS_GLOBAL = "https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars";
+    @Deprecated // 该接口返回的数据尾部损坏
     public static final String QQ_NEWS_CHINA = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
     public static final String QQ_NEWS_FOREIGN = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_foreign";
+    public static final String QQ_NEWS_API = "https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=diseaseh5Shelf";
     public static final String NETEASE_TOTAL = "https://c.m.163.com/ug/api/wuhan/app/data/list-total";
     public static final String NETEASE_AREA = "https://c.m.163.com/ug/api/wuhan/app/data/list-by-area-code?areaCode=";
     public static final String TOUTIAO_DATA = "https://i.snssdk.com/forum/home/v1/info/?forum_id=1656784762444839";

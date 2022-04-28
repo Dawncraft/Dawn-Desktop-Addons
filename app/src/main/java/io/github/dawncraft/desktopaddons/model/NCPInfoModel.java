@@ -1,6 +1,6 @@
 package io.github.dawncraft.desktopaddons.model;
 
-import static io.github.dawncraft.desktopaddons.model.NCPDataSource.QQ_NEWS_CHINA;
+import static io.github.dawncraft.desktopaddons.model.NCPDataSource.QQ_NEWS_API;
 import static io.github.dawncraft.desktopaddons.model.NCPDataSource.QQ_NEWS_FOREIGN;
 import static io.github.dawncraft.desktopaddons.model.NCPDataSource.QQ_NEWS_GLOBAL;
 
@@ -50,13 +50,14 @@ public class NCPInfoModel
     private JSONObject getChinaInfo() throws IOException, JSONException
     {
         Request request = new Request.Builder()
-                .url(QQ_NEWS_CHINA)
+                .url(QQ_NEWS_API) // QQ_NEWS_CHINA
                 .get()
                 .build();
         Response response = HttpUtils.getClient().newCall(request).execute();
         String content = Objects.requireNonNull(response.body()).string();
         JSONObject json = new JSONObject(content);
-        JSONObject data = new JSONObject(json.getString("data"));
+        // JSONObject data = new JSONObject(json.getString("data"));
+        JSONObject data = json.getJSONObject("data").getJSONObject("diseaseh5Shelf");
         JSONObject area = data.getJSONArray("areaTree").getJSONObject(0);
         area.put("lastUpdateTime", data.getString("lastUpdateTime"));
         return area;
