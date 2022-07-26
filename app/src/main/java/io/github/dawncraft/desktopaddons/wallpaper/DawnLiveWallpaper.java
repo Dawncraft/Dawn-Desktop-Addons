@@ -1,6 +1,13 @@
 package io.github.dawncraft.desktopaddons.wallpaper;
 
+import android.annotation.SuppressLint;
+import android.app.WallpaperManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
+import android.service.wallpaper.WallpaperService;
 import android.view.MotionEvent;
 
 import io.github.dawncraft.desktopaddons.DAApplication;
@@ -14,7 +21,8 @@ public class DawnLiveWallpaper extends GLWallpaperService
     private Wallpaper wallpaper;
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         int id = DAApplication.getPreferences().getInt("wallpaper_id", 0);
         wallpaper = LiveWallpaperActivity.FAKE_WALLPAPERS.get(id);
@@ -61,5 +69,23 @@ public class DawnLiveWallpaper extends GLWallpaperService
                 renderer = null;
             }
         };
+    }
+
+    // WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
+    @SuppressLint("ObsoleteSdkInt")
+    public static void openLiveWallpaperPreview(Context context)
+    {
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+        {
+            intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+            intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                    new ComponentName(context, DawnLiveWallpaper.class));
+        }
+        else
+        {
+            intent = new Intent(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER);
+        }
+        context.startActivity(intent);
     }
 }

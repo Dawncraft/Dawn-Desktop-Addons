@@ -51,7 +51,7 @@ public class WallpaperEditorFragment extends Fragment
             public void onClick(View v)
             {
                 DAApplication.getPreferences().edit().putInt("wallpaper_id", wallpaper.id).apply();
-                Utils.openLiveWallpaperPreview(getContext(), DawnLiveWallpaper.class);
+                DawnLiveWallpaper.openLiveWallpaperPreview(getContext());
             }
         });
         return root;
