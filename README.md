@@ -25,8 +25,8 @@ An Android app provides a live wallpaper and some app widgets. Maintained by Daw
 1. 各种bug
 
 ## TODO
-1. 修改或删除句子
-2. 在Android 12上首次添加小部件时使用默认配置, 无需手动配置
+1. 修改或删除自己提交的句子
+2. live2d动态壁纸
 
 ## 测试机型
 - HM Note 1S(Android4.4.4/MIUI9.2稳定版) 新冠肺炎小部件可用(由old-android分支维护)
@@ -45,7 +45,7 @@ adb shell am start -n io.github.dawncraft.desktopaddons/.ui.MainActivity
 ```bash
 adb shell dumpsys appwidget
 ```
-用以下命令刷新所有桌面小部件(需要root或模拟器)
+~~用以下命令刷新所有桌面小部件(需要root或模拟器)~~ 自v4.0.0起无效
 ```bash
 adb shell su am broadcast -a android.intent.action.MY_PACKAGE_REPLACED -n io.github.dawncraft.desktopaddons/.broadcast.PackageBroadcastReceiver
 ```
@@ -63,4 +63,3 @@ adb shell service call activity 1599295570
 
 ## 更新日志
 懒得写了...
-
