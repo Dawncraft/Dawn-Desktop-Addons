@@ -13,6 +13,13 @@
         android:title="@string/check_shizuku"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        android:key="keep_alive"
+        android:title="@string/keep_alive"
+        android:summary="@string/keep_alive_summary"
+        android:defaultValue="false"
+        app:iconSpaceReserved="false" />
+
     <io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference
         android:title="@string/hide_app_icon"
         android:summary="@string/hide_app_icon_summary"

@@ -28,6 +28,11 @@ import io.github.dawncraft.desktopaddons.entity.SentenceAppWidgetID;
 import io.github.dawncraft.desktopaddons.model.SentenceModel;
 import io.github.dawncraft.desktopaddons.util.Utils;
 
+/**
+ * 一言桌面小部件
+ *
+ * @author QingChenW
+ */
 public class SentenceAppWidget extends AppWidgetProvider
 {
     public static final String ACTION_REFRESH = "desktopaddons.intent.action.REFRESH";

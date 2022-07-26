@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public final class DateUtils
 {
     private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
-    private static final SimpleDateFormat UTC_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z", Locale.ROOT);
+    private static final SimpleDateFormat UTC_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT);
 
     private DateUtils() {}
 
@@ -39,7 +39,6 @@ public final class DateUtils
     {
         try
         {
-            str = str.replace("Z", " UTC");
             return formatDate(UTC_DATE_FORMAT.parse(str));
         }
         catch (ParseException e)

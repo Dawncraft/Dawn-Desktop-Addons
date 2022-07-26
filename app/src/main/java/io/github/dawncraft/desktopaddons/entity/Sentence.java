@@ -1,5 +1,10 @@
 package io.github.dawncraft.desktopaddons.entity;
 
+/**
+ * 用于展示的句子信息
+ *
+ * @author QingChenW
+ */
 public class Sentence
 {
     private int id;
@@ -8,6 +13,7 @@ public class Sentence
     private String author;
     private String from;
     private Source source;
+    private String committer;
 
     public int getId()
     {
@@ -67,6 +73,16 @@ public class Sentence
     public void setSource(Source source)
     {
         this.source = source;
+    }
+
+    public String getCommitter()
+    {
+        return committer;
+    }
+
+    public void setCommitter(String committer)
+    {
+        this.committer = committer;
     }
 
     public enum Source

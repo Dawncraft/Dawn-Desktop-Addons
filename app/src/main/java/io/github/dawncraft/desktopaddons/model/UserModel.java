@@ -22,6 +22,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.internal.Util;
 
+/**
+ * 用于处理用户相关操作的Model
+ *
+ * @author QingChenW
+ */
 public class UserModel
 {
     public void login(String username, String password, OnLoginListener listener)

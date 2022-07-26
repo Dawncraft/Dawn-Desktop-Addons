@@ -21,6 +21,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * 用于获取句子的Model
+ *
+ * @author QingChenW
+ */
 public class SentenceModel
 {
     public Sentence getHitokoto() throws IOException, JSONException
@@ -158,6 +163,8 @@ public class SentenceModel
         if (!json.isNull("from_who"))
             sentence.setAuthor(json.getString("from_who"));
         sentence.setFrom(json.getString("from"));
+        if (!json.isNull("creator"))
+            sentence.setCommitter(json.getString("creator"));
         return sentence;
     }
 
@@ -173,6 +180,8 @@ public class SentenceModel
             sentence.setAuthor(json.getString("author"));
         if (!json.isNull("from"))
             sentence.setFrom(json.getString("from"));
+        if (!json.isNull("committerName"))
+            sentence.setCommitter(json.getString("committerName"));
         return sentence;
     }
 

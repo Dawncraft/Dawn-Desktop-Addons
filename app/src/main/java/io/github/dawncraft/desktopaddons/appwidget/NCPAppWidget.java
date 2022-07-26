@@ -21,7 +21,7 @@ import io.github.dawncraft.desktopaddons.util.Utils;
 import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 
 /**
- * 监控新型冠状病毒肺炎疫情数据的桌面小工具
+ * 监控新型冠状病毒肺炎疫情数据的桌面小部件
  *
  * @author QingChenW
  */

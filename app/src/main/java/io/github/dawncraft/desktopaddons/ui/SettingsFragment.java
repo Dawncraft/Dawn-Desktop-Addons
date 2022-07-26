@@ -1,5 +1,6 @@
 package io.github.dawncraft.desktopaddons.ui;
 
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,24 +10,36 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import java.util.Objects;
+
 import de.psdev.licensesdialog.LicensesDialog;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
+import io.github.dawncraft.desktopaddons.entity.AppInfo;
+import io.github.dawncraft.desktopaddons.model.UpdateModel;
+import io.github.dawncraft.desktopaddons.service.DaemonService;
 import io.github.dawncraft.desktopaddons.ui.widget.ComponentSwitchPreference;
+import io.github.dawncraft.desktopaddons.util.FileUtils;
+import io.github.dawncraft.desktopaddons.util.HttpUtils;
 import io.github.dawncraft.desktopaddons.util.SystemPropertyUtils;
 import io.github.dawncraft.desktopaddons.util.Utils;
 import io.github.dawncraft.desktopaddons.worker.NCPInfoWorker;
 import rikka.shizuku.Shizuku;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements Shizuku.OnRequestPermissionResultListener
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements Shizuku.OnRequestPermissionResultListener, UpdateModel.OnAppInfoListener
 {
     public static final int PERMISSION_REQUEST_CODE = 233;
     private static final boolean ENABLE_SHIZUKU = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+
+    private String version;
+    private UpdateModel updateModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -34,21 +47,44 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
         super.onCreate(savedInstanceState);
         if (ENABLE_SHIZUKU)
             Shizuku.addRequestPermissionResultListener(this);
+        PackageInfo packageInfo = Utils.getAppInfo(requireContext());
+        version = packageInfo != null ? packageInfo.versionName : "";
+        updateModel = new UpdateModel();
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
     {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+        SwitchPreferenceCompat preferenceKeepAlive = findPreference("keep_alive");
+        if (preferenceKeepAlive != null)
+        {
+            preferenceKeepAlive.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
+            {
+                @Override
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue)
+                {
+                    if (newValue instanceof Boolean)
+                    {
+                        if ((Boolean) newValue)
+                            DaemonService.startService(getContext());
+                        else
+                            DaemonService.stopService(getContext());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
         EditTextPreference preferenceUpdateInterval = findPreference("ncp_update_interval");
         if (preferenceUpdateInterval != null)
         {
             preferenceUpdateInterval.setSummaryProvider(new Preference.SummaryProvider<EditTextPreference>()
             {
                 @Override
-                public CharSequence provideSummary(EditTextPreference preference)
+                public CharSequence provideSummary(@NonNull EditTextPreference preference)
                 {
-                    int interval = Integer.parseInt(preference.getText());
+                    int interval = Integer.parseInt(Objects.requireNonNull(preference.getText()));
                     return interval > 0 ? getString(R.string.ncp_update_interval_unit, interval)
                             : getString(R.string.ncp_update_interval_manual);
                 }
@@ -65,7 +101,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
             preferenceUpdateInterval.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
             {
                 @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue)
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue)
                 {
                     if (newValue instanceof String)
                     {
@@ -93,7 +129,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
             preferenceZenMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
             {
                 @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue)
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue)
                 {
                     if (newValue instanceof Boolean)
                     {
@@ -110,16 +146,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
         Preference preferenceVersion = findPreference("check_update");
         if (preferenceVersion != null)
         {
-            PackageInfo packageInfo = Utils.getAppInfo(requireContext());
-            preferenceVersion.setSummary(getString(R.string.no_update,
-                    packageInfo != null ? packageInfo.versionName : "null"));
+            preferenceVersion.setSummary(getString(R.string.version, version)
+                    + " " + getString(R.string.checking_update));
             preferenceVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
             {
                 @Override
-                public boolean onPreferenceClick(Preference preference)
+                public boolean onPreferenceClick(@NonNull Preference preference)
                 {
-                    // TODO 更新检查
-                    Utils.toast(getContext(), "更新检查尚未实现呢~");
+                    preferenceVersion.setTitle(R.string.get_update);
+                    preference.setSummary(getString(R.string.version, version)
+                            + " " + getString(R.string.checking_update));
+                    updateModel.checkUpdate(false, SettingsFragment.this);
                     return true;
                 }
             });
@@ -130,7 +167,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
             preferenceLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
             {
                 @Override
-                public boolean onPreferenceClick(Preference preference)
+                public boolean onPreferenceClick(@NonNull Preference preference)
                 {
                     new LicensesDialog.Builder(requireActivity())
                             .setNotices(R.raw.licenses)
@@ -162,6 +199,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
                 preferenceZenMode.setChecked(false);
             }
         }
+        updateModel.checkUpdate(true, this);
     }
 
     @Override
@@ -204,7 +242,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
                     preferenceCheckShizuku.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
                     {
                         @Override
-                        public boolean onPreferenceClick(Preference preference)
+                        public boolean onPreferenceClick(@NonNull Preference preference)
                         {
                             if (!Shizuku.shouldShowRequestPermissionRationale())
                             {
@@ -239,5 +277,81 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shizuk
             preferenceDevTiles.setEnabled(isTileSupported &&
                     SystemPropertyUtils.isDevelopmentSettingsEnabled(requireContext()));
         }
+    }
+
+    @Override
+    public void onResponse(UpdateModel.Result result, AppInfo appInfo)
+    {
+        requireActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Preference preferenceVersion = findPreference("check_update");
+                if (result == UpdateModel.Result.BUSY)
+                {
+                    Utils.toast(getContext(), R.string.checking_update);
+                }
+                else if (result == UpdateModel.Result.ERROR)
+                {
+                    if (preferenceVersion != null)
+                    {
+                        preferenceVersion.setSummary(getString(R.string.version, version)
+                                + " " + getString(R.string.update_error));
+                    }
+                    Utils.toast(getContext(), R.string.update_error);
+                }
+                else
+                {
+                    // TODO 按照语义化版本进行比较, 或者按版本号?
+                    if (!version.equals(appInfo.getVersion()))
+                    {
+                        if (preferenceVersion != null)
+                        {
+                            preferenceVersion.setTitle(R.string.get_update);
+                            preferenceVersion.setSummary(getString(R.string.version, version)
+                                    + " " + getString(R.string.has_update, appInfo.getVersion()));
+                            preferenceVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+                            {
+                                @Override
+                                public boolean onPreferenceClick(@NonNull Preference preference)
+                                {
+                                    String message = getString(R.string.update_dialog_time, appInfo.getReleaseTime()) +
+                                            "\n" +
+                                            getString(R.string.update_dialog_size, FileUtils.getFormatSize(appInfo.getSize())) +
+                                            "\n" +
+                                            getString(R.string.update_dialog_message) +
+                                            "\n" +
+                                            appInfo.getMessage();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
+                                            .setTitle(getString(R.string.has_update, appInfo.getVersion()))
+                                            .setMessage(message)
+                                            .setPositiveButton(R.string.update_dialog_download, new DialogInterface.OnClickListener()
+                                            {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which)
+                                                {
+                                                    HttpUtils.openUrl(getContext(), appInfo.getDownloadUrl(), false);
+                                                }
+                                            })
+                                            .setNegativeButton(R.string.update_dialog_ignore, null);
+                                    builder.show();
+                                    return true;
+                                }
+                            });
+                        }
+                        Utils.toast(getContext(), R.string.notify_update);
+                    }
+                    else
+                    {
+                        if (preferenceVersion != null)
+                        {
+                            preferenceVersion.setSummary(getString(R.string.version, version)
+                                    + " " + getString(R.string.no_update));
+                        }
+                    }
+                }
+            }
+        });
     }
 }

@@ -9,6 +9,11 @@ import java.util.List;
 
 import io.github.dawncraft.desktopaddons.entity.SentenceAppWidgetID;
 
+/**
+ * 一言桌面小部件的DAO层
+ *
+ * @author QingChenW
+ */
 @Dao
 public interface SentenceAppWidgetDAO
 {

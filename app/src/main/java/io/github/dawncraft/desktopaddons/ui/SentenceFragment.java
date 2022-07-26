@@ -74,6 +74,12 @@ public class SentenceFragment extends Fragment
                     TextView textViewFrom = view.findViewById(R.id.textViewFrom);
                     textViewFrom.setText(sentence.getFrom());
                 }
+                if (sentence.getCommitter() != null)
+                {
+                    view.findViewById(R.id.tableRowCommitter).setVisibility(View.VISIBLE);
+                    TextView textViewCommitter = view.findViewById(R.id.textViewCommitter);
+                    textViewCommitter.setText(sentence.getCommitter());
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
                         .setTitle(getString(R.string.sentence_detail, sentence.getId()))
                         .setView(view)

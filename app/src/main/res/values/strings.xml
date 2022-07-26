@@ -13,11 +13,15 @@
     <string name="shizuku_no_permission">Shizuku: %d, Click to grant permissions</string>
     <string name="shizuku_has_permission">Shizuku: %d, permissions are granted</string>
     <string name="request_permission_successfully">You have allowed all permissions, thank you!</string>
+    <string name="keep_alive">Keep alive</string>
+    <string name="keep_alive_summary">Launch a foreground service to keep APP running (May increase power consumption)</string>
+    <string name="foreground_channel_name">Foreground notification</string>
+    <string name="is_running">Desktop Addons is running...</string>
     <string name="hide_app_icon">Hide app icon</string>
     <string name="hide_app_icon_summary">Invalid above Android 10, you can open this from app setting or ADB after hiding</string>
     <string name="settings_wallpaper">Live wallpaper</string>
     <string name="wallpaper_scene_setting">Scene settings</string>
-    <string name="wallpaper_scene_setting_summary">There is nothing</string>
+    <string name="wallpaper_scene_setting_summary">There is nothing now but coming soon</string>
     <string name="settings_app_widget">APP widget</string>
     <string name="sentence_list">Submit your sentences</string>
     <string name="sentence_list_summary">Submit your sentences to Dawncraft server (Login needed)</string>
@@ -61,8 +65,18 @@
     <string name="user_logout_confirm">Are you sure to log out?</string>
     <string name="settings_about">About</string>
     <string name="check_update">Click to check update</string>
-    <string name="no_update">Version: %s Up to date</string>
-    <string name="has_update">Version: %s Found update: %s</string>
+    <string name="get_update">Click to get update</string>
+    <string name="version">Version: %s</string>
+    <string name="checking_update">Checking update</string>
+    <string name="update_error">Can\'t find update, please check network</string>
+    <string name="no_update">Up to date</string>
+    <string name="has_update">Found update: %s</string>
+    <string name="notify_update">There is a new version of this APP</string>
+    <string name="update_dialog_time">Release time: %s</string>
+    <string name="update_dialog_size">Size: %s</string>
+    <string name="update_dialog_message">Change log:</string>
+    <string name="update_dialog_ignore">Ignore</string>
+    <string name="update_dialog_download">Go to download</string>
     <string name="visit_github">Visit GitHub</string>
     <string name="visit_github_summary">Come to see our GitHub</string>
     <string name="library_licenses">Third library licenses</string>
@@ -77,6 +91,7 @@
     <string name="sentence">Sentence:</string>
     <string name="sentence_author">Author:</string>
     <string name="sentence_from">From:</string>
+    <string name="sentence_committer">Committer:</string>
     <string name="sentence_copy_declaration">We are not responsible for possible copyright issues because of this sentence.</string>
     <string name="sentence_copy_success">Copy sentence successfully</string>
     <string name="sentence_pin">Pin</string>
@@ -152,6 +167,7 @@
 
     <!-- Don't translate these text. -->
     <string name="github_url" translatable="false">https://github.com/Dawncraft/Dawn-Desktop-Addons</string>
+    <string name="reset_password_url" translatable="false">https://h5.dawncraft.cc/forgetPassword</string>
     <string name="divider" translatable="false">--------</string>
     <string name="none" translatable="false">-</string>
     <string name="unknown_date" translatable="false">XXXX-XX-XX XX:XX:XX</string>

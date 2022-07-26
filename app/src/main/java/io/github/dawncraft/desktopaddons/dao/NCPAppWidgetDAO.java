@@ -9,6 +9,11 @@ import java.util.List;
 
 import io.github.dawncraft.desktopaddons.entity.NCPAppWidgetID;
 
+/**
+ * 新冠肺炎桌面小部件的DAO层
+ *
+ * @author QingChenW
+ */
 @Dao
 public interface NCPAppWidgetDAO
 {

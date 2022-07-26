@@ -9,6 +9,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.Objects;
 
+import io.github.dawncraft.desktopaddons.DAApplication;
 import io.github.dawncraft.desktopaddons.R;
 import io.github.dawncraft.desktopaddons.service.DaemonService;
 
@@ -25,8 +26,18 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.fragmentContainer);
         navController = Objects.requireNonNull(navHostFragment).getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController);
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         // NOTE Android 12 后不允许在后台启动前台服务, 所以在MainActivity中启动
-        DaemonService.startService(getApplicationContext());
+        if (DAApplication.getPreferences().getBoolean("keep_alive", false))
+        {
+            DaemonService.startService(getApplicationContext());
+        }
     }
 
     @Override

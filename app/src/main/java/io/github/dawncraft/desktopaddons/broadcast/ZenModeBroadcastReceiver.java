@@ -42,8 +42,8 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         if (Intent.ACTION_USER_PRESENT.equals(action))
         {
             Log.d(TAG, "Action user present");
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.cancel(NOTIFICATION_ID);
+            NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+            manager.cancel(NOTIFICATION_ID);
             return;
         }
         boolean isZenMode = Utils.isZenMode(context);
@@ -69,8 +69,15 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         {
             notificationLayout.setTextViewText(R.id.textViewZen, context.getString(R.string.zen_mode_open));
             TypedValue typedValue = new TypedValue();
-            int color = context.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true)
-                    ? typedValue.data : context.getColor(android.R.color.holo_blue_light);
+            int color;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                color = context.getTheme().resolveAttribute(R.attr.colorControlActivated, typedValue, true)
+                        ? typedValue.data : context.getColor(android.R.color.holo_blue_light);
+            }
+            else
+            {
+                color = context.getResources().getColor(android.R.color.holo_blue_light);
+            }
             notificationLayout.setInt(R.id.imageButtonZen, "setColorFilter", color);
         }
         Intent intent = new Intent(context, ZenModeBroadcastReceiver.class);
@@ -78,7 +85,7 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, Utils.FLAG_IMMUTABLE);
         notificationLayout.setOnClickPendingIntent(R.id.imageButtonZen, pendingIntent);
         // NOTE Android 5.0 之后, 谷歌为了使通知栏图标更加统一, 小图标必须是背景镂空只包含黑白两色的透明图片, 否则出错会变成小白块
-        Notification customNotification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setShowWhen(false)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
@@ -92,8 +99,8 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build();
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID, customNotification);
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        manager.notify(NOTIFICATION_ID, notification);
     }
 
     public static void register(Context context)
@@ -110,14 +117,14 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
             NotificationChannel channel = new NotificationChannel(
                     ZenModeBroadcastReceiver.CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(description);
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             channel.setSound(null, null);
             channel.setVibrationPattern(null);
             channel.enableLights(false);
-            channel.setBypassDnd(true);
             channel.setShowBadge(false);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.createNotificationChannel(channel);
+            channel.setBypassDnd(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+            manager.createNotificationChannel(channel);
         }
         instance = new ZenModeBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
@@ -131,8 +138,8 @@ public class ZenModeBroadcastReceiver extends BroadcastReceiver
     {
         if (instance != null)
         {
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.cancel(NOTIFICATION_ID);
+            NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+            manager.cancel(NOTIFICATION_ID);
             context.getApplicationContext().unregisterReceiver(instance);
             instance = null;
         }
