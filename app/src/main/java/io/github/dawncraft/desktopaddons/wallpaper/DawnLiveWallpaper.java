@@ -1,31 +1,41 @@
 package io.github.dawncraft.desktopaddons.wallpaper;
 
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.view.MotionEvent;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import io.github.dawncraft.desktopaddons.util.GLUtils;
-import site.hanschen.glwallpaperservice.EglConfigChooser;
+import io.github.dawncraft.desktopaddons.DAApplication;
+import io.github.dawncraft.desktopaddons.entity.Wallpaper;
+import io.github.dawncraft.desktopaddons.ui.LiveWallpaperActivity;
+import io.github.dawncraft.desktopaddons.wallpaper.model.ModelManager;
 import site.hanschen.glwallpaperservice.GLWallpaperService;
 
 public class DawnLiveWallpaper extends GLWallpaperService
 {
+    private Wallpaper wallpaper;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        int id = DAApplication.getPreferences().getInt("wallpaper_id", 0);
+        wallpaper = LiveWallpaperActivity.FAKE_WALLPAPERS.get(id);
+    }
+
     @Override
     protected GLEngine createGLEngine()
     {
         return new GLEngine()
         {
+            private WallpaperRenderer renderer;
+
             @Override
             protected void setupGLSurfaceView(boolean isPreview)
             {
-                if (GLUtils.isSupportGL20(DawnLiveWallpaper.this))
-                {
-                    setEGLContextClientVersion(2);
-                }
-                setEGLConfigChooser(new EglConfigChooser(8, 8, 8, 0, 0, 0, 0));
-                setRenderer(new WallpaperRenderer());
+                // if (GLUtils.isSupportGL20(getApplicationContext()))
+                //     setEGLContextClientVersion(2);
+                // setEGLConfigChooser(new EglConfigChooser(8, 8, 8, 0, 0, 0, 0));
+                ModelManager modelManager = new ModelManager(getApplicationContext());
+                renderer = new WallpaperRenderer(wallpaper, modelManager);
+                setRenderer(renderer);
                 setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
             }
 
@@ -34,29 +44,22 @@ public class DawnLiveWallpaper extends GLWallpaperService
             {
                 super.onOffsetsChanged(xOffset, yOffset, xOffsetStep, yOffsetStep, xPixelOffset, yPixelOffset);
             }
+
+            @Override
+            public void onTouchEvent(MotionEvent event)
+            {
+                super.onTouchEvent(event);
+                renderer.onTouchEvent(event);
+            }
+
+            @Override
+            public void onDestroy()
+            {
+                super.onDestroy();
+                if (renderer != null)
+                    renderer.release();
+                renderer = null;
+            }
         };
-    }
-
-    public static class WallpaperRenderer implements GLSurfaceView.Renderer
-    {
-        public WallpaperRenderer() {}
-
-        @Override
-        public void onSurfaceCreated(GL10 gl, EGLConfig config)
-        {
-            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        }
-
-        @Override
-        public void onSurfaceChanged(GL10 gl, int width, int height)
-        {
-            GLES20.glViewport(0, 0, width, height);
-        }
-
-        @Override
-        public void onDrawFrame(GL10 gl)
-        {
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        }
     }
 }

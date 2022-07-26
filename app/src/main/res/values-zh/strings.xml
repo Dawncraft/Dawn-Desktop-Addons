@@ -19,8 +19,8 @@
     <string name="hide_app_icon">隐藏桌面图标</string>
     <string name="hide_app_icon_summary">对Android10以上系统无效, 隐藏后可以从应用设置页或者ADB命令打开</string>
     <string name="settings_wallpaper">动态壁纸</string>
-    <string name="wallpaper_scene_setting">场景设置</string>
-    <string name="wallpaper_scene_setting_summary">现在还啥也没有, 但是大的就要来哩</string>
+    <string name="wallpaper_list">壁纸列表</string>
+    <string name="wallpaper_list_summary">看看你拥有的动态壁纸</string>
     <string name="settings_app_widget">桌面小部件</string>
     <string name="sentence_list">提交你的句子</string>
     <string name="sentence_list_summary">向曙光工艺服务器提交你的句子(需要登录)</string>
@@ -81,7 +81,8 @@
     <string name="library_licenses">开放源代码许可</string>
     <string name="library_licenses_summary">点击查看第三方库的开源协议</string>
 
-    <string name="fragment_wallpaper">动态壁纸设置</string>
+    <string name="activity_wallpaper">动态壁纸设置</string>
+    <string name="fragment_wallpaper_editor">编辑壁纸</string>
 
     <string name="fragment_sentence">句子列表</string>
     <string name="get_sentences_failed">加载句子失败, 请重试</string>

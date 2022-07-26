@@ -55,6 +55,15 @@
             </intent-filter>
         </activity-alias>
         <activity
+            android:name=".ui.LiveWallpaperActivity"
+            android:exported="true"
+            android:label="@string/activity_wallpaper"
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="io.github.dawncraft.desktopaddons.ui.MainActivity" />
+        </activity>
+        <activity
             android:name=".ui.NCPAppWidgetConfigActivity"
             android:label="@string/ncp_app_widget_config"
             android:theme="@style/AppTheme.Dialog"
@@ -91,7 +100,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/livewallpaper" />
+                android:resource="@xml/live_wallpaper" />
         </service>
         <service
             android:name=".quicksetting.SwitchFifthGTile"

@@ -33,9 +33,9 @@
         app:iconSpaceReserved="false">
 
         <io.github.dawncraft.desktopaddons.ui.widget.NavigationPreference
-            android:title="@string/wallpaper_scene_setting"
-            android:summary="@string/wallpaper_scene_setting_summary"
-            app:destination="@id/wallpaperFragment"
+            android:title="@string/wallpaper_list"
+            android:summary="@string/wallpaper_list_summary"
+            app:destination="@id/liveWallpaperActivity"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 

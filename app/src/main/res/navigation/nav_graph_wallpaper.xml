@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_wallpaper"
+    app:startDestination="@id/liveWallpaperFragment">
+
+    <fragment
+        android:id="@+id/liveWallpaperFragment"
+        android:name="io.github.dawncraft.desktopaddons.ui.LiveWallpaperActivity$LiveWallpaperFragment"
+        android:label="@string/activity_wallpaper"
+        tools:layout="@layout/fragment_live_wallpaper">
+        <action
+            android:id="@+id/action_liveWallpaperFragment_to_wallpaperEditorFragment"
+            app:destination="@id/wallpaperEditorFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wallpaperEditorFragment"
+        android:name="io.github.dawncraft.desktopaddons.ui.WallpaperEditorFragment"
+        android:label="@string/fragment_wallpaper_editor"
+        tools:layout="@layout/fragment_wallpaper_editor" />
+
+</navigation>
