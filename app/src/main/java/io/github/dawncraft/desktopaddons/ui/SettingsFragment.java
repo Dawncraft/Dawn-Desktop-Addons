@@ -153,7 +153,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 @Override
                 public boolean onPreferenceClick(@NonNull Preference preference)
                 {
-                    preferenceVersion.setTitle(R.string.get_update);
+                    preferenceVersion.setTitle(R.string.check_update);
                     preference.setSummary(getString(R.string.version, version)
                             + " " + getString(R.string.checking_update));
                     updateModel.checkUpdate(false, SettingsFragment.this);
