@@ -16,6 +16,7 @@ import io.github.dawncraft.desktopaddons.entity.SentenceAppWidgetID;
 )
 public abstract class DADatabase extends RoomDatabase
 {
+    public static final String DB_NAME = "db";
     public abstract NCPAppWidgetDAO ncpAppWidgetDAO();
     public abstract SentenceAppWidgetDAO sentenceAppWidgetDAO();
 }

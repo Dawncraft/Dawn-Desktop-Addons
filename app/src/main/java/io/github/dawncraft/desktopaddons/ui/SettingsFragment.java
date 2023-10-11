@@ -16,6 +16,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.pluto.Pluto;
+
 import java.util.Objects;
 
 import de.psdev.licensesdialog.LicensesDialog;
@@ -140,6 +142,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         return true;
                     }
                     return false;
+                }
+            });
+        }
+        Preference preferenceAppInfo = findPreference("app_info");
+        if (preferenceAppInfo != null)
+        {
+            preferenceAppInfo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(@NonNull Preference preference) {
+                    Pluto.INSTANCE.open();
+                    return true;
                 }
             });
         }

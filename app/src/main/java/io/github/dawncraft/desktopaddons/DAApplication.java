@@ -2,9 +2,20 @@ package io.github.dawncraft.desktopaddons;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
+
+import com.pluto.Pluto;
+import com.pluto.plugins.datastore.pref.PlutoDatastorePreferencesPlugin;
+import com.pluto.plugins.exceptions.PlutoExceptionsPlugin;
+import com.pluto.plugins.layoutinspector.PlutoLayoutInspectorPlugin;
+import com.pluto.plugins.logger.PlutoLoggerPlugin;
+import com.pluto.plugins.network.PlutoNetworkPlugin;
+import com.pluto.plugins.preferences.PlutoSharePreferencesPlugin;
+import com.pluto.plugins.rooms.db.PlutoRoomsDBWatcher;
+import com.pluto.plugins.rooms.db.PlutoRoomsDatabasePlugin;
 
 import io.github.dawncraft.desktopaddons.broadcast.ZenModeBroadcastReceiver;
 import io.github.dawncraft.desktopaddons.model.NCPDataSource;
@@ -25,11 +36,22 @@ public class DAApplication extends Application
     public void onCreate()
     {
         super.onCreate();
+        new Pluto.Installer(this)
+                .addPlugin(new PlutoNetworkPlugin())
+                .addPlugin(new PlutoExceptionsPlugin())
+                .addPlugin(new PlutoLoggerPlugin())
+                .addPlugin(new PlutoSharePreferencesPlugin())
+                .addPlugin(new PlutoRoomsDatabasePlugin())
+                .addPlugin(new PlutoDatastorePreferencesPlugin())
+                .addPlugin(new PlutoLayoutInspectorPlugin())
+                .install();
+        initializeStrictMode();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        database = Room.databaseBuilder(this, DADatabase.class, "db")
+        database = Room.databaseBuilder(this, DADatabase.class, DADatabase.DB_NAME)
                 .allowMainThreadQueries()
                 // .enableMultiInstanceInvalidation()
                 .build();
+        PlutoRoomsDBWatcher.INSTANCE.watch(DADatabase.DB_NAME, DADatabase.class);
         NCPDataSource.loadNamesFromRes(this);
         HttpUtils.init(this);
         if (sharedPreferences.getBoolean("zen_mode_switch", false))
@@ -47,6 +69,22 @@ public class DAApplication extends Application
         super.onTerminate();
         ZenModeBroadcastReceiver.unregister(this);
         sharedPreferences = null;
+    }
+
+    private void initializeStrictMode()
+    {
+        StrictMode.setThreadPolicy(
+                new StrictMode.ThreadPolicy.Builder()
+                        .detectAll()
+                        .penaltyLog()
+                        .build()
+        );
+        StrictMode.setVmPolicy(
+                new StrictMode.VmPolicy.Builder()
+                        .detectAll()
+                        .penaltyLog()
+                        .build()
+        );
     }
 
     public static SharedPreferences getPreferences()

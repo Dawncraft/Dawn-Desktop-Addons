@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="io.github.dawncraft.desktopaddons">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -30,7 +29,6 @@
         android:allowBackup="false"
         android:launchMode="singleInstance"
         android:excludeFromRecents="true"
-        android:extractNativeLibs="true"
         tools:targetApi="m">
         <!-- NOTE 最小SDK版本高于23时默认不压缩库, 详见 https://blog.csdn.net/xiaxl/article/details/115253074 -->
 

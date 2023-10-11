@@ -126,6 +126,7 @@
         app:iconSpaceReserved="false" >
 
         <Preference
+            android:key="app_info"
             android:title="@string/app_name"
             android:summary="@string/app_author"
             app:iconSpaceReserved="false" />

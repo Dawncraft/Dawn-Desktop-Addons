@@ -7,6 +7,8 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 
+import com.pluto.plugins.network.okhttp.PlutoOkhttpHelperKt;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -35,12 +37,13 @@ public final class HttpUtils
 
     public static void init(Context context)
     {
-        client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cache(new Cache(context.getCacheDir(), 10 * 1024 * 1024))
                 .authenticator(new DawnAuthenticator())
                 .addInterceptor(new AuthInterceptor())
-                .addNetworkInterceptor(new CacheInterceptor())
-                .build();
+                .addNetworkInterceptor(new CacheInterceptor());
+        PlutoOkhttpHelperKt.addPlutoOkhttpInterceptor(builder);
+        client = builder.build();
         customTabsBuilder = new CustomTabsIntent.Builder()
                 .setShowTitle(true)
                 .setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM);
